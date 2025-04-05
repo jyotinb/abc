@@ -1,4 +1,22 @@
-<!-- your_module/views/assets.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <!-- CSS -->
+                <link rel="stylesheet" type="text/css" href="/drkds_dashboard/static/src/css/dashboard.css"/>
+                
+                <!-- JavaScript -->
+                <script type="text/javascript" src="/drkds_dashboard/static/src/js/dashboard.js"></script>
+                <script type="text/javascript" src="/drkds_dashboard/static/src/js/chart_renderer.js"></script>
+            </xpath>
+        </template>
+        
+        <!-- For Owl Components -->
+        <template id="assets_backend_owl" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="module" src="/drkds_dashboard/static/src/js/owl_sales_dashboard.js"></script>
+            </xpath>
+        </template>
+    </data>
 </odoo>
