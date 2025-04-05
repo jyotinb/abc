@@ -33,7 +33,6 @@
         'data/dashboard_template_data.xml',
         'data/dashboard_filter_data.xml',
         'data/dashboard_cron.xml',
-        'views/assets.xml',
     ],
     'assets': {
         'web.assets_backend': [
