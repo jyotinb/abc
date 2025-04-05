@@ -1,102 +1,98 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2022 CreuBlanca
-     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record model="ir.ui.view" id="spreadsheet_spreadsheet_search_view">
-        <field name="name">spreadsheet.spreadsheet.search (in spreadsheet_oca)</field>
-        <field name="model">spreadsheet.spreadsheet</field>
+    <record id="view_drkds_dashboard_security_config_tree" model="ir.ui.view">
+        <field name="name">drkds.dashboard.security.config.tree</field>
+        <field name="model">drkds.dashboard.security.config</field>
         <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <field name="owner_id"/>
-            </search>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="spreadsheet_spreadsheet_tree_view">
-        <field name="name">spreadsheet.spreadsheet.tree (in spreadsheet_oca)</field>
-        <field name="model">spreadsheet.spreadsheet</field>
-        <field name="arch" type="xml">
-            <tree js_class="spreadsheet_tree">
-                <field name="name" />
-                <field name="company_id" groups="base.group_multi_company" />
-                <button
-                    name="open_spreadsheet"
-                    type="object"
-                    string="Edit"
-                    icon="fa-pencil"
-                />
+            <tree>
+                <field name="config_name"/>
+                <field name="security_level"/>
+                <field name="enable_two_factor"/>
             </tree>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="spreadsheet_spreadsheet_form_view">
-        <field name="name">spreadsheet.spreadsheet.tree (in spreadsheet_oca)</field>
-        <field name="model">spreadsheet.spreadsheet</field>
+    <record id="view_drkds_dashboard_security_config_form" model="ir.ui.view">
+        <field name="name">drkds.dashboard.security.config.form</field>
+        <field name="model">drkds.dashboard.security.config</field>
         <field name="arch" type="xml">
             <form>
-                <header />
                 <sheet>
-                    <div name="button_box" id="button_box" class="oe_button_box">
-                        <button
-                            name="open_spreadsheet"
-                            type="object"
-                            string="Edit"
-                            class="oe_stat_button"
-                            icon="fa-pencil"
-                        />
-                    </div>
-                    <div class="oe_title">
-                        <h1><field name="name" placeholder="Name" /></h1>
-                    </div>
                     <group>
-                        <group colspan="4">
-                            <field name="owner_id" />
-                            <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                            />
-                        </group>
-                        <group string="Write Access">
-                            <field name="contributor_ids" widget="many2many_tags" />
-                            <field
-                                name="contributor_group_ids"
-                                widget="many2many_tags"
-                            />
-                        </group>
-                        <group string="Read Access">
-                            <field name="reader_ids" widget="many2many_tags" />
-                            <field name="reader_group_ids" widget="many2many_tags" />
-                        </group>
-                        <group colspan="4">
-                            <field
-                                name="data"
-                                filename="filename"
-                                groups="base.group_no_one"
-                            />
-                            <field name="filename" invisible="1" />
-                        </group>
+                        <field name="config_name"/>
+                        <field name="security_level"/>
                     </group>
+                    <notebook>
+                        <page string="Password Policy">
+                            <group>
+                                <field name="min_password_length"/>
+                                <field name="require_uppercase"/>
+                                <field name="require_lowercase"/>
+                                <field name="require_numbers"/>
+                                <field name="require_special_chars"/>
+                            </group>
+                        </page>
+                        <page string="Access Control">
+                            <group>
+                                <field name="max_login_attempts"/>
+                                <field name="lockout_duration"/>
+                            </group>
+                        </page>
+                        <page string="Two-Factor Authentication">
+                            <group>
+                                <field name="enable_two_factor"/>
+                                <field name="two_factor_method" attrs="{'invisible': [('enable_two_factor', '=', False)], 'required': [('enable_two_factor', '=', True)]}"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
+    
+    <record id="view_drkds_dashboard_security_log_tree" model="ir.ui.view">
+        <field name="name">drkds.dashboard.security.log.tree</field>
+        <field name="model">drkds.dashboard.security.log</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="create_date"/>
+                <field name="event_type"/>
+                <field name="user_id"/>
+                <field name="ip_address"/>
+                <field name="details"/>
+            </tree>
+        </field>
+    </record>
 
-    <record model="ir.actions.act_window" id="spreadsheet_spreadsheet_act_window">
-        <field name="name">Spreadsheets</field>
-        <field name="res_model">spreadsheet.spreadsheet</field>
+    <record id="action_drkds_dashboard_security_config" model="ir.actions.act_window">
+        <field name="name">Security Configuration</field>
+        <field name="res_model">drkds.dashboard.security.config</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
+    </record>
+    
+    <record id="action_drkds_dashboard_security_log" model="ir.actions.act_window">
+        <field name="name">Security Logs</field>
+        <field name="res_model">drkds.dashboard.security.log</field>
+        <field name="view_mode">tree</field>
     </record>
 
-    <record model="ir.ui.menu" id="spreadsheet_spreadsheet_menu">
-        <field name="name">Spreadsheets</field>
-        <field name="action" ref="spreadsheet_spreadsheet_act_window" />
-        <field name="web_icon">spreadsheet_oca,static/description/icon.png</field>
-        <field name="groups_id" eval="[(4, ref('spreadsheet_oca.group_user'))]" />
-        <field name="sequence" eval="16" />
-    </record>
-
+    <menuitem 
+        id="menu_drkds_dashboard_security" 
+        name="Dashboard Security" 
+        parent="base.menu_custom"
+        sequence="50"/>
+        
+    <menuitem 
+        id="menu_drkds_dashboard_security_config" 
+        name="Security Configuration" 
+        parent="menu_drkds_dashboard_security"
+        action="action_drkds_dashboard_security_config"
+        sequence="10"/>
+        
+    <menuitem 
+        id="menu_drkds_dashboard_security_log" 
+        name="Security Logs" 
+        parent="menu_drkds_dashboard_security"
+        action="action_drkds_dashboard_security_log"
+        sequence="20"/>
 </odoo>
