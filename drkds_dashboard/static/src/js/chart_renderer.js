@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useState, onWillUpdateProps } from "@web/core/utils/hooks";
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ChartRenderer extends Component {
     setup() {
