@@ -35,6 +35,19 @@
         'data/dashboard_cron.xml',
         'views/assets.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'drkds_dashboard/static/src/css/dashboard.css',
+            'drkds_dashboard/static/src/js/dashboard.js',
+            'drkds_dashboard/static/src/js/chart_renderer.js',
+            'drkds_dashboard/static/src/js/kpi_card.js',
+            'drkds_dashboard/static/src/js/owl_sales_dashboard.js',
+            'drkds_dashboard/static/src/xml/dashboard_template.xml',
+            'drkds_dashboard/static/src/js/chart_renderer/chart_renderer.xml',
+            'drkds_dashboard/static/src/js/kpi_card/kpi_card.xml',
+            'drkds_dashboard/static/src/xml/owl_sales_dashboard.xml',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': False
