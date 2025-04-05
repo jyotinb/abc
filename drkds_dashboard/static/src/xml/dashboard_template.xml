@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="drkds_dashboard_template">
+        <div class="o_drkds_dashboard">
+            <div class="o_drkds_header">
+                <h2>Dashboard</h2>
+                <div class="o_drkds_controls">
+                    <select class="o_drkds_template_selector form-select">
+                        <option value="">Select Template</option>
+                    </select>
+                    <div class="btn-group ml-2">
+                        <button class="o_drkds_export_btn btn btn-secondary" data-format="csv">Export CSV</button>
+                        <button class="o_drkds_export_btn btn btn-secondary" data-format="xlsx">Export Excel</button>
+                        <button class="o_drkds_export_btn btn btn-secondary" data-format="pdf">Export PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="o_drkds_metrics_container">
+                <!-- Metrics will be inserted here -->
+            </div>
+        </div>
+    </t>
+</templates>
