@@ -15,20 +15,25 @@
     'depends': [
         'base', 
         'web', 
-        'sale'
+        'sale',
+        'mail'
     ],
+    'external_dependencies': {
+        'python': ['xlsxwriter', 'reportlab'],
+    },
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
         'views/dashboard_metric_views.xml',
         'views/dashboard_filter_views.xml',
         'views/dashboard_template_views.xml',
+        'views/dashboard_export_views.xml',
         'wizards/dashboard_configuration_wizard_view.xml',
         'data/dashboard_metric_data.xml',
         'data/dashboard_template_data.xml',
         'data/dashboard_filter_data.xml',
         'data/dashboard_cron.xml',
-        
+        'views/assets.xml',
     ],
     'installable': True,
     'application': True,
