@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="template_sales_performance" model="drkds.dashboard.template">
+            <field name="name">Sales Performance Dashboard</field>
+            <field name="description">Comprehensive overview of sales performance metrics</field>
+            <field name="metric_ids" eval="[(6, 0, [
+    ref('metric_total_sales_count'),
+    ref('metric_total_sales_amount')
+])]"/>
+            <field name="filter_ids" eval="[(6, 0, [ref('filter_this_year_sales')])]"/>
+            <field name="layout_configuration">
+            {
+                "type": "grid",
+                "columns": 2,
+                "widgets": [
+                    {"metric": "total_sales_count", "size": "medium"},
+                    {"metric": "total_sales_amount", "size": "large"}
+                ]
+            }
+            </field>
+        </record>
+    </data>
+</odoo>

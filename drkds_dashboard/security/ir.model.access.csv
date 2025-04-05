@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_drkds_dashboard_metric_user,drkds_dashboard_metric_user,model_drkds_dashboard_metric,base.group_user,1,0,0,0
+access_drkds_dashboard_metric_manager,drkds_dashboard_metric_manager,model_drkds_dashboard_metric,group_drkds_dashboard_manager,1,1,1,1

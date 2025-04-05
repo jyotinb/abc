@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_drkds_dashboard_config_wizard" model="ir.ui.view">
+        <field name="name">drkds.dashboard.config.wizard.form</field>
+        <field name="model">drkds.dashboard.config.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Configuration Wizard">
+                <header>
+                    <button name="action_create_configuration" 
+                            type="object" 
+                            string="Create Configuration" 
+                            class="oe_highlight"/>
+                    <button special="cancel" string="Cancel" class="oe_secondary"/>
+                </header>
+                
+                <sheet>
+                    <group>
+                        <field name="configuration_mode" widget="radio"/>
+                    </group>
+                    
+                    <!-- Metric Configuration -->
+                    <group string="Metric Configuration" 
+                           groups="base.group_system">
+                        <group>
+                            <field name="metric_name"/>
+                            <field name="metric_model"/>
+                            <field name="metric_type"/>
+                        </group>
+                        <group>
+                            <field name="metric_field" 
+                                   invisible="metric_type not in ['sum', 'avg', 'min', 'max']" 
+                                   required="metric_type in ['sum', 'avg', 'min', 'max']"/>
+                            <field name="metric_domain"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Custom Calculation Section -->
+                    <group string="Custom Calculation" 
+                           groups="base.group_system"
+                           invisible="metric_type != 'custom'">
+                        <field name="metric_python_code" 
+                               widget="ace" 
+                               options="{'mode': 'python'}"/>
+                    </group>
+                    
+                    <!-- Filter Configuration -->
+                    <group string="Filter Configuration" 
+                           groups="base.group_system">
+                        <group>
+                            <field name="filter_name"/>
+                            <field name="filter_model"/>
+                            <field name="filter_type"/>
+                        </group>
+                        <group>
+                            <field name="filter_domain"/>
+                            <field name="filter_metadata"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Template Configuration -->
+                    <group string="Template Configuration" 
+                           groups="base.group_system">
+                        <group>
+                            <field name="template_name"/>
+                            <field name="template_metrics"/>
+                            <field name="template_filters"/>
+                        </group>
+                        <group>
+                            <field name="template_description"/>
+                            <field name="template_layout"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to Open Wizard -->
+    <record id="action_open_drkds_dashboard_config_wizard" model="ir.actions.act_window">
+        <field name="name">Dashboard Configuration</field>
+        <field name="res_model">drkds.dashboard.config.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_configuration_mode': 'metric'
+        }</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem 
+        id="menu_drkds_dashboard_config_wizard" 
+        name="Dashboard Configuration" 
+        parent="base.menu_custom" 
+        action="action_open_drkds_dashboard_config_wizard" 
+        sequence="10"/>
+</odoo>

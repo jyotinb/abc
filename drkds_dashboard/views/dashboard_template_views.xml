@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_drkds_dashboard_template_tree" model="ir.ui.view">
+        <field name="name">drkds.dashboard.template.tree</field>
+        <field name="model">drkds.dashboard.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_drkds_dashboard_template_form" model="ir.ui.view">
+        <field name="name">drkds.dashboard.template.form</field>
+        <field name="model">drkds.dashboard.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="metric_ids"/>
+                        <field name="filter_ids"/>
+                        <field name="layout_configuration"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_drkds_dashboard_template" model="ir.actions.act_window">
+        <field name="name">Dashboard Templates</field>
+        <field name="res_model">drkds.dashboard.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem 
+        id="menu_drkds_dashboard_template" 
+        name="Dashboard Templates" 
+        parent="base.menu_custom" 
+        action="action_drkds_dashboard_template"/>
+</odoo>

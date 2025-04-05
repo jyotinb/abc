@@ -1,0 +1,35 @@
+<!-- owl_sales_dashboard.xml -->
+
+<templates xml:space="preserve">
+    <t t-name="owl.OwlSalesDashboard">
+        <div>
+            <div>
+                <h3>Sales Dashboard</h3>
+                <button t-on-click="onChangePeriod">Change Period</button>
+            </div>
+            <div>
+                <t t-foreach="['quotations', 'orders']" t-as="metric">
+                    <div>
+                        <KpiCard t-att-title="metric" t-att-value="state[metric].value" t-att-percentage="state[metric].percentage"/>
+                    </div>
+                </t>
+            </div>
+            <div>
+                <h4>Top Products</h4>
+                <ChartRenderer type="bar" data="state.topProducts" label="Sales" />
+            </div>
+            <div>
+                <h4>Top Sales People</h4>
+                <ChartRenderer type="bar" data="state.topSalesPeople" label="Sales" />
+            </div>
+            <div>
+                <h4>Monthly Sales</h4>
+                <ChartRenderer type="line" data="state.monthlySales" label="Sales" />
+            </div>
+            <div>
+                <h4>Partner Orders</h4>
+                <ChartRenderer type="bar" data="state.partnerOrders" label="Sales" />
+            </div>
+        </div>
+    </t>
+</templates>

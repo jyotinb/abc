@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="filter_this_year_sales" model="drkds.dashboard.filter">
+            <field name="name">This Year Sales</field>
+            <field name="technical_name">this_year_sales</field>
+            <field name="model_name">sale.order</field>
+            <field name="filter_type">date_range</field>
+            <field name="domain">['&amp;', ('date_order', '>=', time.strftime('%Y-01-01')), ('date_order', '&lt;=', time.strftime('%Y-12-31'))]</field>
+            <field name="description">Sales orders for the current year</field>
+        </record>
+    </data>
+</odoo>

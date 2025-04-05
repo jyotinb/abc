@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="metric_total_sales_count" model="drkds.dashboard.metric">
+            <field name="name">Total Sales Count</field>
+            <field name="technical_name">total_sales_count</field>
+            <field name="model_name">sale.order</field>
+            <field name="metric_type">count</field>
+            <field name="description">Total number of sales orders</field>
+        </record>
+        
+        <record id="metric_total_sales_amount" model="drkds.dashboard.metric">
+            <field name="name">Total Sales Amount</field>
+            <field name="technical_name">total_sales_amount</field>
+            <field name="model_name">sale.order</field>
+            <field name="metric_type">sum</field>
+            <field name="field_name">amount_total</field>
+            <field name="description">Total revenue from sales</field>
+        </record>
+    </data>
+</odoo>
