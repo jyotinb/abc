@@ -4,7 +4,6 @@ import re
 import secrets
 import hashlib
 import logging
-import pyotp
 
 class DrkdsDashboardSecurityConfig(models.Model):
     _name = 'drkds.dashboard.security.config'
@@ -31,12 +30,11 @@ class DrkdsDashboardSecurityConfig(models.Model):
     max_login_attempts = fields.Integer(default=5, required=True)
     lockout_duration = fields.Integer(default=30, required=True)  # minutes
 
-    # Two-Factor Authentication
+    # Two-Factor Authentication - Simplified for Community
     enable_two_factor = fields.Boolean(default=False)
     two_factor_method = fields.Selection([
-        ('totp', 'Time-Based One-Time Password'),
         ('email', 'Email Verification')
-    ], default='totp')
+    ], default='email')
 
     @api.constrains('min_password_length', 'max_login_attempts', 'lockout_duration')
     def _validate_security_settings(self):
@@ -69,26 +67,6 @@ class DrkdsDashboardSecurityConfig(models.Model):
                 return False
 
         return True
-
-    def generate_two_factor_secret(self):
-        """
-        Generate a secure two-factor authentication secret
-        """
-        return pyotp.random_base32()
-
-    def verify_two_factor_token(self, secret, user_token):
-        """
-        Verify two-factor authentication token
-        """
-        if not self.enable_two_factor:
-            return True
-
-        try:
-            totp = pyotp.TOTP(secret)
-            return totp.verify(user_token)
-        except Exception as e:
-            logging.error(f"Two-factor verification error: {e}")
-            return False
 
     def generate_security_token(self, user_id=None):
         """
