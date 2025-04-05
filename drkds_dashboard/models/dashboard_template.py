@@ -3,6 +3,8 @@ from odoo.exceptions import ValidationError
 import json
 import logging
 
+_logger = logging.getLogger(__name__)
+
 class DrkdsDashboardTemplate(models.Model):
     _name = 'drkds.dashboard.template'
     _description = 'Dashboard Templates'
@@ -81,7 +83,7 @@ class DrkdsDashboardTemplate(models.Model):
                 try:
                     dashboard_config['metrics'][metric.technical_name] = metric.calculate_metric(additional_domain)
                 except Exception as e:
-                    logging.error(f"Metric calculation error: {str(e)}")
+                    _logger.error(f"Metric calculation error: {str(e)}")
                     dashboard_config['metrics'][metric.technical_name] = {
                         'error': str(e)
                     }
@@ -97,12 +99,18 @@ class DrkdsDashboardTemplate(models.Model):
                         'domain': filter_domain
                     }
                 except Exception as e:
-                    logging.error(f"Filter application error: {str(e)}")
+                    _logger.error(f"Filter application error: {str(e)}")
             
             return dashboard_config
         except Exception as e:
-            logging.error(f"Dashboard configuration generation error: {str(e)}")
+            _logger.error(f"Dashboard configuration generation error: {str(e)}")
             raise ValidationError(f"Error generating dashboard configuration: {str(e)}")
+    
+    def generate_dashboard_data(self, additional_domain=None):
+        """
+        Compatibility method for the controller
+        """
+        return self.generate_dashboard_configuration(additional_domain)
 
     def action_preview_template(self):
         """
