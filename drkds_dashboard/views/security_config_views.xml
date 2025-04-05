@@ -41,7 +41,7 @@
                         <page string="Two-Factor Authentication">
                             <group>
                                 <field name="enable_two_factor"/>
-                                <field name="two_factor_method" attrs="{'invisible': [('enable_two_factor', '=', False)], 'required': [('enable_two_factor', '=', True)]}"/>
+                                <field name="two_factor_method" invisible="not enable_two_factor" required="enable_two_factor"/>
                             </group>
                         </page>
                     </notebook>
