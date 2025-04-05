@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="owl.OwlSalesDashboard">
+        <div class="container p-3">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="mb-3">Sales Dashboard</h3>
+                    <div class="btn-group mb-3">
+                        <button class="btn btn-secondary" t-on-click="onChangePeriod">
+                            Last <t t-esc="state.period"/> Days
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 col-lg-3">
+                    <KpiCard 
+                        title="Quotations" 
+                        value="state.quotations.value" 
+                        percentage="state.quotations.percentage"
+                        onClick="() => this.viewQuotations()"
+                    />
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <KpiCard 
+                        title="Orders" 
+                        value="state.orders.value" 
+                        percentage="state.orders.percentage"
+                        onClick="() => this.viewOrders()"
+                    />
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <KpiCard 
+                        title="Revenue" 
+                        value="state.orders.revenue" 
+                        percentage="state.orders.revenue_percentage"
+                        onClick="() => this.viewRevenues()"
+                    />
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <KpiCard 
+                        title="Average Order" 
+                        value="state.orders.average" 
+                        percentage="state.orders.average_percentage"
+                    />
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Top Products</h5>
+                        </div>
+                        <div class="card-body">
+                            <ChartRenderer type="'bar'" data="state.topProducts" label="'Sales'" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Top Sales People</h5>
+                        </div>
+                        <div class="card-body">
+                            <ChartRenderer type="'bar'" data="state.topSalesPeople" label="'Sales'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Monthly Sales</h5>
+                        </div>
+                        <div class="card-body">
+                            <ChartRenderer type="'line'" data="state.monthlySales" label="'Sales'" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Partner Orders</h5>
+                        </div>
+                        <div class="card-body">
+                            <ChartRenderer type="'bar'" data="state.partnerOrders" label="'Sales'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
