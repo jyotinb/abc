@@ -19,12 +19,11 @@
                     </group>
                     
                     <!-- Metric Configuration -->
-                    <group string="Metric Configuration" 
-                           groups="base.group_system">
+                    <group string="Metric Configuration" invisible="configuration_mode != 'metric'">
                         <group>
-                            <field name="metric_name"/>
-                            <field name="metric_model"/>
-                            <field name="metric_type"/>
+                            <field name="metric_name" required="configuration_mode == 'metric'"/>
+                            <field name="metric_model" required="configuration_mode == 'metric'"/>
+                            <field name="metric_type" required="configuration_mode == 'metric'"/>
                         </group>
                         <group>
                             <field name="metric_field" 
@@ -36,20 +35,19 @@
                     
                     <!-- Custom Calculation Section -->
                     <group string="Custom Calculation" 
-                           groups="base.group_system"
-                           invisible="metric_type != 'custom'">
+                           invisible="configuration_mode != 'metric' or metric_type != 'custom'">
                         <field name="metric_python_code" 
                                widget="ace" 
-                               options="{'mode': 'python'}"/>
+                               options="{'mode': 'python'}"
+                               required="metric_type == 'custom'"/>
                     </group>
                     
                     <!-- Filter Configuration -->
-                    <group string="Filter Configuration" 
-                           groups="base.group_system">
+                    <group string="Filter Configuration" invisible="configuration_mode != 'filter'">
                         <group>
-                            <field name="filter_name"/>
-                            <field name="filter_model"/>
-                            <field name="filter_type"/>
+                            <field name="filter_name" required="configuration_mode == 'filter'"/>
+                            <field name="filter_model" required="configuration_mode == 'filter'"/>
+                            <field name="filter_type" required="configuration_mode == 'filter'"/>
                         </group>
                         <group>
                             <field name="filter_domain"/>
@@ -58,11 +56,10 @@
                     </group>
                     
                     <!-- Template Configuration -->
-                    <group string="Template Configuration" 
-                           groups="base.group_system">
+                    <group string="Template Configuration" invisible="configuration_mode != 'template'">
                         <group>
-                            <field name="template_name"/>
-                            <field name="template_metrics"/>
+                            <field name="template_name" required="configuration_mode == 'template'"/>
+                            <field name="template_metrics" required="configuration_mode == 'template'"/>
                             <field name="template_filters"/>
                         </group>
                         <group>
