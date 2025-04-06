@@ -29,13 +29,16 @@
         'views/dashboard_template_views.xml',
         'views/dashboard_export_views.xml',
         'wizards/dashboard_configuration_wizard_view.xml',
-        'data/dashboard_metric_data.xml',
-        'data/dashboard_template_data.xml',
-        'data/dashboard_filter_data.xml',
+        'data/dashboard_metric_data.xml',     # Load metrics first
+        'data/dashboard_filter_data.xml',     # Then load filters
+        'data/dashboard_template_data.xml',   # Then templates that reference them
         'data/dashboard_cron.xml',
+        'views/sales_dashboard_menu.xml',
     ],
     'assets': {
         'web.assets_backend': [
+            ('include', 'web/static/lib/Chart/Chart.js'),
+
             'drkds_dashboard/static/src/css/dashboard.css',
             'drkds_dashboard/static/src/js/dashboard.js',
             'drkds_dashboard/static/src/js/chart_renderer.js',

@@ -1,93 +1,220 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="owl.OwlSalesDashboard">
-        <div class="container p-3">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h3 class="mb-3">Sales Dashboard</h3>
-                    <div class="btn-group mb-3">
-                        <button class="btn btn-secondary" t-on-click="onChangePeriod">
-                            Last <t t-esc="state.period"/> Days
-                        </button>
+        <div class="d-flex flex-column h-100 overflow-auto">
+            <div class="container p-3">
+                <!-- Error Message Section -->
+                <t t-if="this.state.error">
+                    <div class="alert alert-danger mb-4">
+                        <strong>Dashboard Error:</strong>
+                        <p t-esc="this.state.error"/>
+                        <details>
+                            <summary>Troubleshooting Tips</summary>
+                            <ul>
+                                <li>Check your sales order data</li>
+                                <li>Verify date filtering conditions</li>
+                                <li>Ensure sufficient permissions</li>
+                            </ul>
+                        </details>
                     </div>
-                </div>
-            </div>
-            
-            <div class="row mb-4">
-                <div class="col-md-6 col-lg-3">
-                    <KpiCard 
-                        title="Quotations" 
-                        value="state.quotations.value" 
-                        percentage="state.quotations.percentage"
-                        onClick="() => this.viewQuotations()"
-                    />
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <KpiCard 
-                        title="Orders" 
-                        value="state.orders.value" 
-                        percentage="state.orders.percentage"
-                        onClick="() => this.viewOrders()"
-                    />
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <KpiCard 
-                        title="Revenue" 
-                        value="state.orders.revenue" 
-                        percentage="state.orders.revenue_percentage"
-                        onClick="() => this.viewRevenues()"
-                    />
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <KpiCard 
-                        title="Average Order" 
-                        value="state.orders.average" 
-                        percentage="state.orders.average_percentage"
-                    />
-                </div>
-            </div>
-            
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Top Products</h5>
-                        </div>
-                        <div class="card-body">
-                            <ChartRenderer type="'bar'" data="state.topProducts" label="'Sales'" />
+                </t>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h3 class="mb-3">Sales Dashboard</h3>
+                        <div class="btn-group mb-3">
+                            <button 
+                                class="btn btn-secondary" 
+                                t-att-class="{'active': state.period === 30}"
+                                t-on-click="() => this.onChangePeriod(30)">
+                                Last 30 Days
+                            </button>
+                            <button 
+                                class="btn btn-secondary" 
+                                t-att-class="{'active': state.period === 90}"
+                                t-on-click="() => this.onChangePeriod(90)">
+                                Last 90 Days
+                            </button>
+                            <button 
+                                class="btn btn-secondary" 
+                                t-att-class="{'active': state.period === 365}"
+                                t-on-click="() => this.onChangePeriod(365)">
+                                Last Year
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Top Sales People</h5>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 col-lg-3">
+                        <KpiCard 
+                            title="'Quotations'" 
+                            value="state.quotations.value" 
+                            percentage="state.quotations.percentage"
+                            onClick.bind="() => this.viewQuotations()"
+                        />
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <KpiCard 
+                            title="'Orders'" 
+                            value="state.orders.value" 
+                            percentage="state.orders.percentage"
+                            onClick.bind="() => this.viewOrders()"
+                        />
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <KpiCard 
+                            title="'Revenue'" 
+                            value="state.orders.revenue" 
+                            percentage="state.orders.revenue_percentage"
+                            onClick.bind="() => this.viewRevenues()"
+                        />
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <KpiCard 
+                            title="'Average Order'" 
+                            value="state.orders.average" 
+                            percentage="state.orders.average_percentage"
+                        />
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <!-- Top Products List -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Top Products</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <t t-if="state.topProducts.length > 0">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                        <table class="table table-sm table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-3">Product</th>
+                                                    <th class="text-end pe-3">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="state.topProducts" t-as="product" t-key="product_index">
+                                                    <tr>
+                                                        <td class="ps-3" t-esc="product.label"/>
+                                                        <td class="text-end pe-3" t-esc="product.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-center p-3">No product data available</div>
+                                </t>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <ChartRenderer type="'bar'" data="state.topSalesPeople" label="'Sales'" />
+                    </div>
+
+                    <!-- Top Sales People List -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Top Sales People</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <t t-if="state.topSalesPeople.length > 0">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                        <table class="table table-sm table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-3">Sales Person</th>
+                                                    <th class="text-end pe-3">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="state.topSalesPeople" t-as="person" t-key="person_index">
+                                                    <tr>
+                                                        <td class="ps-3" t-esc="person.label"/>
+                                                        <td class="text-end pe-3" t-esc="person.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-center p-3">No sales person data available</div>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Monthly Sales</h5>
-                        </div>
-                        <div class="card-body">
-                            <ChartRenderer type="'line'" data="state.monthlySales" label="'Sales'" />
+                
+                <div class="row mb-4">
+                    <!-- Monthly Sales List -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Monthly Sales</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <t t-if="state.monthlySales.length > 0">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                        <table class="table table-sm table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-3">Month</th>
+                                                    <th class="text-end pe-3">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="state.monthlySales" t-as="month" t-key="month_index">
+                                                    <tr>
+                                                        <td class="ps-3" t-esc="month.label"/>
+                                                        <td class="text-end pe-3" t-esc="month.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-center p-3">No monthly sales data available</div>
+                                </t>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Partner Orders</h5>
-                        </div>
-                        <div class="card-body">
-                            <ChartRenderer type="'bar'" data="state.partnerOrders" label="'Sales'" />
+
+                    <!-- Partner Orders List -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Partner Orders</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <t t-if="state.partnerOrders.length > 0">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                        <table class="table table-sm table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-3">Partner</th>
+                                                    <th class="text-end pe-3">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="state.partnerOrders" t-as="partner" t-key="partner_index">
+                                                    <tr>
+                                                        <td class="ps-3" t-esc="partner.label"/>
+                                                        <td class="text-end pe-3" t-esc="partner.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-center p-3">No partner order data available</div>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>

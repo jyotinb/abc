@@ -6,7 +6,7 @@
             <field name="technical_name">this_year_sales</field>
             <field name="model_name">sale.order</field>
             <field name="filter_type">date_range</field>
-            <field name="domain">['&amp;', ('date_order', '>=', time.strftime('%Y-01-01')), ('date_order', '&lt;=', time.strftime('%Y-12-31'))]</field>
+            <field name="domain">[('date_order', '!=', False)]</field>
             <field name="description">Sales orders for the current year</field>
         </record>
     </data>

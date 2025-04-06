@@ -5,18 +5,33 @@
             <div class="o_drkds_header">
                 <h2>Dashboard</h2>
                 <div class="o_drkds_controls">
-                    <select class="o_drkds_template_selector form-select">
+                    <select t-ref="templateSelector" class="o_drkds_template_selector form-select" t-on-change="onTemplateChange">
                         <option value="">Select Template</option>
+                        <t t-foreach="state.templates" t-as="template">
+                            <option t-att-value="template.id" t-att-selected="state.currentTemplateId === template.id">
+                                <t t-esc="template.name"/>
+                            </option>
+                        </t>
                     </select>
                     <div class="btn-group ml-2">
-                        <button class="o_drkds_export_btn btn btn-secondary" data-format="csv">Export CSV</button>
-                        <button class="o_drkds_export_btn btn btn-secondary" data-format="xlsx">Export Excel</button>
-                        <button class="o_drkds_export_btn btn btn-secondary" data-format="pdf">Export PDF</button>
+                        <button class="o_drkds_export_btn btn btn-secondary" data-format="csv" t-on-click="onExportClick">Export CSV</button>
+                        <button class="o_drkds_export_btn btn btn-secondary" data-format="xlsx" t-on-click="onExportClick">Export Excel</button>
+                        <button class="o_drkds_export_btn btn btn-secondary" data-format="pdf" t-on-click="onExportClick">Export PDF</button>
                     </div>
                 </div>
             </div>
-            <div class="o_drkds_metrics_container">
-                <!-- Metrics will be inserted here -->
+            <div t-ref="metricsContainer" class="o_drkds_metrics_container">
+                <t t-if="state.dashboardData.metrics">
+                    <t t-foreach="Object.entries(state.dashboardData.metrics)" t-as="metric">
+                        <div class="o_drkds_metric_card">
+                            <div class="o_drkds_metric_title"><t t-esc="metric[0]"/></div>
+                            <div class="o_drkds_metric_value"><t t-esc="metric[1]"/></div>
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-info">No metrics available</div>
+                </t>
             </div>
         </div>
     </t>

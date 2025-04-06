@@ -1,3 +1,12 @@
+.btn-group .btn-secondary.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-group .btn-secondary {
+    transition: all 0.3s ease;
+}
+
 .o_drkds_dashboard {
     display: flex;
     flex-direction: column;

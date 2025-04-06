@@ -1,16 +1,14 @@
 /** @odoo-module */
 
-import { useState, onWillUpdateProps } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 export class ChartRenderer extends Component {
     setup() {
-        this.state = useState({ chart: null });
-        onWillUpdateProps(() => {
-            if (this.state.chart) {
-                this.updateChart();
-            }
-        });
+        // Ensure Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            return;
+        }
     }
 
     mounted() {
@@ -18,28 +16,56 @@ export class ChartRenderer extends Component {
     }
 
     renderChart() {
-        const ctx = this.el.querySelector('canvas').getContext('2d');
-        this.state.chart = new Chart(ctx, {
-            type: this.props.type,
+        const canvas = this.el.querySelector('canvas');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+
+        // Destroy existing chart if any
+        if (this.chart) {
+            this.chart.destroy();
+        }
+
+        // Provide default data if no data is available
+        const chartData = this.props.data && this.props.data.length > 0 
+            ? this.props.data 
+            : [{ label: 'No Data', value: 0 }];
+
+        // Create new chart
+        this.chart = new Chart(ctx, {
+            type: this.props.type || 'bar',
             data: {
-                labels: this.props.data.map(item => item.label),
+                labels: chartData.map(item => item.label),
                 datasets: [{
-                    label: this.props.label,
-                    data: this.props.data.map(item => item.value),
+                    label: this.props.label || 'Data',
+                    data: chartData.map(item => item.value),
                     backgroundColor: this.props.backgroundColor || 'rgba(75, 192, 192, 0.2)',
                     borderColor: this.props.borderColor || 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
             },
-            options: this.props.options || {}
+            options: {
+                ...(this.props.options || {}),
+                responsive: true,
+                maintainAspectRatio: false
+            }
         });
     }
 
-    updateChart() {
-        this.state.chart.data.labels = this.props.data.map(item => item.label);
-        this.state.chart.data.datasets[0].data = this.props.data.map(item => item.value);
-        this.state.chart.update();
+    willUnmount() {
+        // Cleanup chart when component is destroyed
+        if (this.chart) {
+            this.chart.destroy();
+        }
     }
 }
 
 ChartRenderer.template = "owl.ChartRenderer";
+ChartRenderer.props = {
+    type: { type: String, optional: true },
+    data: { type: Array, optional: true },
+    label: { type: String, optional: true },
+    backgroundColor: { type: String, optional: true },
+    borderColor: { type: String, optional: true },
+    options: { type: Object, optional: true }
+};

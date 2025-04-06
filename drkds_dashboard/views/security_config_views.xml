@@ -95,4 +95,5 @@
         parent="menu_drkds_dashboard_security"
         action="action_drkds_dashboard_security_log"
         sequence="20"/>
-</odoo>
+		
+	
