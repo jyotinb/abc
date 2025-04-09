@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="owl.OwlSalesDashboard">
+        <div class="d-flex flex-column h-100 overflow-auto">
+            <div class="container-fluid px-3 py-2">
+                <!-- Loading indicator -->
+                <t t-if="state.loading">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="background-color: rgba(255,255,255,0.7); z-index: 1000;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- Error Message Section -->
+                <t t-if="state.error">
+                    <div class="alert alert-danger mb-3 mt-2">
+                        <strong>Dashboard Error:</strong>
+                        <p t-esc="state.error"/>
+                    </div>
+                </t>
+
+                <t t-if="!state.error">
+                    <div class="row mb-3 mt-2">
+                        <div class="col-md-7">
+                            <h3 class="mb-2">Sales Dashboard</h3>
+                            
+                            <!-- Date Period Selector -->
+                            <div class="d-flex flex-wrap align-items-center mb-2">
+                                <div class="btn-group me-3 mb-2">
+                                    <button 
+                                        class="btn btn-sm btn-secondary" 
+                                        t-att-class="{'active': state.period === 30 &amp;&amp; !state.customDateRange}"
+                                        t-on-click="() => this.onChangePeriod(30)">
+                                        Last 30 Days
+                                    </button>
+                                    <button 
+                                        class="btn btn-sm btn-secondary" 
+                                        t-att-class="{'active': state.period === 90 &amp;&amp; !state.customDateRange}"
+                                        t-on-click="() => this.onChangePeriod(90)">
+                                        Last 90 Days
+                                    </button>
+                                    <button 
+                                        class="btn btn-sm btn-secondary" 
+                                        t-att-class="{'active': state.period === 365 &amp;&amp; !state.customDateRange}"
+                                        t-on-click="() => this.onChangePeriod(365)">
+                                        Last Year
+                                    </button>
+                                </div>
+                                
+                                <!-- Filter toggle button -->
+                                <button 
+                                    class="btn btn-sm btn-outline-primary mb-2" 
+                                    t-on-click="toggleFilters">
+                                    <i class="fa fa-filter me-1"></i>
+                                    <t t-if="!state.showFilters">Show Filters</t>
+                                    <t t-else="">Hide Filters</t>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Custom date range -->
+                        <div class="col-md-5">
+                            <div class="d-flex flex-wrap justify-content-end align-items-center">
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <div class="input-group input-group-sm me-2 mb-2" style="width: auto;">
+                                        <span class="input-group-text">From</span>
+                                        <input 
+                                            type="date" 
+                                            class="form-control" 
+                                            t-att-value="state.startDate" 
+                                            t-on-change="(e) => { state.startDate = e.target.value }"
+                                        />
+                                    </div>
+                                    <div class="input-group input-group-sm me-2 mb-2" style="width: auto;">
+                                        <span class="input-group-text">To</span>
+                                        <input 
+                                            type="date" 
+                                            class="form-control" 
+                                            t-att-value="state.endDate" 
+                                            t-on-change="(e) => { state.endDate = e.target.value }"
+                                        />
+                                    </div>
+                                    <button 
+                                        class="btn btn-sm btn-primary mb-2" 
+                                        t-on-click="onDateRangeChange">
+                                        Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Filters Section -->
+                    <div t-if="state.showFilters" class="row mb-3 filter-container p-3 border rounded bg-light">
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Product Categories</label>
+                            <select 
+                                multiple="true" 
+                                class="form-select" 
+                                t-on-change="onCategoryChange"
+                                style="height: 100px;">
+                                <t t-foreach="state.productCategories" t-as="category" t-key="category.id">
+                                    <option 
+                                        t-att-value="category.id"
+                                        t-att-selected="state.selectedCategories.includes(category.id)">
+                                        <t t-esc="category.display_name || category.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl to select multiple</small>
+                        </div>
+                        
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Sales Teams</label>
+                            <select 
+                                multiple="true" 
+                                class="form-select" 
+                                t-on-change="onTeamChange"
+                                style="height: 100px;">
+                                <t t-foreach="state.salesTeams" t-as="team" t-key="team.id">
+                                    <option 
+                                        t-att-value="team.id"
+                                        t-att-selected="state.selectedTeams.includes(team.id)">
+                                        <t t-esc="team.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl to select multiple</small>
+                        </div>
+                        
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-outline-secondary w-100" t-on-click="resetFilters">
+                                <i class="fa fa-refresh me-1"></i> Reset Filters
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- KPI Cards -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-sm-6 col-md-6 col-lg-3">
+                            <KpiCard 
+                                title="'Quotations'" 
+                                value="state.quotations.value" 
+                                percentage="state.quotations.percentage"
+                                onClick.bind="() => this.viewQuotations()"
+                            />
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3">
+                            <KpiCard 
+                                title="'Orders'" 
+                                value="state.orders.value" 
+                                percentage="state.orders.percentage"
+                                onClick.bind="() => this.viewOrders()"
+                            />
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3">
+                            <KpiCard 
+                                title="'Revenue'" 
+                                value="state.orders.revenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})" 
+                                percentage="state.orders.revenue_percentage"
+                                onClick.bind="() => this.viewRevenues()"
+                            />
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3">
+                            <KpiCard 
+                                title="'Average Order'" 
+                                value="state.orders.average.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})" 
+                                percentage="state.orders.average_percentage"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <!-- Top Products List -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Top Products</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <t t-if="state.topProducts.length > 0">
+                                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                            <table class="table table-sm table-hover mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ps-3">Product</th>
+                                                        <th class="text-end pe-3">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="state.topProducts" t-as="product" t-key="product_index">
+                                                        <tr>
+                                                            <td class="ps-3 text-truncate" style="max-width: 200px;">
+                                                                <t t-esc="product.label"/>
+                                                            </td>
+                                                            <td class="text-end pe-3" t-esc="product.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="text-center p-3">No product data available</div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Sales People List -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Top Sales People</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <t t-if="state.topSalesPeople.length > 0">
+                                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                            <table class="table table-sm table-hover mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ps-3">Sales Person</th>
+                                                        <th class="text-end pe-3">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="state.topSalesPeople" t-as="person" t-key="person_index">
+                                                        <tr>
+                                                            <td class="ps-3 text-truncate" style="max-width: 200px;">
+                                                                <t t-esc="person.label"/>
+                                                            </td>
+                                                            <td class="text-end pe-3" t-esc="person.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="text-center p-3">No sales person data available</div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <!-- Monthly Sales List -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Monthly Sales</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <t t-if="state.monthlySales.length > 0">
+                                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                            <table class="table table-sm table-hover mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ps-3">Month</th>
+                                                        <th class="text-end pe-3">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="state.monthlySales" t-as="month" t-key="month_index">
+                                                        <tr>
+                                                            <td class="ps-3">
+                                                                <t t-esc="month.label"/>
+                                                            </td>
+                                                            <td class="text-end pe-3" t-esc="month.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="text-center p-3">No monthly sales data available</div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Partner Orders List -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Partner Orders</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <t t-if="state.partnerOrders.length > 0">
+                                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                            <table class="table table-sm table-hover mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ps-3">Partner</th>
+                                                        <th class="text-end pe-3">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="state.partnerOrders" t-as="partner" t-key="partner_index">
+                                                        <tr>
+                                                            <td class="ps-3 text-truncate" style="max-width: 200px;">
+                                                                <t t-esc="partner.label"/>
+                                                            </td>
+                                                            <td class="text-end pe-3" t-esc="partner.value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"/>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="text-center p-3">No partner order data available</div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

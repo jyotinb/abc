@@ -1,0 +1,132 @@
+/* Enhanced Dashboard Styling */
+
+/* Active state for filter buttons */
+.btn-group .btn-secondary.active {
+    background-color: #0b5ed7;
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-group .btn-secondary {
+    transition: all 0.3s ease;
+}
+
+/* KPI Card Animation */
+.card {
+    transition: all 0.2s ease-in-out;
+    border-radius: 0.5rem !important;
+    overflow: hidden;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+/* Card Header and Body Styling */
+.card-header {
+    background-color: rgba(0,0,0,0.02);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0.75rem 1rem;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Table Styling */
+.table-responsive {
+    scrollbar-width: thin;
+}
+
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.03);
+}
+
+/* Filter Panel Styles */
+.filter-container {
+    background-color: #f8f9fa !important;
+    border-color: #e9ecef !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Loading indicator */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Badge Styling */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+.badge.bg-success {
+    background-color: #198754 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+    
+    h3 {
+        font-size: 1.5rem;
+    }
+    
+    .KpiCard .h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+    .filter-container {
+        background-color: rgba(255,255,255,0.05) !important;
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(255,255,255,0.05);
+    }
+}
