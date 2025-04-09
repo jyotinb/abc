@@ -47,6 +47,9 @@ export class OwlSalesDashboard extends Component {
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.notification = useService("notification");
+        
+        // Cache for category filtered order IDs
+        this.categoryFilteredOrderIds = null;
 
         onWillStart(async () => {
             try {
@@ -81,12 +84,14 @@ export class OwlSalesDashboard extends Component {
 
     async loadFilterData() {
         try {
-            // Load product categories
+            // Load ALL product categories without filtering
             const categories = await this.orm.searchRead(
                 'product.category',
-                [['parent_id', '!=', false]], // Skip root category
-                ['id', 'name', 'display_name']
+                [], // No domain filter - get all categories
+                ['id', 'name', 'display_name', 'parent_id']
             );
+            
+            console.log('Available product categories:', categories);
             this.state.productCategories = categories;
             
             // Load sales teams
@@ -95,9 +100,17 @@ export class OwlSalesDashboard extends Component {
                 [],
                 ['id', 'name']
             );
+            console.log('Available sales teams:', teams);
             this.state.salesTeams = teams;
         } catch (error) {
             console.error('Error loading filter data:', error);
+            this.notification.add('Error loading filter data: ' + error.message, { 
+                type: 'danger',
+                sticky: false
+            });
+            // Don't throw, just continue with empty filters
+            this.state.productCategories = [];
+            this.state.salesTeams = [];
         }
     }
     
@@ -126,11 +139,6 @@ export class OwlSalesDashboard extends Component {
     buildDomainFilters() {
         let domain = [];
         
-        // Add product category filter
-        if (this.state.selectedCategories.length > 0) {
-            domain.push(['order_line.product_id.categ_id', 'in', this.state.selectedCategories]);
-        }
-        
         // Add sales team filter
         if (this.state.selectedTeams.length > 0) {
             domain.push(['team_id', 'in', this.state.selectedTeams]);
@@ -138,23 +146,136 @@ export class OwlSalesDashboard extends Component {
         
         return domain;
     }
+    
+    // Updated getCategoryFilteredOrderIds method with better debugging
+    async getCategoryFilteredOrderIds() {
+        // Skip if no categories selected
+        if (!this.state.selectedCategories.length) {
+            console.log('No categories selected, skipping filter');
+            return null; // null means "no filtering needed"
+        }
+        
+        console.log('Filtering by categories:', this.state.selectedCategories);
+        
+        // If we've already calculated this, return the cached result
+        if (this.categoryFilteredOrderIds !== null) {
+            console.log('Using cached category order IDs');
+            return this.categoryFilteredOrderIds;
+        }
+        
+        try {
+            // First, verify that the categories exist
+            const categories = await this.orm.searchRead(
+                'product.category',
+                [['id', 'in', this.state.selectedCategories]],
+                ['id', 'name']
+            );
+            
+            console.log('Found matching categories:', categories);
+            
+            if (!categories.length) {
+                console.error('No matching categories found in database!');
+                this.notification.add('Selected category IDs not found in the database', { 
+                    type: 'warning',
+                    sticky: false
+                });
+                // Return empty array - no matches will be found
+                this.categoryFilteredOrderIds = [];
+                return [];
+            }
+            
+            // Simple search for order lines with products in these categories
+            console.log('Looking for order lines with products in categories:', this.state.selectedCategories);
+            const orderLines = await this.orm.searchRead(
+                'sale.order.line',
+                [['product_id.categ_id', 'in', this.state.selectedCategories]],
+                ['order_id', 'product_id', 'name']
+            );
+            
+            console.log('Found matching order lines:', orderLines);
+            
+            // Extract unique order IDs - handle both array and object formats
+            const orderIds = [...new Set(orderLines.map(line => 
+                Array.isArray(line.order_id) ? line.order_id[0] : line.order_id
+            ))];
+            
+            console.log('Extracted order IDs:', orderIds);
+            
+            // Cache the result
+            this.categoryFilteredOrderIds = orderIds.length ? orderIds : [];
+            return this.categoryFilteredOrderIds;
+        } catch (error) {
+            console.error('Error getting filtered order IDs:', error);
+            this.notification.add('Error applying category filter: ' + error.message, { 
+                type: 'danger',
+                sticky: false
+            });
+            return null; // On error, skip filtering
+        }
+    }
 
     async fetchDashboardData() {
         const { current_date, previous_date } = this.getDates();
         const additionalFilters = this.buildDomainFilters();
         
+        // Reset category filter cache when fetching new data
+        this.categoryFilteredOrderIds = null;
+        
+        // Reset error state
+        this.state.error = null;
+        
+        // Execute these one by one with error handling for each
         try {
-            await Promise.all([
-                this.getQuotations(current_date, previous_date, additionalFilters),
-                this.getOrders(current_date, previous_date, additionalFilters),
-                this.getTopProducts(current_date, additionalFilters),
-                this.getTopSalesPeople(current_date, additionalFilters),
-                this.getMonthlySales(current_date, additionalFilters),
-                this.getPartnerOrders(current_date, additionalFilters)
-            ]);
+            // Get quotations data
+            try {
+                await this.getQuotations(current_date, previous_date, additionalFilters);
+            } catch (error) {
+                console.error('Quotations Fetch Error:', error);
+                this.state.error = (this.state.error || "") + "Error loading quotations data. ";
+            }
+            
+            // Get orders data
+            try {
+                await this.getOrders(current_date, previous_date, additionalFilters);
+            } catch (error) {
+                console.error('Orders Fetch Error:', error);
+                this.state.error = (this.state.error || "") + "Error loading orders data. ";
+            }
+            
+            // Get top products
+            try {
+                await this.getTopProducts(current_date, additionalFilters);
+            } catch (error) {
+                console.error('Top Products Fetch Error:', error);
+                this.state.error = (this.state.error || "") + "Error loading top products data. ";
+            }
+            
+            // Get top sales people
+            try {
+                await this.getTopSalesPeople(current_date, additionalFilters);
+            } catch (error) {
+                console.error('Top Sales People Fetch Error:', error);
+                this.state.error = (this.state.error || "") + "Error loading top sales people data. ";
+            }
+            
+            // Get monthly sales
+            try {
+                await this.getMonthlySales(current_date, additionalFilters);
+            } catch (error) {
+                console.error('Monthly Sales Fetch Error:', error);
+                this.state.error = (this.state.error || "") + "Error loading monthly sales data. ";
+            }
+            
+            // Get partner orders
+            try {
+                await this.getPartnerOrders(current_date, additionalFilters);
+            } catch (error) {
+                console.error('Partner Orders Fetch Error:', error);
+                this.state.error = (this.state.error || "") + "Error loading partner orders data. ";
+            }
         } catch (error) {
             console.error('Detailed Fetch Error:', error);
-            throw error;
+            this.state.error = (this.state.error || "") + "General dashboard loading error. ";
         }
     }
 
@@ -196,11 +317,33 @@ export class OwlSalesDashboard extends Component {
         }
     }
     
-    // Category filter change handler
+    // Category filter change handler with better debugging
     async onCategoryChange(event) {
-        const selectedOptions = Array.from(event.target.selectedOptions).map(option => parseInt(option.value));
-        this.state.selectedCategories = selectedOptions;
-        await this.applyFilters();
+        try {
+            const selectedOptions = Array.from(event.target.selectedOptions).map(option => {
+                // Parse to integer
+                const id = parseInt(option.value);
+                console.log(`Selected category: ID=${id}, Label=${option.text}`);
+                return id;
+            });
+            
+            console.log('All selected categories:', selectedOptions);
+            
+            // Set the state
+            this.state.selectedCategories = selectedOptions;
+            
+            // Reset category filter cache when categories change
+            this.categoryFilteredOrderIds = null;
+            
+            // Apply the filters
+            await this.applyFilters();
+        } catch (error) {
+            console.error('Error in category change handler:', error);
+            this.notification.add('Error changing categories: ' + error.message, { 
+                type: 'danger',
+                sticky: false
+            });
+        }
     }
     
     // Team filter change handler
@@ -214,6 +357,7 @@ export class OwlSalesDashboard extends Component {
     async applyFilters() {
         try {
             this.state.loading = true;
+            this.state.error = null; // Reset error state
             await this.fetchDashboardData();
         } catch (error) {
             console.error('Filter Application Error:', error);
@@ -234,6 +378,10 @@ export class OwlSalesDashboard extends Component {
         this.state.customDateRange = false;
         this.state.period = 90;
         this.setDefaultDates();
+        
+        // Reset category filter cache
+        this.categoryFilteredOrderIds = null;
+        
         await this.applyFilters();
     }
     
@@ -247,24 +395,41 @@ export class OwlSalesDashboard extends Component {
             // Current period domain
             let domain = [
                 ['state', 'in', ['sent', 'draft']],
-                ['create_date', '>', current_date],
+                ['create_date', '>=', current_date],
                 ['create_date', '<=', this.state.endDate]
             ];
             
             // Add additional filters
             domain = [...domain, ...additionalFilters];
             
+            // Add category filters if needed
+            const categoryOrderIds = await this.getCategoryFilteredOrderIds();
+            if (categoryOrderIds !== null) {
+                if (categoryOrderIds.length === 0) {
+                    // No orders match the category filter, return empty results
+                    this.state.quotations = { value: 0, percentage: 0 };
+                    return;
+                }
+                // Add order IDs to the domain
+                domain.push(['id', 'in', categoryOrderIds]);
+            }
+            
             const data = await this.orm.searchCount("sale.order", domain);
             
             // Previous period domain
             let prev_domain = [
                 ['state', 'in', ['sent', 'draft']],
-                ['create_date', '>', previous_date],
-                ['create_date', '<=', current_date]
+                ['create_date', '>=', previous_date],
+                ['create_date', '<', current_date]
             ];
             
             // Add additional filters
             prev_domain = [...prev_domain, ...additionalFilters];
+            
+            // Add category filters if needed
+            if (categoryOrderIds !== null) {
+                prev_domain.push(['id', 'in', categoryOrderIds]);
+            }
             
             const prev_data = await this.orm.searchCount("sale.order", prev_domain);
             
@@ -278,6 +443,7 @@ export class OwlSalesDashboard extends Component {
             };
         } catch (error) {
             console.error('Quotations Fetch Error:', error);
+            this.state.quotations = { value: 0, percentage: 0 };
             throw error;
         }
     }
@@ -287,24 +453,45 @@ export class OwlSalesDashboard extends Component {
             // Current period domain
             let domain = [
                 ['state', 'in', ['sale', 'done']],
-                ['create_date', '>', current_date],
+                ['create_date', '>=', current_date],
                 ['create_date', '<=', this.state.endDate]
             ];
             
             // Add additional filters
             domain = [...domain, ...additionalFilters];
             
+            // Add category filters if needed
+            const categoryOrderIds = await this.getCategoryFilteredOrderIds();
+            if (categoryOrderIds !== null) {
+                if (categoryOrderIds.length === 0) {
+                    // No orders match the category filter, return empty results
+                    this.state.orders = {
+                        value: 0, percentage: 0,
+                        revenue: 0, revenue_percentage: 0,
+                        average: 0, average_percentage: 0
+                    };
+                    return;
+                }
+                // Add order IDs to the domain
+                domain.push(['id', 'in', categoryOrderIds]);
+            }
+            
             const data = await this.orm.searchCount("sale.order", domain);
 
             // Previous period domain
             let prev_domain = [
                 ['state', 'in', ['sale', 'done']],
-                ['create_date', '>', previous_date],
-                ['create_date', '<=', current_date]
+                ['create_date', '>=', previous_date],
+                ['create_date', '<', current_date]
             ];
             
             // Add additional filters
             prev_domain = [...prev_domain, ...additionalFilters];
+            
+            // Add category filters if needed
+            if (categoryOrderIds !== null) {
+                prev_domain.push(['id', 'in', categoryOrderIds]);
+            }
             
             const prev_data = await this.orm.searchCount("sale.order", prev_domain);
 
@@ -338,29 +525,59 @@ export class OwlSalesDashboard extends Component {
             };
         } catch (error) {
             console.error('Orders Fetch Error:', error);
+            this.state.orders = {
+                value: 0, percentage: 0,
+                revenue: 0, revenue_percentage: 0,
+                average: 0, average_percentage: 0
+            };
             throw error;
         }
     }
 
     async getTopProducts(current_date, additionalFilters = []) {
         try {
-            let domain = [
+            // Determine which orders to include
+            let orderDomain = [
                 ['state', 'in', ['sale', 'done']],
-                ['order_id.create_date', '>', current_date],
-                ['order_id.create_date', '<=', this.state.endDate]
+                ['create_date', '>=', current_date],
+                ['create_date', '<=', this.state.endDate]
             ];
             
-            // Adapt additional filters for order lines
-            const adaptedFilters = additionalFilters.map(filter => {
-                if (filter[0] === 'team_id') {
-                    return ['order_id.' + filter[0], filter[1], filter[2]];
+            // Add additional filters
+            orderDomain = [...orderDomain, ...additionalFilters];
+            
+            // Add category filters if needed
+            let categoryOrderIds = await this.getCategoryFilteredOrderIds();
+            if (categoryOrderIds !== null) {
+                if (categoryOrderIds.length === 0) {
+                    // No orders match the category filter, return empty results
+                    this.state.topProducts = [];
+                    return;
                 }
-                return filter;
-            });
+                // Add order IDs to the domain
+                orderDomain.push(['id', 'in', categoryOrderIds]);
+            }
             
-            domain = [...domain, ...adaptedFilters];
+            // Get valid order IDs
+            const orderIds = await this.orm.search('sale.order', orderDomain);
             
-            const data = await this.orm.readGroup("sale.order.line", domain, 
+            if (!orderIds || orderIds.length === 0) {
+                // No orders found
+                this.state.topProducts = [];
+                return;
+            }
+            
+            // Get product data from order lines
+            let lineDomain = [['order_id', 'in', orderIds]];
+            
+            // If categories selected and we didn't already filter by order IDs
+            if (this.state.selectedCategories.length > 0 && categoryOrderIds === null) {
+                lineDomain.push(['product_id.categ_id', 'in', this.state.selectedCategories]);
+            }
+            
+            const data = await this.orm.readGroup(
+                "sale.order.line", 
+                lineDomain, 
                 ["product_id", "price_total:sum"], 
                 ["product_id"]
             );
@@ -375,6 +592,7 @@ export class OwlSalesDashboard extends Component {
                 .slice(0, 10);
         } catch (error) {
             console.error('Top Products Fetch Error:', error);
+            this.state.topProducts = [];
             throw error;
         }
     }
@@ -383,11 +601,24 @@ export class OwlSalesDashboard extends Component {
         try {
             let domain = [
                 ['state', 'in', ['sale', 'done']],
-                ['create_date', '>', current_date],
+                ['create_date', '>=', current_date],
                 ['create_date', '<=', this.state.endDate]
             ];
             
+            // Add additional filters
             domain = [...domain, ...additionalFilters];
+            
+            // Add category filters if needed
+            const categoryOrderIds = await this.getCategoryFilteredOrderIds();
+            if (categoryOrderIds !== null) {
+                if (categoryOrderIds.length === 0) {
+                    // No orders match the category filter, return empty results
+                    this.state.topSalesPeople = [];
+                    return;
+                }
+                // Add order IDs to the domain
+                domain.push(['id', 'in', categoryOrderIds]);
+            }
             
             const data = await this.orm.readGroup("sale.order", domain, 
                 ["user_id", "amount_total:sum"], 
@@ -404,6 +635,7 @@ export class OwlSalesDashboard extends Component {
                 .slice(0, 10);
         } catch (error) {
             console.error('Top Sales People Fetch Error:', error);
+            this.state.topSalesPeople = [];
             throw error;
         }
     }
@@ -412,11 +644,24 @@ export class OwlSalesDashboard extends Component {
         try {
             let domain = [
                 ['state', 'in', ['sale', 'done']],
-                ['create_date', '>', current_date],
+                ['create_date', '>=', current_date],
                 ['create_date', '<=', this.state.endDate]
             ];
             
+            // Add additional filters
             domain = [...domain, ...additionalFilters];
+            
+            // Add category filters if needed
+            const categoryOrderIds = await this.getCategoryFilteredOrderIds();
+            if (categoryOrderIds !== null) {
+                if (categoryOrderIds.length === 0) {
+                    // No orders match the category filter, return empty results
+                    this.state.monthlySales = [];
+                    return;
+                }
+                // Add order IDs to the domain
+                domain.push(['id', 'in', categoryOrderIds]);
+            }
             
             const data = await this.orm.readGroup("sale.order", domain, 
                 ["amount_total:sum"], 
@@ -446,6 +691,7 @@ export class OwlSalesDashboard extends Component {
                 .slice(0, 12);
         } catch (error) {
             console.error('Monthly Sales Fetch Error:', error);
+            this.state.monthlySales = [];
             throw error;
         }
     }
@@ -454,11 +700,24 @@ export class OwlSalesDashboard extends Component {
         try {
             let domain = [
                 ['state', 'in', ['sale', 'done']],
-                ['create_date', '>', current_date],
+                ['create_date', '>=', current_date],
                 ['create_date', '<=', this.state.endDate]
             ];
             
+            // Add additional filters
             domain = [...domain, ...additionalFilters];
+            
+            // Add category filters if needed
+            const categoryOrderIds = await this.getCategoryFilteredOrderIds();
+            if (categoryOrderIds !== null) {
+                if (categoryOrderIds.length === 0) {
+                    // No orders match the category filter, return empty results
+                    this.state.partnerOrders = [];
+                    return;
+                }
+                // Add order IDs to the domain
+                domain.push(['id', 'in', categoryOrderIds]);
+            }
             
             const data = await this.orm.readGroup("sale.order", domain, 
                 ["partner_id", "amount_total:sum"], 
@@ -475,6 +734,7 @@ export class OwlSalesDashboard extends Component {
                 .slice(0, 10);
         } catch (error) {
             console.error('Partner Orders Fetch Error:', error);
+            this.state.partnerOrders = [];
             throw error;
         }
     }
@@ -484,7 +744,7 @@ export class OwlSalesDashboard extends Component {
         const { current_date } = this.getDates();
         let domain = [
             ['state', 'in', ['sent', 'draft']],
-            ['create_date', '>', current_date],
+            ['create_date', '>=', current_date],
             ['create_date', '<=', this.state.endDate]
         ];
         
@@ -507,7 +767,7 @@ export class OwlSalesDashboard extends Component {
         const { current_date } = this.getDates();
         let domain = [
             ['state', 'in', ['sale', 'done']],
-            ['create_date', '>', current_date],
+            ['create_date', '>=', current_date],
             ['create_date', '<=', this.state.endDate]
         ];
         
@@ -530,7 +790,7 @@ export class OwlSalesDashboard extends Component {
         const { current_date } = this.getDates();
         let domain = [
             ['state', 'in', ['sale', 'done']],
-            ['create_date', '>', current_date],
+            ['create_date', '>=', current_date],
             ['create_date', '<=', this.state.endDate]
         ];
         
@@ -554,4 +814,4 @@ export class OwlSalesDashboard extends Component {
 OwlSalesDashboard.template = "owl.OwlSalesDashboard";
 OwlSalesDashboard.components = { KpiCard, ChartRenderer };
 
-registry.category("actions").add("owl_sales_dashboard.main", OwlSalesDashboard);
+registry.category("actions").add("owl.sales_dashboard", OwlSalesDashboard);
