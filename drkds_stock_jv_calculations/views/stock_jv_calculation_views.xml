@@ -50,7 +50,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom"/>
-                                    <field name="bom_id" optional="hide"/>
+                                    <field name="bom_id" optional="show"/>
                                 </tree>
                             </field>
                         </page>
@@ -59,20 +59,11 @@
                                 <strong>Warning:</strong> Unit mismatches were detected during calculation. 
                                 Check the chatter below for details. All quantities have been automatically converted to their product's default unit of measure.
                             </div>
-                            <div class="alert alert-info" role="alert" invisible="not context_today">
-                                <strong>Info:</strong> Some products involve subcontracting.
-                                <ul>
-                                    <li>Products marked as "Is Subcontracted" will be received from subcontractors.</li>
-                                    <li>Products marked as "Supplied to Subcontractor" need to be sent to subcontractors.</li>
-                                </ul>
-                            </div>
                             <field name="result_ids" nolabel="1">
                                 <tree string="Raw Materials">
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom"/>
-                                    <field name="is_subcontracted"/>
-                                    <field name="is_supplied_to_subcontractor"/>
                                     <field name="has_uom_warning" invisible="1"/>
                                 </tree>
                             </field>

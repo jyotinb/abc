@@ -73,10 +73,17 @@ class StockJvCalculationWizardLine(models.TransientModel):
             bom = False
             bom_available = False
             if line.product_id and line.wizard_id.company_id:
-                boms = self.env['mrp.bom']._bom_find(line.product_id, company_id=line.wizard_id.company_id.id)
-                if line.product_id.id in boms:
-                    bom = boms[line.product_id.id]
-                    bom_available = True
+                # Direct search for the BOM instead of using _bom_find
+                domain = [
+                    '|',
+                    ('product_id', '=', line.product_id.id),
+                    '&',
+                    ('product_id', '=', False),
+                    ('product_tmpl_id', '=', line.product_id.product_tmpl_id.id),
+                    ('company_id', '=', line.wizard_id.company_id.id),
+                ]
+                bom = self.env['mrp.bom'].search(domain, limit=1)
+                bom_available = bool(bom)
             line.bom_id = bom.id if bom else False
             line.bom_available = bom_available
     
