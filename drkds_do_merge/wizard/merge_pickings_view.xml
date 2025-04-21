@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_stock_picking_merge_wizard_form" model="ir.ui.view">
+        <field name="name">stock.picking.merge.wizard.form</field>
+        <field name="model">stock.picking.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Merge Delivery Orders">
+                <sheet>
+                    <group>
+                        <field name="merge_method" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="dest_picking_id" options="{'no_create': True}" 
+                               domain="[('id', 'in', picking_ids)]"/>
+                    </group>
+                    <group>
+                        <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('state', 'not in', ('done', 'cancel')), ('picking_type_id.code', '=', 'outgoing')]"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Note: This process will merge the selected delivery orders. The original sales order rate data will be preserved.
+                    </div>
+                    
+                    <field name="has_term_warnings" invisible="1"/>
+                    <field name="has_payment_term_mismatch" invisible="1"/>
+                    <field name="has_incoterm_mismatch" invisible="1"/>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <field name="payment_term_warning" readonly="1" nolabel="1"/>
+                    </div>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <field name="delivery_term_warning" readonly="1" nolabel="1"/>
+                    </div>
+                    
+                    <!-- Term selection section -->
+                    <group string="Select Final Terms">
+                        <field name="final_payment_term_id" 
+                               options="{'no_create': True}"
+                               domain="[('id', 'in', available_payment_terms)]"
+                               help="Select which payment term to use for the merged delivery order"/>
+                        
+                        <field name="final_incoterm_id" 
+                               options="{'no_create': True}"
+                               domain="[('id', 'in', available_incoterms)]"
+                               help="Select which delivery term (incoterm) to use for the merged delivery order"/>
+                        
+                        <field name="available_payment_terms" invisible="1"/>
+                        <field name="available_incoterms" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Merge" name="action_merge_pickings" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_stock_picking_merge_wizard" model="ir.actions.act_window">
+        <field name="name">Merge Delivery Orders</field>
+        <field name="res_model">stock.picking.merge.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

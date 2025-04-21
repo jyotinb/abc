@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View - inherit stock.picking form -->
+    <record id="view_picking_form_inherited" model="ir.ui.view">
+        <field name="name">stock.picking.form.merge.inherited</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']" position="after">
+                <page string="Merge Information">
+                    <group>
+                        <field name="is_merged" invisible="1"/>
+                        <field name="has_term_mismatches" invisible="1"/>
+                        <field name="merged_from_pickings" widget="many2many_tags" readonly="1"/>
+                        <field name="merged_to_picking" widget="many2many_tags" readonly="1"/>
+                        <field name="original_sale_orders" widget="many2many_tags" readonly="1"/>
+                    </group>
+                    
+                    <!-- Selected terms section -->
+                    <group string="Selected Terms">
+                        <field name="selected_payment_term_id" readonly="1"/>
+                        <field name="selected_incoterm_id" readonly="1"/>
+                    </group>
+                    
+                    <group>
+                        <field name="term_mismatch_notes" readonly="1" nolabel="1"/>
+                    </group>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <b>Warning:</b> This delivery contains orders with different payment or delivery terms.
+                        Please verify with the customer before processing.
+                    </div>
+                </page>
+            </xpath>
+            
+            <!-- Add a banner to show if this picking is merged to another one -->
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info" role="alert">
+                    This delivery order has been merged into another one.
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Add merge button to list view -->
+    <record id="action_stock_picking_merge_button" model="ir.actions.act_window">
+        <field name="name">Merge Selected</field>
+        <field name="res_model">stock.picking.merge.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="context">{'default_picking_ids': active_ids}</field>
+    </record>
+</odoo>
