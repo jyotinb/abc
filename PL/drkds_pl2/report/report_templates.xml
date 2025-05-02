@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="external_layout_boxed1">
+        <!-- Ensure company and 'o' variables are defined -->
+        <t t-set="company" t-value="company or env.company"/>
+        <t t-set="o" t-value="o or doc or False"/>
+        
+        <!-- Header section -->
+        <div t-attf-class="header o_company_#{company.id}_layout">
+            <div class="row mb10">
+                <table class="table table-sm o_main_table" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; width: 100%; border-bottom: none;">
+                    <tr>
+                        <!-- Logo column -->
+                         <td style="width: 20%;">  
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" style="max-width: 620px; max-height: 200px;"/>  
+                        </td>
+                        
+                        <!-- Document info column -->
+                        <td style="font-size:13px; max-width: 320px; vertical-align: top; width: 80%; text-align: left;" class="top">  
+                            <br/>
+                            <strong>#PL:<span t-if="o" t-field="o.name"/><t t-else="">__________</t></strong>
+                            <br/>
+                            <strong>Date: </strong>
+                            <span class="m-0 naticenter" t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> <br/>
+                            <strong>Valid Up to: </strong>
+                            <span class="m-0 naticenter" t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/><br/>
+							<strong>Payment :</strong>Advance with P.O. <br/>
+							<strong>Delivery Terms:</strong> EX-WORKS <br/>
+							
+							
+							<div class="row" t-if="data and data.get('salesman_name')">
+        <div class="col-12">
+            <strong>Our Contact: </strong><span t-esc="data.get('salesman_name')"/>
+        </div>
+    </div>
+ <t t-if="salesman_email">
+                <strong>Email: </strong><span t-esc="salesman_email"/>
+            </t>
+            <!-- Salesman Mobile if available -->
+            <t t-if="salesman_mobile">
+                <br/><strong>Mobile: </strong><span t-esc="salesman_mobile"/>
+            </t>
+							
+                            <!-- Uncomment and adapt this section if you need contact information -->
+                            <!--
+                            <div class="contact" t-if="o.partner_person_id">
+                                <t t-if="o.partner_person_id.name">
+                                    <strong>Kind Attn: </strong><span t-field="o.partner_person_id.name"/><br/>
+                                </t>
+                                <t t-if="o.partner_person_id.email">
+                                    <span> ✉ <span t-field="o.partner_person_id.email"/></span><br/>
+                                </t>
+                                <t t-if="o.partner_person_id.mobile">
+                                    <span>✆ <span t-field="o.partner_person_id.mobile"/></span>
+                                </t>
+                            </div>
+                            -->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Content section - this is where the report content will be inserted -->
+        <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+            <t t-raw="0"/>
+        </div>
+        
+        <!-- Footer section -->
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+            
+			
+                <!-- <div t-if="company.report_footer" t-field="company.report_footer"/> -->
+                
+				 <div style="text-align:center " class="text-center">
+				
+<div t-if="report_type == 'pdf'">
+                    Page: <span class="page"/> / <span class="topage"/> 
+                </div>
+                </div>
+            
+        </div>
+    </template>
+
+
+ 
+    <template id="report_product_three_column">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!-- Set the display currency -->
+                <t t-set="currency" t-value="doc.env.company.currency_id"/>
+				
+				<t t-if="not company">
+				<!-- Multicompany -->
+				<t t-if="company_id">
+					<t t-set="company" t-value="company_id"/>
+				</t>
+				<t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+					<t t-set="company" t-value="o.company_id.sudo()"/>
+				</t>
+				<t t-else="else">
+					<t t-set="company" t-value="res_company"/>
+				</t>
+			</t>
+				
+				
+                <t t-call="drkds_pl2.external_layout_boxed1">
+                    <div class="page">
+					 <div class="row">
+        <div>
+            <strong>Company: </strong><span t-if="data and data.get('customer_name')" t-esc="data.get('customer_name')"/>
+        
+            <strong>Kind Attn: </strong><span t-if="data and data.get('contact_name')" t-esc="data.get('contact_name')"/>
+        </div>
+    </div>
+							
+                        <!-- Products listing in 3 specific columns -->
+                        <table class="table table-sm" style="border-collapse: collapse; width: 100%;">
+                            <thead>
+                                <tr>
+									<th class="text-begin">Sr#</th>
+                                    <th class="text-start">Product Description</th>
+                                    <th class="text-center">Image</th>
+									<th class="text-center">UoM</th>
+                                    <th class="text-center">Rate<br/>Basic</th>
+									<th class="text-center">Rate<br/>with GST </th>
+                                </tr>
+                            </thead>
+                            <tbody style="border-top: 1px solid #000;">
+                                <!-- For multi product documents -->
+								<t t-set="l" t-value="0"/>
+                                <t t-if="doc.is_multi_product">
+                                    <!-- Use products from the wizard instead of doc.product_line_ids -->
+                                    <t t-foreach="products or []" t-as="product">
+                                        <tr style="border-bottom: 1px solid #000 !important;">
+                                           <t t-set="l" t-value="l+1"/>
+
+                                            <!-- Column 1: Product Name -->
+                                            <td> <t t-esc="l"/>
+											</td>
+										<td style="padding: 0;">
+    <span t-field="product.display_name"/>
+    <t t-if="product.l10n_in_hsn_code"><br/>
+    HSN:<span t-field="product.l10n_in_hsn_code"/>
+    </t>
+    <t t-if="product.taxes_id">
+        GST:<span t-esc="', '.join(['{:.0f}%'.format(tax.amount) for tax in product.taxes_id])"/>
+    </t>
+    <t t-if="not product.taxes_id"><br/>
+        GST:0%
+    </t>
+</td>
+                                            
+                                            <!-- Column 2: Product Image -->
+                                            <td class="text-center align-middle">
+                                                <img t-if="product.image_1920" 
+     t-att-src="'data:image/png;base64,' + str(product.image_1920, 'utf-8')" 
+     style="max-height: 100px; max-width: 100px;"/>
+                                                <p t-else="" class="text-muted">No image</p>
+                                            </td>
+                                            <td class="text-end align-middle" style="text-align:right "><t t-esc="product.uom_id.name"/> 
+                                            </td>
+                                            
+                                            <!-- Find the corresponding product_line to get the unit_cost -->
+                                            <t t-set="product_line" t-value="doc.product_line_ids.filtered(lambda p: p.product_id.id == product.id)"/>
+                                            <t t-set="unit_cost" t-value="product_line.unit_cost if product_line else 0"/>
+
+                                              <!-- Calculate GST value once -->
+                                            <t t-set="gst_value">
+                                                <t t-if="product.taxes_id">
+                                                    <t t-esc="sum([tax.amount for tax in product.taxes_id]) / 100"/>
+                                                </t>
+                                                <t t-if="not product.taxes_id">0</t>
+                                            </t>
+
+                                        <!-- Basic Prices Column - All levels or selected level -->
+                                        <td class="text-end align-middle">
+                                            <t t-if="data and data.get('price_level') != 'all'">
+                                                <!-- Show specific price level based on selection -->
+                                                <t t-if="data.get('price_level') == '1' and product._fields.get('level1Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="data.get('price_level') == '2' and product._fields.get('level2Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="data.get('price_level') == '3' and product._fields.get('level3Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="data.get('price_level') == '4' and product._fields.get('level4Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0) + (product.level4Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <small class="text-muted" style="text-align:right !important;">N/A</small>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <!-- Show all price levels -->
+                                                <t t-if="product._fields.get('level1Add')">
+                                                    <t t-set="calculated_level1price" t-value="unit_cost + (product.level1Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_level1price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product._fields.get('level2Add')">
+                                                    <t t-set="calculated_level2price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level2price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product._fields.get('level3Add')">
+                                                    <t t-set="calculated_level3price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level3price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product._fields.get('level4Add')">
+                                                    <t t-set="calculated_level4price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0) + (product.level4Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level4price" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="not (product._fields.get('level1Add') or product._fields.get('level2Add') or product._fields.get('level3Add') or product._fields.get('level4Add'))">
+                                                    <small class="text-muted" style="text-align:right !important;">N/A</small>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        
+                                        <!-- Prices with GST Column -->
+                                        <td class="text-end align-middle">
+                                            <t t-if="data and data.get('price_level') != 'all'">
+                                                <!-- Show specific price level based on selection -->
+                                                <t t-if="data.get('price_level') == '1' and product._fields.get('level1Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="data.get('price_level') == '2' and product._fields.get('level2Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="data.get('price_level') == '3' and product._fields.get('level3Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="data.get('price_level') == '4' and product._fields.get('level4Add')">
+                                                    <t t-set="calculated_price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0) + (product.level4Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"><t t-esc="calculated_price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <small class="text-muted" style="text-align:right !important;">N/A</small>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <!-- Show all price levels with GST -->
+                                                <t t-if="product._fields.get('level1Add')">
+                                                    <t t-set="calculated_level1price" t-value="unit_cost + (product.level1Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level1price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product._fields.get('level2Add')">
+                                                    <t t-set="calculated_level2price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level2price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product._fields.get('level3Add')">
+                                                    <t t-set="calculated_level3price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level3price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product._fields.get('level4Add')">
+                                                    <t t-set="calculated_level4price" t-value="unit_cost + (product.level1Add or 0) + (product.level2Add or 0) + (product.level3Add or 0) + (product.level4Add or 0)"/>
+                                                    <div class="m-0" style="text-align:right !important;">
+                                                        <span class="small"> <t t-esc="calculated_level4price * (1 + float(gst_value))" t-options='{"widget": "float", "precision": 2}'/></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="not (product._fields.get('level1Add') or product._fields.get('level2Add') or product._fields.get('level3Add') or product._fields.get('level4Add'))">
+                                                    <small class="text-muted" style="text-align:right !important;">N/A</small>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                
+                                <!-- For single product documents -->
+                                <t t-if="not doc.is_multi_product">
+                                    <tr style="border-bottom: 1px solid #000 !important;">
+                                        <!-- Column 1: Product Name -->
+                                        <td>
+                                            <p><strong><span t-field="doc.product_id.display_name"/></strong></p>
+                                            <p t-if="doc.product_id.default_code">
+                                                <small>Code: <span t-field="doc.product_id.default_code"/></small>
+                                            </p>
+                                            <p t-if="doc.bom_id">
+                                                <small>BOM: <span t-field="doc.bom_id.display_name"/></small>
+                                            </p>
+                                        </td>
+                                        
+                                        <!-- Column 2: Product Image -->
+                                        <td class="text-center align-middle">
+                                            <img t-if="doc.product_id.image_1920" t-att-src="'data:image/png;base64,' + doc.product_id.image_1920" style="max-height: 100px; max-width: 100px;"/>
+                                            <p t-else="" class="text-muted">No image</p>
+                                        </td>
+                                        
+                                        <!-- Column 3: Level1Price -->
+                                        <td class="text-center align-middle">
+                                            <t t-if="doc.product_id._fields.get('level1price')">
+                                                <h4><span t-field="doc.product_id.level1price" t-options='{"widget": "monetary", "display_currency": currency}'/></h4>
+                                                
+                                                <div class="small text-muted mt-2">
+                                                    <div>Base Cost: <span t-field="doc.total_cost" t-options='{"widget": "monetary", "display_currency": currency}'/></div>
+                                                    <div t-if="doc.product_id._fields.get('level1Add')">
+                                                        Addition: <span t-field="doc.product_id.level1Add" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <p class="text-muted">N/A</p>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Optional: Add a summary section at the bottom -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <!-- <h4>Pricing Summary</h4> -->
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            
+                                        </tr>
+										 <strong>Remark / Note: </strong>All Rates are in INR(Indian Rupees).<br/>
+			Tolerances : As per applicable ISI norms for each product +/- 5,10% unless otherwise specified.<br/><strong>Created On:</strong>
+                                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+										
+                                        <table style="font-size:14px; border-collapse: collapse; border-spacing: 0;   margin: 0;  padding: 0;  width:900px;  border: 1px solid black; " class="table table-sm o_main_table  mt-4">
+                                        <tr>
+                                        <td style="padding-left: 5px; width:46%">
+                                        Our Bank Details: <br/> <br/>
+                                        A/c. Name     	:  Agrolt Solutions Private Limited<br/>
+                                        Bank Name    :  HDFC Bank Limited<br/>
+                                        A/c No.          		:  50200073241078 <br/>
+                                        IFSC Code     	:  HDFC0000379<br/>
+                                        Branch		          :  Kalawad Road, Rajkot<br/>
+                                        Swift Code	    :  HDFCINBBXXX<br/>
+                                        UPI ID:agrolisolutionspriva.62587994@hdfcbank
+                                        </td>
+                                        <td style="width:17%">
+                                        UPI QR Code<br/>
+                                        
+                                        </td>
+                                        <td style="padding-right: 5px;  text-align: end; width:36%" class="text-end">For <strong>Agrolt Solutions Private Limited</strong><br/>
+                                        <br/><br/><br/>
+                                        <br/>Sd/-<br/>
+                                        Authorised Signatory<br/><br/>E.&amp;O.E.<br/>
+                                        Electronic document not signed.
+                                        </td>
+                                        </tr>
+                                        </table>
+                                        <tr>
+                                        <center>Thank You For Your Bussiness ! We Hope To Serve You The Best Always.</center>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    
+    <template id="report_product_three_column_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="drkds_pl2.report_product_three_column"/>
+            </t>
+        </t>
+    </template>
+	
+       
+</odoo>

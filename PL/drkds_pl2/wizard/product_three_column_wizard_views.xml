@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for the Wizard -->
+    <record id="view_product_three_column_wizard_form" model="ir.ui.view">
+        <field name="name">drkds_pl2.product_three_column_wizard.form</field>
+        <field name="model">drkds_pl2.product_three_column_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Product Three Column Report">
+                <field name="doc_id" invisible="1"/>
+                <field name="is_multi_product" invisible="1"/>
+                <field name="use_custom_sequence" invisible="1"/>
+                <field name="available_product_ids" invisible="1"/>
+                
+                <!-- Customer & Report Options Section -->
+                <group>
+                    <group>
+                        <field name="customer_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                        <field name="contact_id" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group>
+                        <field name="salesman_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                        <field name="price_level" required="1"/>
+                    </group>
+                </group>
+                
+                <!-- Product Selection Section -->
+                <group string="Product Selection">
+                    <field name="selected_product_ids" widget="many2many_tags" 
+                           domain="[('id', 'in', available_product_ids)]" 
+                           options="{'no_create': True}" 
+                           placeholder="Select products to include in the report"/>
+                    <field name="product_order"/>
+                </group>
+                
+                <!-- Custom Product Order Section -->
+				<field name="product_sequence_ids" invisible="not use_custom_sequence">
+					<tree editable="bottom">
+						<field name="sequence" widget="handle"/>
+						<field name="product_id" required="1" options="{'no_create': True, 'no_open': True}" domain="[('id', 'in', parent.selected_product_ids)]"/>
+						<field name="product_name"/>
+					</tree>
+				</field>
+                
+                <footer>
+                    <button name="action_print_report" string="Print Report" type="object" class="btn-primary" 
+                       confirm="Are you sure these details are correct? This will generate the report."/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Action to open the Wizard -->
+    <record id="action_product_three_column_wizard" model="ir.actions.act_window">
+        <field name="name">Product Three Column Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">drkds_pl2.product_three_column_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
