@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bank_account_user,bank.account.user,model_bank_account,drkds_bank_payments.group_bank_payment_user,1,1,1,0
+access_bank_account_manager,bank.account.manager,model_bank_account,drkds_bank_payments.group_bank_payment_manager,1,1,1,1
+access_payment_sheet_user,payment.sheet.user,model_payment_sheet,drkds_bank_payments.group_bank_payment_user,1,1,1,0
+access_payment_sheet_manager,payment.sheet.manager,model_payment_sheet,drkds_bank_payments.group_bank_payment_manager,1,1,1,1
+access_payment_sheet_line_user,payment.sheet.line.user,model_payment_sheet_line,drkds_bank_payments.group_bank_payment_user,1,1,1,1
+access_payment_sheet_line_manager,payment.sheet.line.manager,model_payment_sheet_line,drkds_bank_payments.group_bank_payment_manager,1,1,1,1
+access_payment_export_wizard_user,payment.export.wizard.user,model_payment_export_wizard,drkds_bank_payments.group_bank_payment_user,1,1,1,0
+access_payment_export_wizard_manager,payment.export.wizard.manager,model_payment_export_wizard,drkds_bank_payments.group_bank_payment_manager,1,1,1,1

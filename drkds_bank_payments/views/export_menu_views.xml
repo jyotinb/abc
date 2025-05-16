@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Export Menu - Add this after initial installation -->
+        <menuitem id="menu_payment_export" 
+                  name="Export Payments" 
+                  parent="menu_bank_payments_root" 
+                  action="action_payment_export_wizard" 
+                  sequence="30"/>
+    </data>
+</odoo>

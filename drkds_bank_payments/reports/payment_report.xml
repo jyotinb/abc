@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_payment_sheet" model="ir.actions.report">
+            <field name="name">Payment Sheet Report</field>
+            <field name="model">payment.sheet</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">drkds_bank_payments.report_payment_sheet</field>
+            <field name="report_file">drkds_bank_payments.report_payment_sheet</field>
+            <field name="binding_model_id" ref="model_payment_sheet"/>
+            <field name="binding_type">report</field>
+        </record>
+        
+        <template id="report_payment_sheet">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Payment Sheet <span t-field="o.name"/></h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Date:</strong> <span t-field="o.date"/>
+                                    <br/>
+                                    <strong>Status:</strong> <span t-field="o.state"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Total Amount:</strong> <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
+                                    <br/>
+                                    <strong>Number of Payments:</strong> <span t-field="o.payment_count"/>
+                                </div>
+                            </div>
+                            <h4>Payment Details</h4>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Partner</th>
+                                        <th>Account Name</th>
+                                        <th>Account No</th>
+                                        <th>IFSC Code</th>
+                                        <th class="text-right">Amount</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.payment_line_ids" t-as="line">
+                                        <td><span t-field="line.partner_id"/></td>
+                                        <td><span t-field="line.account_name"/></td>
+                                        <td><span t-field="line.account_no"/></td>
+                                        <td><span t-field="line.ifsc_code"/></td>
+                                        <td class="text-right"><span t-field="line.amount" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                                        <td><span t-field="line.remarks"/></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-right"><strong>Total:</strong></td>
+                                        <td class="text-right"><strong><span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></strong></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="row mt32">
+                                <div class="col-12">
+                                    <strong>Remarks:</strong>
+                                    <p t-field="o.remarks"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

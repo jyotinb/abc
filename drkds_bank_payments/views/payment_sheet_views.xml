@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Payment Sheet Form View -->
+        <record id="view_payment_sheet_form" model="ir.ui.view">
+            <field name="name">payment.sheet.form</field>
+            <field name="model">payment.sheet</field>
+            <field name="arch" type="xml">
+                <form string="Payment Sheet">
+                    <header>
+                        <button name="action_confirm" type="object" string="Confirm" 
+                                class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_mark_paid" type="object" string="Mark as Paid" 
+                                class="oe_highlight" invisible="state != 'confirmed'"/>
+                        <button name="action_reset_to_draft" type="object" string="Reset to Draft" 
+                                groups="drkds_bank_payments.group_bank_payment_manager" 
+                                invisible="state == 'draft'"/>
+                        <!-- Export button - available for all states -->
+                        <button name="action_export_excel" type="object" string="Export to Excel" 
+                                class="btn-primary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,paid"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date" readonly="state != 'draft'"/>
+                                <field name="total_amount" widget="monetary"/>
+                            </group>
+                            <group>
+                                <field name="payment_count"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Payments">
+                                <field name="payment_line_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="partner_id" options="{'no_create': True}" help="Only partners with bank accounts are shown"/>
+                                        <field name="bank_account_id" options="{'no_create': True}"/>
+                                        <field name="instruction_reference"/>
+                                        <field name="customer_reference"/>
+                                        <field name="account_name" readonly="1" optional="hide"/>
+                                        <field name="account_no" readonly="1" optional="hide"/>
+                                        <field name="ifsc_code" readonly="1" optional="hide"/>
+                                        <field name="bank_name" readonly="1" optional="hide"/>
+                                        <field name="email" readonly="1" optional="hide"/>
+                                        <field name="amount" sum="Total"/>
+                                        <field name="remarks" optional="show"/>
+                                    </tree>
+                                </field>
+                                <div class="oe_right oe_button_box" name="buttons">
+                                    <button name="create_new_line" type="object" string="Add Payment Line" 
+                                            class="btn-primary" invisible="state != 'draft'"/>
+                                </div>
+                            </page>
+                            <page string="Remarks">
+                                <field name="remarks" readonly="state == 'paid'" placeholder="Add remarks for this payment sheet..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Payment Sheet Tree View -->
+        <record id="view_payment_sheet_tree" model="ir.ui.view">
+            <field name="name">payment.sheet.tree</field>
+            <field name="model">payment.sheet</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Sheets" decoration-success="state=='paid'" decoration-info="state=='confirmed'" 
+                      decoration-muted="state=='draft'">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="payment_count"/>
+                    <field name="total_amount" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Payment Sheet Search View -->
+        <record id="view_payment_sheet_search" model="ir.ui.view">
+            <field name="name">payment.sheet.search</field>
+            <field name="model">payment.sheet</field>
+            <field name="arch" type="xml">
+                <search string="Search Payment Sheets">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Payment Sheet Action -->
+        <record id="action_payment_sheet" model="ir.actions.act_window">
+            <field name="name">Payment Sheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">payment.sheet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_payment_sheet_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new payment sheet
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

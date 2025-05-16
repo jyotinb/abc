@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Bank Payments Submenu under Accounting -->
+        <menuitem id="menu_bank_payments" 
+                  name="Bank Payments" 
+                  parent="account.menu_finance" 
+                  sequence="25" 
+                  groups="drkds_bank_payments.group_bank_payment_user"/>
+        
+        <!-- Payment Sheet Menu -->
+        <menuitem id="menu_payment_sheet" 
+                  name="Payment Sheets" 
+                  parent="menu_bank_payments" 
+                  action="action_payment_sheet" 
+                  sequence="10"/>
+        
+        <!-- Bank Account Menu -->
+        <menuitem id="menu_bank_account" 
+                  name="Bank Accounts" 
+                  parent="menu_bank_payments" 
+                  action="action_bank_account" 
+                  sequence="20"/>
+				  
+		 <menuitem id="menu_banks" name="Banks" parent="menu_bank_payments" 
+          action="base.action_res_bank_form" sequence="20"/>
+    </data>
+	
+</odoo>
+
+
