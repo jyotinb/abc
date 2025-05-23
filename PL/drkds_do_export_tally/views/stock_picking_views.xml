@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Export button to the stock.picking form view -->
+    <record id="view_picking_form_export_button" model="ir.ui.view">
+        <field name="name">stock.picking.form.export.button</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button 
+                    name="action_open_export_wizard" 
+                    string="Export to Tally" 
+                    type="object" 
+                    invisible="state != 'done'"
+                    class="oe_highlight"
+                    groups="stock.group_stock_user"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

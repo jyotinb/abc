@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Export Delivery Wizard Form View -->
+    <record id="view_export_delivery_wizard_form" model="ir.ui.view">
+        <field name="name">export.delivery.wizard.form</field>
+        <field name="model">export.delivery.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Delivery Order to Tally">
+                <group>
+                    <field name="picking_id" readonly="1"/>
+                    <field name="include_price"/>
+                    <field name="excel_file" filename="file_name" invisible="1"/>
+                    <field name="file_name" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_export_to_excel" 
+                            string="Export to Tally Format" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="Cancel" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
