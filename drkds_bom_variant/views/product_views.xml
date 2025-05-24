@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Variant Form View Extension -->
+    <record id="drkds_product_product_form_view" model="ir.ui.view">
+        <field name="name">drkds.product.product.form.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" 
+                        name="action_view_variant_boms" 
+                        type="object" 
+                        icon="fa-puzzle-piece"
+                        attrs="{'invisible': [('variant_bom_count', '=', 0)]}">
+                    <field string="Variant BoMs" name="variant_bom_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page string="Variant BoMs" name="variant_boms" attrs="{'invisible': [('variant_bom_count', '=', 0)]}">
+                    <group>
+                        <field name="has_variant_bom" invisible="1"/>
+                        <button string="Create Variant BoM" 
+                                name="action_create_variant_bom" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('has_variant_bom', '=', True)]}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Product Template Form View Extension -->
+    <record id="drkds_product_template_form_view" model="ir.ui.view">
+        <field name="name">drkds.product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" 
+                        name="action_view_variant_boms" 
+                        type="object" 
+                        icon="fa-puzzle-piece"
+                        attrs="{'invisible': [('variant_bom_count', '=', 0)]}">
+                    <field string="Variant BoMs" name="variant_bom_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

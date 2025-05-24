@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Manufacturing Order Form View Extension -->
+    <record id="drkds_mrp_production_form_view" model="ir.ui.view">
+        <field name="name">drkds.mrp.production.form.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="is_variant_specific" invisible="1"/>
+                <field name="has_variant_bom" invisible="1"/>
+                <field name="variant_bom_id" invisible="1"/>
+                <button string="Create Variant BoM" 
+                        name="action_create_variant_bom" 
+                        type="object" 
+                        attrs="{'invisible': ['|', ('is_variant_specific', '=', True), ('product_id', '=', False)]}"
+                        class="oe_link"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

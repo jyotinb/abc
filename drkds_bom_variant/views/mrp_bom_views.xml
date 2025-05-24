@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend BoM Form View -->
+    <record id="drkds_mrp_bom_form_view" model="ir.ui.view">
+        <field name="name">drkds.mrp.bom.form.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Add buttons to the top button box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_variants" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-puzzle-piece"
+                        attrs="{'invisible': ['|', ('variant_management_enabled', '=', False), ('product_id', '!=', False)]}">
+                    <field name="variant_count" widget="statinfo" string="Variants"/>
+                </button>
+            </xpath>
+            
+            <!-- Add variant management checkbox in the first group -->
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="variant_management_enabled" attrs="{'invisible': [('product_id', '!=', False)]}"/>
+                <field name="variant_specific" invisible="1"/>
+                <field name="parent_bom_id" attrs="{'invisible': [('parent_bom_id', '=', False)]}" readonly="1"/>
+            </xpath>
+            
+            <!-- Add "Apply on Variants" button to BoM lines -->
+            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='manual_consumption']" position="after">
+                <button name="action_open_variant_wizard" 
+                        type="object" 
+                        icon="fa-puzzle-piece" 
+                        string="Apply on Variants" 
+                        attrs="{'invisible': ['|', ('parent.variant_management_enabled', '=', False), ('parent.product_id', '!=', False)]}"
+                        class="text-success"/>
+                <field name="is_variant_specific" invisible="1"/>
+            </xpath>
+            
+            <!-- Add Variant Logs tab -->
+            <xpath expr="//page[@name='miscellaneous']" position="after">
+                <page string="Variant Logs" name="variant_logs" attrs="{'invisible': [('variant_management_enabled', '=', False)]}">
+                    <field name="variant_log_ids" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="create_date"/>
+                            <field name="user_id"/>
+                            <field name="product_id"/>
+                            <field name="action"/>
+                            <field name="attribute_values"/>
+                            <field name="description"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- BoM Variant Log Views -->
+    <record id="drkds_bom_variant_log_tree_view" model="ir.ui.view">
+        <field name="name">drkds.bom.variant.log.tree</field>
+        <field name="model">drkds.bom.variant.log</field>
+        <field name="arch" type="xml">
+            <tree string="BoM Variant Logs" create="0">
+                <field name="name"/>
+                <field name="create_date"/>
+                <field name="bom_id"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="action"/>
+                <field name="attribute_values"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="drkds_bom_variant_log_form_view" model="ir.ui.view">
+        <field name="name">drkds.bom.variant.log.form</field>
+        <field name="model">drkds.bom.variant.log</field>
+        <field name="arch" type="xml">
+            <form string="BoM Variant Log" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="create_date"/>
+                            <field name="user_id"/>
+                            <field name="action"/>
+                        </group>
+                        <group>
+                            <field name="bom_id"/>
+                            <field name="product_id"/>
+                            <field name="attribute_values"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_drkds_bom_variant_log" model="ir.actions.act_window">
+        <field name="name">BoM Variant Logs</field>
+        <field name="res_model">drkds.bom.variant.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No BoM variant logs found
+            </p>
+            <p>
+                Logs for Bill of Materials variant operations will appear here.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_drkds_bom_variant_log"
+              name="BoM Variant Logs"
+              parent="mrp.menu_mrp_bom"
+              action="action_drkds_bom_variant_log"
+              sequence="30"/>
+</odoo>

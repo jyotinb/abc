@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_drkds_bom_variant_apply_wizard,access_drkds_bom_variant_apply_wizard,model_drkds_bom_variant_apply_wizard,mrp.group_mrp_user,1,1,1,0
+access_drkds_bom_variant_log,access_drkds_bom_variant_log,model_drkds_bom_variant_log,mrp.group_mrp_user,1,1,1,0
+access_drkds_bom_variant_log_manager,access_drkds_bom_variant_log_manager,model_drkds_bom_variant_log,mrp.group_mrp_manager,1,1,1,1
