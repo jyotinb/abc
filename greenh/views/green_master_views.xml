@@ -1,0 +1,1210 @@
+<odoo>
+	<record id="view_green_master_tree" model="ir.ui.view">
+        <field name="name">green.master.tree</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <tree string="Greenhouse Master List">
+                <field name="customer" width="150"/>
+                <field name="city" width="150"/>
+				<field name="mobile" width="150"/>
+                <field name="structure_type" width="150"/>
+                
+                <field name="total_span_length" width="150"/>
+                <field name="total_bay_length" width="150"/>
+				<field name="no_of_spans" width="150"/>
+				<field name="no_of_bays" width="150"/>
+				<button name="action_calculate_process" string="Calculate" type="object" class="btn-primary"/>
+                <!-- Add more fields as needed -->
+            </tree>
+        </field>
+    </record>
+    <record id="view_green_master_form" model="ir.ui.view">
+        <field name="name">green.master.form</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <form string="Greenhouse Master">
+				  <header>
+                    <!-- Button to print the report -->
+                    <button name="print_report" string="Print Report" type="object" class="btn-primary"/>
+                </header>
+                 <sheet>
+                    <notebook>
+                        <!-- First tab with basic information -->
+                        <page string="Basic Information">
+                            <group>
+                                <field name="customer"/>
+                                <field name="address"/>
+                                <field name="city"/>
+                                <field name="mobile"/>
+                                <field name="email"/>
+                                <field name="reference"/>
+                            </group>
+                        </page>
+
+                        <!-- Second tab with structure details -->
+                        <page string="Structure ">
+						<group col="2">
+                            <group string="Inputs">
+                                <field name="structure_type"/>
+                               
+                                <field name="total_span_length"/>
+                                <field name="total_bay_length"/>
+                               
+                                
+                                <field name="span_width"/>
+                                <field name="bay_width"/>
+                                
+								<field name="gutter_slope"/>
+								<field name="last_span_gutter"/>
+								<field name="top_ridge_height"/>
+								<field name="column_height"/>
+								<!--<field name=""/>-->
+							
+								</group>
+							<group string="Calculations">
+								<field name="structure_size"/>
+                               
+                                <field name="gutter_length"/>
+								<field name="no_of_bays"/>
+                                <field name="no_of_spans"/>
+                                <field name="bottom_height"/>
+                               
+                                
+                                <field name="arch_height"/>
+                                
+							</group>
+                        </group>    
+                        </page>
+						<page string="Aerodynamic side corridors(ASC)">
+						<group col="2">
+                            <group string="Inputs">
+                                <field name="is_side_coridoors"/>
+                               
+                                <field name="width_front_span_coridoor"/>
+                                <field name="width_back_span_coridoor"/>
+                                <field name="width_front_bay_coridoor"/>
+                                <field name="width_back_bay_coridoor"/>
+                                <field name="support_hockeys"/>
+								<field name="length_support_hockeys"/>
+								
+                               
+								</group>
+							<group col="1" string="Calculations">
+								<group>
+                                <field name="length_front_span_coridoor"/>
+                               
+                                <field name="length_back_span_coridoor"/>
+                                <field name="length_front_bay_coridoor"/>
+                               
+                                 <field name="length_back_bay_coridoor"/>
+                               
+                                <field name="no_hockey_support"/>
+								<field name="hockey_support_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+                                <field name="no_front_span_coridoor_hockeys"/>
+								<field name="front_span_coridoor_hockeys_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+								<field name="length_front_span_coridoor_hockey"/>
+                                 <field name="no_back_span_coridoor_hockeys"/>
+								 <field name="back_span_coridoor_hockeys_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+								<field name="length_back_span_coridoor_hockey"/>
+								</group>
+								<group>
+                                 <field name="no_front_bay_coridoor_hockeys"/>
+								 <field name="front_bay_coridoor_hockeys_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+                               <field name="length_front_bay_coridoor_hockey"/>
+                                <field name="no_back_bay_coridoor_hockeys"/>
+								<field name="back_bay_coridoor_hockeys_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+								<field name="length_back_bay_coridoor_hockey"/>
+                                <field name="no_total_hockeys"/>
+								</group>
+							</group>
+                        </group>
+                        </page>
+						<page string="Frame ">
+							<group col="2">
+                            <group string="Inputs">
+                                <field name="no_column_big_frame"/>
+                               <field name="no_anchor_frame_lines" invisible="no_column_big_frame == '0'"/>
+                               <field name="thick_column"/>
+                               
+                                
+                               
+								</group>
+								<group  col="1" string="Calculations">
+								<group>
+									<field name="total_anchor_frames" invisible="no_column_big_frame == '0'"/>
+									<field name="no_middle_columns" invisible="no_column_big_frame == '0'"/>
+									<field name="middle_column_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+							   
+									<field name="length_middle_column" invisible="no_column_big_frame == '0'"/>
+									<field name="no_quadraple_columns" invisible="no_column_big_frame == '0'"/>
+									<field name="quadraple_columns_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+									<field name="length_quadraple_column" invisible="no_column_big_frame == '0'"/>
+									 <field name="no_main_columns"/>
+									 <field name="main_columns_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+								   <field name="length_main_column"/>
+									<field name="total_normal_frames"/>
+									<field name="no_thick_columns" invisible="thick_column == '0'"/>
+									<field name="length_thick_column" invisible="thick_column == '0'"/>
+									<field name="thick_column_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"/>
+								</group>
+								
+								</group>
+                            </group>
+                        </page>
+						
+						<page string="Truss">
+						<group col="2">
+                            <group  colspan="1" string="Inputs">
+									<field name="big_arch_length"/>
+								<field name="small_arch_length"/>
+								<field name="is_bottom_chord"/>
+                                <field name="v_support_bottom_chord_frame" invisible="is_bottom_chord == False"/>
+								<field name="length_v_support_bottom_chord_frame" invisible="is_bottom_chord == False"/>
+                                <field name="is_arch_support_big"/>
+								<field name="length_arch_support_big" invisible="is_arch_support_big == False"/>
+                                <field name="is_arch_support_small_big_arch"/>
+								<field name="length_arch_support_small_big_arch" invisible="is_arch_support_small_big_arch == False"/>
+								
+                                <field name="is_arch_support_small_small_arch"/>
+								<field name="length_arch_support_small_small_arch"/>
+                                <field name="no_vent_big_arch_support_frame"/>
+								<field name="length_vent_big_arch_support"/>
+								<field name="no_vent_small_arch_support_frame"/>
+								<field name="length_vent_small_arch_support"/>
+                                <field name="bay_side_border_purlin"/>
+                               <field name="span_side_border_purlin"/>
+                                
+								</group>
+								<group  colspan="1" string="Calculations">
+                                <field name="bottom_chord_af_normal" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_af_normal_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="length_bottom_chord_af_normal" invisible="is_bottom_chord == False"/>
+                                <field name="bottom_chord_af_male" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_af_male_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="length_bottom_chord_af_male" invisible="is_bottom_chord == False"/>
+                                <field name="bottom_chord_af_female" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_af_female_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="length_bottom_chord_af_female" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_il_normal" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_il_normal_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="length_bottom_chord_il_normal" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_il_male" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_il_male_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="length_bottom_chord_il_male" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_il_female" invisible="is_bottom_chord == False"/>
+								<field name="bottom_chord_il_female_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="length_bottom_chord_il_female" invisible="is_bottom_chord == False"/>
+								<field name="no_v_support_bottom_chord" invisible="is_bottom_chord == False"/>
+								<field name="v_support_bottom_chord_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="arch_big"/>
+								<field name="arch_big_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="arch_small"/>
+								<field name="arch_small_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+
+                                
+                               
+                                <field name="arch_support_staraight_middle"  invisible="is_bottom_chord == False"/>
+								<field name="arch_support_staraight_middle_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="arch_support_big" invisible="is_arch_support_big == False"/>
+								<field name="arch_support_big_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="arch_support_small_big_arch" invisible="is_arch_support_small_big_arch == False"/>
+								<field name="arch_support_small_big_arch_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="arch_support_small_small_arch"/>
+								<field name="arch_support_small_small_arch_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="vent_big_arch_support"/>
+								<field name="vent_big_arch_support_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+                                <field name="vent_small_arch_support"/>
+								<field name="vent_small_arch_support_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   
+                               <field name="big_arch_purlin"/>
+							   <field name="big_arch_purlin_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="length_big_arch_purlin"/>
+							   <field name="small_arch_purlin"/>
+								<field name="small_arch_purlin_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="length_small_arch_purlin"/>
+								<field name="gable_purlin"/>
+								<field name="gable_purlin_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="length_gable_purlin"/>
+								<field name="no_bay_side_border_purlin"/>
+								<field name="bay_side_border_purlin_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="length_bay_side_border_purlin"/>
+								<field name="no_span_side_border_purlin"/>
+								<field name="span_side_border_purlin_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+								<field name="length_span_side_border_purlin"/>
+								</group>
+                        </group>    
+                        </page>
+                        <!-- Add more tabs as needed -->
+                        <page string="Lower Section">
+						<group col="2">
+                            <group  string="Inputs">
+                                 <field name="side_screen_guard"/>
+                               <field name="length_side_screen_roll_up_pipe_joiner"/>
+							   <field name="length_side_screen_guard"/>
+                                <field name="side_screen_guard_box"/>
+                                <field name="no_side_screen_guard_box"/>
+								<field name="length_side_screen_guard_box_h_pipe"/>
+                                <field name="front_back_c_c_cross_bracing_x"/>
+                                <field name="length_front_back_c_c_cross_bracing_x"/>
+								<field name="middle_c_c_cross_bracing_x"/>
+								<field name="length_middle_c_c_cross_bracing_x"/>
+                                <field name="cross_bracing_column_arch"/>
+								<field name="length_cross_bracing_column_arch"/>
+                               <field name="cross_bracing_column_bottom"/>
+							   <field name="length_cross_bracing_column_bottom"/>
+							    <field name="arch_middle_purlin_big_arch"/>
+								 <field name="arch_middle_purlin_big_arch_pcs"/>
+                                <field name="arch_middle_purlin_small_arch"/>
+                                <field name="arch_middle_purlin_small_arch_pcs"/>
+								<field name="length_side_screen_guard_spacer"/>
+                                <field name="gutter_ippf_full"/>
+								<field name="gutter_ippf_drainage_extension"/>
+                                <field name="gutter_funnel_ippf"/>
+                                <field name="gutter_end_cap"/>
+                               </group>
+							   <group string="Calculations" >
+							   <field name="side_screen_roll_up_pipe"/>
+							   <field name="side_screen_roll_up_pipe_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="length_side_screen_roll_up_pipe"/>
+							   <field name="side_screen_roll_up_pipe_joiner"/>
+							   <field name="side_screen_roll_up_pipe_joiner_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_side_screen_guard"/>
+							   <field name="side_screen_guard_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_side_screen_guard_box_pipe"/>
+							   <field name="side_screen_guard_box_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_side_screen_guard_box_h_pipe"/>
+							   <field name="side_screen_guard_box_h_pipe_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="length_side_screen_guard_box_pipe"/>
+							   <field name="no_front_back_c_c_cross_bracing_x"/>
+							   <field name="front_back_c_c_cross_bracing_x_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_middle_c_c_cross_bracing_x"/>
+							   <field name="middle_c_c_cross_bracing_x_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_cross_bracing_column_arch"/>
+							   <field name="cross_bracing_column_arch_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_cross_bracing_column_bottom"/>
+							   <field name="cross_bracing_column_bottom_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_arch_middle_purlin_big_arch"/>
+							   <field name="arch_middle_purlin_big_arch_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="length_arch_middle_purlin_big_arch"/>
+							   <field name="no_arch_middle_purlin_small_arch"/>
+							   <field name="arch_middle_purlin_small_arch_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="length_arch_middle_purlin_small_arch"/>
+							   <field name="side_screen_guard_spacer"/>
+							   <field name="side_screen_guard_spacer_pipe_id" 
+                               widget="many2one" 
+                               options="{'no_create_edit': True}"
+                               context="{'show_parameters': True}"
+							   invisible="is_bottom_chord == False"/>
+							   <field name="no_gutter_ippf_full"/>
+							   <field name="length_gutter_ippf_full"/>
+							   <field name="no_gutter_funnel_ippf_funnel"/>
+							   <field name="no_gutter_ippf_drainage_ext"/>
+							   <field name="no_gutter_end_cap"/>
+							   
+							   
+							   
+							   
+							   
+							   
+                            </group>
+						</group>	
+						</page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_green_master" model="ir.actions.act_window">
+        <field name="name">Greenhouse Master</field>
+        <field name="res_model">green.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_greenhouse_management" name="Greenhouse Management" sequence="10"/>
+    <menuitem id="menu_green_master" name="Greenhouse Master" parent="menu_greenhouse_management" action="action_green_master" sequence="10"/>
+	<record id="report_print_green_master" model="ir.actions.report">
+            <field name="name">Green Master Report</field>
+            <field name="model">green.master</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">greenh.green_master_report_template</field>
+            <field name="report_file">greenh.green_master_report_template</field>
+            <field name="binding_type">report</field>
+        </record>
+	 <!-- Report Action Definition 
+    <report
+        id="green_master_report_action"
+        model="green.master"
+        string="Green Master Report"
+        report_type="qweb-pdf"
+        name="greenh.green_master_report_template"
+        file="greenh.green_master_report_template"
+        print_report_name="'Green Master Report - %s' % (object.name)"
+    /> -->
+    
+	  <!-- Report Template Definition -->
+    <template id="green_master_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2>Green Master Report</h2>
+					<h3>Basic Information</h3>
+                    <p><strong>Name:</strong> <span t-esc="o.customer"/></p>
+					
+ <!--                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Field Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o._fields.items()" t-as="field">
+                            
+                            <t t-if="field[0] not in ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']">
+                                
+                                <t t-if="not field[1].compute and not field[1].related">
+                                   
+                                    <t t-if="field[1].type not in ['one2many', 'many2many', 'binary', 'reference', 'selection']">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="field[1].string"/>  
+                                            </td>
+                                            <td>
+                                                <t t-esc="o[field[0]]"/>  
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+                        </tbody>
+                    </table> -->
+					
+                    <strong>Total Span Length:</strong> <span t-esc="o.total_span_length"/>
+                    
+                    <strong style="position: absolute; left: 250px;  width: 170px; text-align: left;">Span Width:</strong> <span style="position: absolute; left: 370px;  width: 50px; text-align: left;" t-esc="o.span_width"/>
+                    <strong style="position: absolute; left: 450px;  width: 190px; text-align: left;">Number of Spans:</strong> <span style="position: absolute; left: 620px;  width: 100px; text-align: left;" t-esc="o.no_of_spans"/><br/>
+                    <strong>Total Bay Length:</strong> <span t-esc="o.total_bay_length"/>
+                    <strong style="position: absolute; left: 250px;  width: 170px; text-align: left;">Bay Width:</strong> <span style="position: absolute; left: 370px;  width: 50px; text-align: left;" t-esc="o.bay_width"/>
+                    <strong style="position: absolute; left: 450px;  width: 190px; text-align: left;">Number of Bays:</strong> <span style="position: absolute; left: 620px;  width: 100px; text-align: left;" t-esc="o.no_of_bays"/><br/>
+                    
+                    <strong>Gutter Length:</strong> <span t-esc="o.gutter_length"/>
+                    
+                    <strong style="position: absolute; left: 250px;  width: 170px; text-align: left;">Gutter Slope:</strong> <span style="position: absolute; left: 380px;  width: 50px; text-align: left;" t-esc="o.gutter_slope"/>
+                    <strong style="position: absolute; left: 450px;  width: 190px; text-align: left;">Last Span Gutter:</strong> <span style="position: absolute; left: 620px;  width: 100px; text-align: left;" t-esc="'Yes' if o.last_span_gutter else 'No'"/><br/>
+                    <strong>Top Ridge Height:</strong> <span t-esc="o.top_ridge_height"/>
+                    <strong style="position: absolute; left: 250px;  width: 170px; text-align: left;">Bottom Height:</strong> <span style="position: absolute; left: 395px;  width: 50px; text-align: left;" t-esc="o.bottom_height"/>
+                    <strong style="position: absolute; left: 450px;  width: 190px; text-align: left;">Arch Height:</strong> <span style="position: absolute; left: 580px;  width: 100px; text-align: left;" t-esc="o.arch_height"/><br/>
+                    
+                    <strong>Column Height:</strong> <span t-esc="o.column_height"/><br/>
+      
+                     <h3>Aerodynamic Side Corridors (ASC)</h3>
+                    <strong>Is ASC:</strong> <span t-esc="'Yes-' if o.is_side_coridoors else 'No'"/><span t-esc="o.no_asc"/><br/>
+                    <t t-if="o.width_front_span_coridoor > 0">
+					<strong> Front Span ASC Width:</strong> <span t-esc="o.width_front_span_coridoor"/>
+                     <strong style="position: absolute; left: 450px;  width: 190px; text-align: left;">Length:</strong> <span style="position: absolute; left: 525px;  width: 100px; text-align: left;"  t-esc="o.length_front_span_coridoor"/><br/>
+                    </t>
+					 <t t-if="o.width_back_span_coridoor > 0">
+					<strong> Back Span ASC Width:</strong> <span t-esc="o.width_back_span_coridoor"/>
+                    <strong style="position: absolute; left: 450px;  width: 190px; text-align: left;">Length:</strong> <span style="position: absolute; left: 525px;  width: 100px; text-align: left;"  t-esc="o.length_back_span_coridoor"/><br/>
+                     </t>
+					 <t t-if="o.width_front_bay_coridoor > 0">
+					<strong> Left Bay ASC Width:</strong> <span t-esc="o.width_front_bay_coridoor"/>
+                    <strong  style="position: absolute; left: 450px;  width: 190px; text-align: left;">Length:</strong> <span style="position: absolute; left: 525px;  width: 100px; text-align: left;"  t-esc="o.length_front_bay_coridoor"/><br/>
+                     </t>
+					 <t t-if="o.width_back_bay_coridoor > 0">
+					<strong > Right Bay ASC Width:</strong> <span t-esc="o.width_back_bay_coridoor"/>
+                    
+                    
+                    <strong  style="position: absolute; left: 450px;  width: 190px; text-align: left;">Length:</strong> <span style="position: absolute; left: 525px;  width: 100px; text-align: left;"  t-esc="o.length_back_bay_coridoor"/><br/>
+                    </t>
+					
+                    <strong>Support per ASC Pipe:</strong> <span t-esc="o.support_hockeys"/><br/>
+                    
+                    <!--
+                    <strong>Number of Hockey Support:</strong> <span t-esc="o.no_hockey_support"/><br/>
+                    <strong>Hockey Support Pipe:</strong> <span t-esc="o.hockey_support_pipe_id.display_name"/><br/>
+                    (,,,,)
+                    -->
+						<span style="position: absolute; left: 450px;  width: 100px; text-align: right;"> Nos</span>
+                    <span style="position: absolute; left: 515px;  width: 100px; text-align: right;"> Length </span>
+                        
+                    <span style="position: absolute; left: 620px;  width: 100px; text-align: left;">PipeType </span>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;">Dim </span>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;">WT </span><br/>
+                    
+					<t t-if="o.no_hockey_support > 0">
+                    <strong>ASC Pipe Support:</strong>
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_hockey_support" t-options="{'widget': 'float', 'precision': 0}"/>
+                    <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_support_hockeys.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+                        
+                    <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.hockey_support_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.hockey_support_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.hockey_support_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/><br/>
+                    </t>
+                    <t t-if="o.no_front_span_coridoor_hockeys > 0">
+                    <strong>Front Span ASC Pipes:</strong>
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_front_span_coridoor_hockeys" t-options="{'widget': 'float', 'precision': 0}"/>
+                    <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_front_span_coridoor_hockey" t-options="{'widget': 'float', 'precision': 2}"/>    
+                    <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.front_span_coridoor_hockeys_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.front_span_coridoor_hockeys_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.front_span_coridoor_hockeys_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    </t>
+					<t t-if="o.no_back_span_coridoor_hockeys > 0">
+                    <strong>Back Span ASC Pipes:</strong>
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_back_span_coridoor_hockeys" t-options="{'widget': 'float', 'precision': 0}"/>
+                    <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_back_span_coridoor_hockey" t-options="{'widget': 'float', 'precision': 2}"/>    
+                    <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.back_span_coridoor_hockeys_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.back_span_coridoor_hockeys_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.back_span_coridoor_hockeys_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    </t>
+					<t t-if="o.no_front_bay_coridoor_hockeys > 0">
+                    <strong>Front Bay ASC Pipes:</strong>
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_front_bay_coridoor_hockeys" t-options="{'widget': 'float', 'precision': 0}"/>
+                    <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_front_bay_coridoor_hockey" t-options="{'widget': 'float', 'precision': 2}"/>    
+                    <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.front_bay_coridoor_hockeys_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.front_bay_coridoor_hockeys_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.front_bay_coridoor_hockeys_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    </t>
+					<t t-if="o.no_back_bay_coridoor_hockeys > 0">
+                    <strong>Back Bay ASC Pipes:</strong>
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_back_bay_coridoor_hockeys" t-options="{'widget': 'float', 'precision': 0}"/>
+                    <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_back_bay_coridoor_hockey" t-options="{'widget': 'float', 'precision': 2}"/>    
+                    <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.back_bay_coridoor_hockeys_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.back_bay_coridoor_hockeys_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.back_bay_coridoor_hockeys_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                   
+                   </t>
+					<t t-if="o.no_total_hockeys > 0">
+                    <strong>Total Number of Pipes:</strong> <span t-esc="o.no_total_hockeys"/><br/>
+                    </t>
+                     
+                     
+                     
+                    <h3>Frame</h3>
+                    
+                    <strong>No of Anchor Frame Lines:</strong> <span t-esc="o.no_anchor_frame_lines"/><br/>
+                    <strong>Total Anchor Frames:</strong> <span t-esc="o.total_anchor_frames"/><br/>
+					<strong>Nos of Big Column per Anchor Frame:</strong> <span t-esc="o.no_column_big_frame"/><br/>
+					<strong>Total Normal Frames:</strong> <span t-esc="o.total_normal_frames"/><br/>
+                    <strong>Thick Column Option:</strong> <span t-esc="o.thick_column"/><br/>
+                    <!--
+                    <strong>No of Middle Columns:</strong> <span t-esc="o.no_middle_columns"/>
+                    <strong>Length</strong> <span t-esc="o.length_middle_column"/>
+                    <strong>Pipe:</strong> <span t-esc="o.middle_column_pipe_id.display_name"/>
+                    <br/>-->
+						<span style="position: absolute; left: 450px;  width: 100px; text-align: right;"> Nos</span>
+                    <span style="position: absolute; left: 515px;  width: 100px; text-align: right;"> Length </span>
+                        
+                    <span style="position: absolute; left: 620px;  width: 100px; text-align: left;">PipeType </span>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;">Dim </span>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;">WT </span><br/>
+					<t t-if="o.no_middle_columns > 0">
+                    <strong>Middle Columns:</strong>
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_middle_columns" t-options="{'widget': 'float', 'precision': 0}"/>
+                     <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_middle_column" t-options="{'widget': 'float', 'precision': 2}"/>
+                     <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.middle_column_pipe_id.name.name"/>
+                     <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.middle_column_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                     <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.middle_column_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+					</t>
+                    <!--
+                    <strong>Number of Quadruple Columns:</strong> <span t-esc="o.no_quadraple_columns"/><br/>
+                    <strong>Quadruple Column Pipe:</strong> <span t-esc="o.quadraple_columns_pipe_id.display_name"/><br/>
+                    <strong>Length of Quadruple Column:</strong> <span t-esc="o.length_quadraple_column"/><br/>
+                    -->
+					<t t-if="o.no_quadraple_columns > 0">
+                    <strong>Quadruple Columns:</strong> 
+                    <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_quadraple_columns" t-options="{'widget': 'float', 'precision': 0}"/>
+                     <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_quadraple_column" t-options="{'widget': 'float', 'precision': 2}"/>
+                     <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.quadraple_columns_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.quadraple_columns_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.quadraple_columns_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+					</t>
+                    <!--
+                    
+                    <strong>Number of Main Columns:</strong> <span t-esc="o.no_main_columns"/><br/>
+                    <strong>Length of Main Column:</strong> <span t-esc="o.length_main_column"/><br/>
+                    <strong>Main Column Pipe:</strong> <span t-esc="o.main_columns_pipe_id.display_name"/><br/>
+                    -->
+                     <strong>Main Columns:</strong> 
+                     <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_main_columns" t-options="{'widget': 'float', 'precision': 0}"/>
+                     <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_main_column" t-options="{'widget': 'float', 'precision': 2}"/>
+                     <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.main_columns_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.main_columns_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>                        
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.main_columns_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <t t-if="o.no_thick_columns > 0">
+                    <strong>Thick Columns:</strong> 
+                     <span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_thick_columns" t-options="{'widget': 'float', 'precision': 0}"/>
+                     <span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_thick_column" t-options="{'widget': 'float', 'precision': 2}"/>
+                     <span style="position: absolute; left: 575px;  width: 100px; text-align: right;" t-esc="o.thick_column_pipe_id.name.name"/>
+                    <span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.thick_column_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>                        
+                    <span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.thick_column_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    </t>
+                    
+                   
+					<div style="page-break-before: always;"/>
+				   <h3>Truss</h3>
+				    <strong>Big Arch Length:</strong> <span t-esc="o.big_arch_length"/><br/>
+                    <strong>Small Arch Length:</strong> <span t-esc="o.small_arch_length"/><br/>
+                    <strong>Is Bottom Chord Required ?</strong> <span t-esc="o.is_bottom_chord if o.is_bottom_chord else 'No'"/><br/>
+                    <strong>Bottom Chord Anchor Frame Singular(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_normal" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_af_normal" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bottom_chord_af_normal_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_normal_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_normal_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    
+                    <strong>Bottom Chord Anchor Frame Male(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_male" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_af_male" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bottom_chord_af_male_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_male_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_male_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+
+                    <strong>Bottom Chord Anchor Frame Female(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_female" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_af_female" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bottom_chord_af_female_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_female_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_af_female_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+
+                    <strong>Bottom Chord Inner Line Singular(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_normal" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_il_normal" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bottom_chord_il_normal_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_normal_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_normal_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Bottom Chord Inner Line Male(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_male" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_il_male" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bottom_chord_il_male_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_male_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_male_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Bottom Chord Inner Line Female(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_female" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_il_female" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bottom_chord_il_female_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_female_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bottom_chord_il_female_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                  
+                    <strong>V Support Bottom Chord per Frame:</strong> <span t-esc="o.v_support_bottom_chord_frame"/><br/>
+                    <strong>V Support Bottom Chord(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_v_support_bottom_chord" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_bottom_chord_il_normal" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.v_support_bottom_chord_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.v_support_bottom_chord_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.v_support_bottom_chord_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Arch Support Straight Middle(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.arch_support_staraight_middle" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_arch_support_staraight_middle" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.arch_support_staraight_middle_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.arch_support_staraight_middle_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.arch_support_staraight_middle_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Is Arch Support Big (Both Arches) Required?</strong> <span t-esc="o.is_arch_support_big"/><br/>
+                    <strong>Arch Support Big (Both Arches)(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.arch_support_big" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_arch_support_big.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.arch_support_big_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.arch_support_big_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.arch_support_big_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Is Arch Support Small for Bigger Arch Required?</strong> <span t-esc="o.is_arch_support_small_big_arch"/><br/>
+                    <strong>Arch Support Small for Big Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.arch_support_small_big_arch" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_arch_support_small_big_arch.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.arch_support_small_big_arch_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.arch_support_small_big_arch_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.arch_support_small_big_arch_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Is Arch Support Small for Smaller Arch Required?</strong> <span t-esc="o.is_arch_support_small_small_arch"/><br/>
+                    <strong>Arch Support Small for Small Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.arch_support_small_small_arch" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_arch_support_small_small_arch.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.arch_support_small_small_arch_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.arch_support_small_small_arch_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.arch_support_small_small_arch_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Vent Support for Big Arch per Frame:</strong> <span t-esc="o.no_vent_big_arch_support_frame"/><br/>
+                   
+                    <strong>Vent Support for Big Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.vent_big_arch_support" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_vent_big_arch_support.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.vent_big_arch_support_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.vent_big_arch_support_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.vent_big_arch_support_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Vent Support for Small Arch per Frame:</strong> <span t-esc="o.no_vent_small_arch_support_frame"/><br/>
+                    
+                    
+                    <strong>Vent Support for Small Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.vent_small_arch_support" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_vent_small_arch_support.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.vent_small_arch_support_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.vent_small_arch_support_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.vent_small_arch_support_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    
+                    
+                    <strong>Big Arch Purlin(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.big_arch_purlin" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_big_arch_purlin" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.big_arch_purlin_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.big_arch_purlin_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.big_arch_purlin_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Small Arch Purlin(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.small_arch_purlin" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_small_arch_purlin" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.small_arch_purlin_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.small_arch_purlin_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.small_arch_purlin_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Gable Purlin(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.gable_purlin" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_gable_purlin" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.gable_purlin_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.gable_purlin_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.gable_purlin_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                   
+                    <strong>Bay Side Border Purlin(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_bay_side_border_purlin" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px; width: 100px; text-align: right;" t-esc="o.length_bay_side_border_purlin" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.bay_side_border_purlin_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.bay_side_border_purlin_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.bay_side_border_purlin_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Span Side Border Purlin(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_span_side_border_purlin" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_span_side_border_purlin" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.span_side_border_purlin_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.span_side_border_purlin_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.span_side_border_purlin_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    
+                    
+                    
+                    
+                    
+                   
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					<div style="page-break-before: always;"/>
+					
+					<h3>Lower Section</h3>
+					
+					<strong>Side Screen Guard:</strong> <span t-esc="o.side_screen_guard if o.side_screen_guard else 'No'"/><br/>
+					<strong>Side Screen Guard(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_side_screen_guard" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_side_screen_guard.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.side_screen_guard_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+					
+					<strong>Side Screen Roll Up Pipe(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.side_screen_roll_up_pipe" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_side_screen_roll_up_pipe" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.side_screen_roll_up_pipe_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.side_screen_roll_up_pipe_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.side_screen_roll_up_pipe_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <strong>Side Screen Roll Up Pipe Joiner(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.side_screen_roll_up_pipe_joiner" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_side_screen_roll_up_pipe_joiner.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.side_screen_roll_up_pipe_joiner_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.side_screen_roll_up_pipe_joiner_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.side_screen_roll_up_pipe_joiner_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Side Screen Guard Box:</strong> <span t-esc="o.side_screen_guard_box if o.side_screen_guard_box else 'No'"/><br/>
+                    <strong>Number of Side Screen Guard Box:</strong> <span t-esc="o.no_side_screen_guard_box"/><br/>
+                    <strong>Side Screen Guard Box Pipe(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_side_screen_guard_box_pipe" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_side_screen_guard_box_pipe" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.side_screen_guard_box_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_box_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_box_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <strong>Side Screen Guard Box H Pipe(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_side_screen_guard_box_h_pipe" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_side_screen_guard_box_h_pipe.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.side_screen_guard_box_h_pipe_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_box_h_pipe_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_box_h_pipe_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <strong>Front &amp; Back Column to Column Cross Bracing X:</strong> <span t-esc="o.front_back_c_c_cross_bracing_x if o.front_back_c_c_cross_bracing_x else 'No'"/><br/>
+                    <strong>Front &amp; Back C to C Cross Bracing X(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_front_back_c_c_cross_bracing_x" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_front_back_c_c_cross_bracing_x.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.front_back_c_c_cross_bracing_x_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.front_back_c_c_cross_bracing_x_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.front_back_c_c_cross_bracing_x_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+
+                    <strong>No of Internal Lines for C to C Cross Bracing X:</strong> <span t-esc="o.middle_c_c_cross_bracing_x"/><br/>
+                    <strong>Internal C to C Cross Bracing X(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_middle_c_c_cross_bracing_x" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_middle_c_c_cross_bracing_x.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.middle_c_c_cross_bracing_x_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.middle_c_c_cross_bracing_x_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.middle_c_c_cross_bracing_x_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <strong>Cross Bracing Column to Arch:</strong> <span t-esc="o.cross_bracing_column_arch if o.cross_bracing_column_arch else 'No'"/><br/>
+                    <strong>Cross Bracing Column to Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_cross_bracing_column_arch" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_cross_bracing_column_arch.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.cross_bracing_column_arch_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.cross_bracing_column_arch_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.cross_bracing_column_arch_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <strong>Cross Bracing Column to Bottom Chord:</strong> <span t-esc="o.cross_bracing_column_bottom if o.cross_bracing_column_bottom else 'No'"/><br/>
+                    <strong>Cross Bracing C to Bottom Chord(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_cross_bracing_column_bottom" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_cross_bracing_column_bottom.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.cross_bracing_column_bottom_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.cross_bracing_column_bottom_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.cross_bracing_column_bottom_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Arch Middle Purlin Big Arch:</strong> <span t-esc="o.arch_middle_purlin_big_arch"/><br/>
+                    <strong>Arch Middle Purlin Big Arch Pieces:</strong> <span t-esc="o.arch_middle_purlin_big_arch_pcs"/><br/>
+                    <strong>Arch Middle Purlin Big Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_arch_middle_purlin_big_arch" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_arch_middle_purlin_big_arch" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.arch_middle_purlin_big_arch_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.arch_middle_purlin_big_arch_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.arch_middle_purlin_big_arch_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    <strong>Arch Middle Purlin Small Arch:</strong> <span t-esc="o.arch_middle_purlin_small_arch"/><br/>
+                    <strong>Arch Middle Purlin Small Arch Pieces:</strong> <span t-esc="o.arch_middle_purlin_small_arch_pcs"/><br/>
+                    <strong>Arch Middle Purlin Small Arch(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.no_arch_middle_purlin_small_arch" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_arch_middle_purlin_small_arch" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.arch_middle_purlin_small_arch_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.arch_middle_purlin_small_arch_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.arch_middle_purlin_small_arch_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    <strong>Side Screen Guard Spacer(N,L,Type,Dim,WT):</strong>
+					<span style="position: absolute; left: 450px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_spacer" t-options="{'widget': 'float', 'precision': 0}"/>
+					<span style="position: absolute; left: 500px;  width: 100px; text-align: right;" t-esc="o.length_side_screen_guard_spacer.length_value" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 575px;  width: 100px; text-align: right;;" t-esc="o.side_screen_guard_spacer_pipe_id.name.name"/>
+					<span style="position: absolute; left: 650px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_spacer_pipe_id.pipe_size.size_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+					<span style="position: absolute; left: 725px;  width: 100px; text-align: right;" t-esc="o.side_screen_guard_spacer_pipe_id.wall_thickness.thickness_in_mm" t-options="{'widget': 'float', 'precision': 2}"/>
+                    <br/>
+                    
+                    
+                    
+                    
+                   
+                    
+                    
+                  
+                    
+                    <strong>Gutter IPPF Full:</strong> <span t-esc="o.gutter_ippf_full"/><br/>
+                    <strong>Number of Gutter IPPF Full:</strong> <span t-esc="o.no_gutter_ippf_full"/><br/>
+                    <strong>Length of Gutter IPPF Full:</strong> <span t-esc="o.length_gutter_ippf_full"/><br/>
+                    
+                    <strong>Gutter Funnel IPPF:</strong> <span t-esc="o.gutter_funnel_ippf"/><br/>
+                    <strong>Number of Gutter Funnel IPPF:</strong> <span t-esc="o.no_gutter_funnel_ippf_funnel"/><br/>
+                    
+                    <strong>Gutter IPPF Drainage Extension:</strong> <span t-esc="o.gutter_ippf_drainage_extension"/><br/>
+                    <strong>Number of Gutter IPPF Drainage Extension:</strong> <span t-esc="o.no_gutter_ippf_drainage_ext"/><br/>
+                    
+                    <strong>Gutter End Cap:</strong> <span t-esc="o.gutter_end_cap"/><br/>
+                    <strong>Number of Gutter End Cap:</strong> <span t-esc="o.no_gutter_end_cap"/><br/>
+                    
+					
+                </div>
+            </t>
+        </t>
+    </template>
+	
+	<record id="view_length_master_form" model="ir.ui.view">
+        <field name="name">length.master.form</field>
+        <field name="model">length.master</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="length_value"/>
+                    <field name="available_for_fields" widget="many2many_tags"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_length_master_tree" model="ir.ui.view">
+        <field name="name">length.master.tree</field>
+        <field name="model">length.master</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="length_value"/>
+                <field name="available_for_fields" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+	
+	<record id="action_length_master" model="ir.actions.act_window">
+        <field name="name">Length Master</field>
+        <field name="res_model">length.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Define a menu item -->
+    <menuitem id="menu_length_master" 
+              name="Length Master" 
+              parent="menu_greenhouse_management"
+              action="action_length_master"  sequence="11"/>
+			  
+			  
+			  
+	 <record id="view_pipe_management_tree" model="ir.ui.view">
+        <field name="name">pipe.management.tree</field>
+        <field name="model">pipe.management</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Management">
+                <field name="name"/>
+                <field name="pipe_size"/>
+                <field name="wall_thickness"/>
+                <field name="weight"/>
+                <field name="rate"/>
+    <!--            <field name="total_cost"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pipe_management_form" model="ir.ui.view">
+        <field name="name">pipe.management.form</field>
+        <field name="model">pipe.management</field>
+        <field name="arch" type="xml">
+            <form string="Pipe Management">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="pipe_size"/>
+                        <field name="wall_thickness"/>
+                        <field name="weight"/>
+                        <field name="rate"/>
+ <!--                       <field name="total_cost" readonly="1"/>-->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Views for Pipe Type Master -->
+    <record id="view_pipe_type_tree" model="ir.ui.view">
+        <field name="name">pipe.type.tree</field>
+        <field name="model">pipe.type</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Types">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pipe_type_form" model="ir.ui.view">
+        <field name="name">pipe.type.form</field>
+        <field name="model">pipe.type</field>
+        <field name="arch" type="xml">
+            <form string="Pipe Type">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Views for Pipe Size Master -->
+    <record id="view_pipe_size_tree" model="ir.ui.view">
+        <field name="name">pipe.size.tree</field>
+        <field name="model">pipe.size</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Sizes">
+                <field name="name"/>
+                <field name="size_in_mm"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pipe_size_form" model="ir.ui.view">
+        <field name="name">pipe.size.form</field>
+        <field name="model">pipe.size</field>
+        <field name="arch" type="xml">
+            <form string="Pipe Size">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="size_in_mm"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Views for Pipe Wall Thickness Master -->
+    <record id="view_pipe_wall_thickness_tree" model="ir.ui.view">
+        <field name="name">pipe.wall_thickness.tree</field>
+        <field name="model">pipe.wall_thickness</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Wall Thickness">
+                <field name="name"/>
+                <field name="thickness_in_mm"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pipe_wall_thickness_form" model="ir.ui.view">
+        <field name="name">pipe.wall_thickness.form</field>
+        <field name="model">pipe.wall_thickness</field>
+        <field name="arch" type="xml">
+            <form string="Wall Thickness">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="thickness_in_mm"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+  
+
+    <!-- Actions for Pipe Management -->
+    <record id="action_pipe_management" model="ir.actions.act_window">
+        <field name="name">Pipe Management</field>
+        <field name="res_model">pipe.management</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+	
+	<!-- Menus for Pipe Management -->
+	<menuitem id="green_master_menu" name="Pipe Master Menu" sequence="10"/>
+    <menuitem id="pipe_management_menu" name="Pipe Management" parent="green_master_menu"/>
+    <menuitem id="menu_pipe_management" name="Pipes" parent="pipe_management_menu" action="action_pipe_management"/>
+	
+	 <!-- Actions for the Master Data -->
+    <record id="action_pipe_type" model="ir.actions.act_window">
+        <field name="name">Pipe Types</field>
+        <field name="res_model">pipe.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_pipe_size" model="ir.actions.act_window">
+        <field name="name">Pipe Sizes</field>
+        <field name="res_model">pipe.size</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_pipe_wall_thickness" model="ir.actions.act_window">
+        <field name="name">Pipe Wall Thicknesses</field>
+        <field name="res_model">pipe.wall_thickness</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Actions for Pipe Masters -->
+    <menuitem id="menu_pipe_type" name="Pipe Types" parent="pipe_management_menu" action="action_pipe_type"/>
+    <menuitem id="menu_pipe_size" name="Pipe Sizes" parent="pipe_management_menu" action="action_pipe_size"/>
+    <menuitem id="menu_pipe_wall_thickness" name="Wall Thicknesses" parent="pipe_management_menu" action="action_pipe_wall_thickness"/>
+
+
+
+	 
+
+    
+	
+</odoo>
