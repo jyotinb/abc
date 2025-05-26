@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_job_work_type_user,job.work.type user,model_job_work_type,base.group_user,1,0,0,0
+access_job_work_type_manager,job.work.type manager,model_job_work_type,base.group_system,1,1,1,1
+access_job_work_operation_user,job.work.operation user,model_job_work_operation,base.group_user,1,0,0,0
+access_job_work_operation_manager,job.work.operation manager,model_job_work_operation,base.group_system,1,1,1,1
+access_mrp_production_jobwork_user,mrp.production.jobwork.user,mrp.model_mrp_production,drkds_job_work.group_job_work_user,1,1,1,0
+access_mrp_production_jobwork_manager,mrp.production.jobwork.manager,mrp.model_mrp_production,drkds_job_work.group_job_work_manager,1,1,1,1

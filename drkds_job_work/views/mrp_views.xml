@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_jobwork_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.jobwork.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Job Work Manufacturing</attribute>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="jobwork_sale_id"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Job Work Details" name="job_work">
+                    <group>
+                        <field name="jobwork_picking_in_id"/>
+                        <field name="jobwork_picking_out_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

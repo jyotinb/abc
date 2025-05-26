@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="view_picking_form_job_work" model="ir.ui.view">
+        <field name="name">stock.picking.job.work.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="jobwork_sale_id" invisible="not jobwork_sale_id"/>
+                <field name="is_job_work_receipt" invisible="1"/>
+				<field name="is_job_work_delivery" invisible="1"/>
+                <field name="customer_dc" invisible="not is_job_work_receipt"/>
+                <field name="customer_dc_date" invisible="not is_job_work_receipt"/>
+            </xpath>
+            <!-- Optional: Add a header or banner for jobwork receipts -->
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info text-center" role="alert" 
+                     invisible="not is_job_work_receipt">
+                    <strong>Job Work Receipt</strong> - Raw materials as per BOM
+                </div>
+				<div class="alert alert-info text-center" role="alert" 
+                     invisible="not is_job_work_delivery">
+                    <strong>Job Work Delivery</strong> - Finish Goods
+                </div>
+            </xpath>
+        </field>
+    </record>
+	
+</odoo>
