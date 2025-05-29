@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu -->
+        <menuitem id="menu_drkds_main" 
+                  name="Kit Calculations" 
+                  sequence="10"/>
+        
+        <!-- Level 1: Simple User Menus -->
+        <menuitem id="menu_cost_sheets_main" 
+                  name="Cost Sheets"
+                  parent="menu_drkds_main"
+                  sequence="10"
+                  groups="group_simple_user"/>
+        
+        <!-- Level 2: Pricelist Manager Menus -->
+        <menuitem id="menu_pricing_main" 
+                  name="Pricing"
+                  parent="menu_drkds_main"
+                  sequence="20"
+                  groups="group_pricelist_manager"/>
+        
+        <!-- Level 3: Template Manager Menus -->
+        <menuitem id="menu_configuration_main" 
+                  name="Configuration"
+                  parent="menu_drkds_main"
+                  sequence="30"
+                  groups="group_template_manager"/>
+        
+        <!-- Level 4: Admin Menus -->
+        <menuitem id="menu_administration_main" 
+                  name="Administration"
+                  parent="menu_drkds_main"
+                  sequence="40"
+                  groups="group_admin"/>
+        
+    </data>
+</odoo>

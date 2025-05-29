@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Module Category -->
+        <record id="module_category_drkds" model="ir.module.category">
+            <field name="name">DRKDS Kit Calculations</field>
+            <field name="description">Kit cost calculation and management system</field>
+            <field name="sequence">50</field>
+        </record>
+        
+        <!-- Level 1: Simple User -->
+        <record id="group_simple_user" model="res.groups">
+            <field name="name">Cost Sheet Simple User</field>
+            <field name="category_id" ref="module_category_drkds"/>
+            <field name="comment">Can create cost sheets and toggle components on/off</field>
+        </record>
+        
+        <!-- Level 2: Pricelist Manager -->
+        <record id="group_pricelist_manager" model="res.groups">
+            <field name="name">Cost Sheet Pricelist Manager</field>
+            <field name="category_id" ref="module_category_drkds"/>
+            <field name="implied_ids" eval="[(4, ref('group_simple_user'))]"/>
+            <field name="comment">Can manage component prices and rates</field>
+        </record>
+        
+        <!-- Level 3: Template & Formula Manager -->
+        <record id="group_template_manager" model="res.groups">
+            <field name="name">Cost Sheet Template Manager</field>
+            <field name="category_id" ref="module_category_drkds"/>
+            <field name="implied_ids" eval="[(4, ref('group_pricelist_manager'))]"/>
+            <field name="comment">Can manage templates, formulas, and component configurations</field>
+        </record>
+        
+        <!-- Level 4: Administrator -->
+        <record id="group_admin" model="res.groups">
+            <field name="name">Cost Sheet Administrator</field>
+            <field name="category_id" ref="module_category_drkds"/>
+            <field name="implied_ids" eval="[(4, ref('group_template_manager'))]"/>
+            <field name="comment">Full system access including logs and system configuration</field>
+        </record>
+        
+        <!-- Record Rules for Data Security -->
+        
+        <!-- Cost Sheets: Users can see all, but edit restrictions apply -->
+        <record id="rule_cost_sheet_read" model="ir.rule">
+            <field name="name">Cost Sheet: Read Access</field>
+            <field name="model_id" ref="model_drkds_cost_sheet"/>
+            <field name="groups" eval="[(4, ref('group_simple_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+        
+        <record id="rule_cost_sheet_write" model="ir.rule">
+            <field name="name">Cost Sheet: Write Access</field>
+            <field name="model_id" ref="model_drkds_cost_sheet"/>
+            <field name="groups" eval="[(4, ref('group_simple_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('state', '=', 'draft')]</field>
+        </record>
+        
+        <!-- BOM Lines: Component toggle for simple users -->
+        <record id="rule_bom_line_toggle" model="ir.rule">
+            <field name="name">BOM Line: Toggle Access</field>
+            <field name="model_id" ref="model_drkds_cost_bom_line"/>
+            <field name="groups" eval="[(4, ref('group_simple_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+        
+        <!-- Components: Pricelist managers can edit rates -->
+        <record id="rule_component_pricelist" model="ir.rule">
+            <field name="name">Component: Pricelist Manager Access</field>
+            <field name="model_id" ref="model_drkds_kit_component"/>
+            <field name="groups" eval="[(4, ref('group_pricelist_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+        
+        <!-- Templates: Template managers full access -->
+        <record id="rule_template_manager" model="ir.rule">
+            <field name="name">Template: Manager Access</field>
+            <field name="model_id" ref="model_drkds_cost_template"/>
+            <field name="groups" eval="[(4, ref('group_template_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+        
+        <!-- Change Logs: Admin only -->
+        <record id="rule_change_log_admin" model="ir.rule">
+            <field name="name">Change Log: Admin Access</field>
+            <field name="model_id" ref="model_drkds_change_log"/>
+            <field name="groups" eval="[(4, ref('group_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+        
+        <!-- Users can see their own logs -->
+        <record id="rule_change_log_own" model="ir.rule">
+            <field name="name">Change Log: Own Access</field>
+            <field name="model_id" ref="model_drkds_change_log"/>
+            <field name="groups" eval="[(4, ref('group_simple_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Component Category Views -->
+        <record id="view_component_category_tree" model="ir.ui.view">
+            <field name="name">drkds.component.category.tree</field>
+            <field name="model">drkds.component.category</field>
+            <field name="arch" type="xml">
+                <tree string="Component Categories">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="component_count"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_component_category_form" model="ir.ui.view">
+            <field name="name">drkds.component.category.form</field>
+            <field name="model">drkds.component.category</field>
+            <field name="arch" type="xml">
+                <form string="Component Category">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_component_tree)d" 
+                                    type="action" 
+                                    class="oe_stat_button" 
+                                    icon="fa-cubes"
+                                    context="{'default_category_id': active_id, 'search_default_category_id': active_id}">
+                                <field name="component_count" widget="statinfo" string="Components"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Component Views -->
+        <record id="view_component_tree" model="ir.ui.view">
+            <field name="name">drkds.kit.component.tree</field>
+            <field name="model">drkds.kit.component</field>
+            <field name="arch" type="xml">
+                <tree string="Components" editable="bottom" decoration-muted="not active">
+                    <field name="sequence" widget="handle"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="current_rate" groups="group_pricelist_manager"/>
+                    <field name="rate_multiplier" groups="group_pricelist_manager"/>
+                    <field name="uom_id"/>
+                    <field name="weight_per_unit"/>
+                    <field name="standard_length"/>
+                    <field name="template_count"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_component_form" model="ir.ui.view">
+            <field name="name">drkds.kit.component.form</field>
+            <field name="model">drkds.kit.component</field>
+            <field name="arch" type="xml">
+                <form string="Component">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_template_component_tree)d" 
+                                    type="action" 
+                                    class="oe_stat_button" 
+                                    icon="fa-list-alt"
+                                    context="{'search_default_component_id': active_id}"
+                                    groups="group_template_manager">
+                                <field name="template_count" widget="statinfo" string="Templates"/>
+                            </button>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="uom_id"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="current_rate" groups="group_pricelist_manager"/>
+                                <field name="rate_multiplier" groups="group_pricelist_manager"/>
+                                <field name="weight_per_unit"/>
+                                <field name="standard_length"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <field name="description"/>
+                        </group>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_component_search" model="ir.ui.view">
+            <field name="name">drkds.kit.component.search</field>
+            <field name="model">drkds.kit.component</field>
+            <field name="arch" type="xml">
+                <search string="Components">
+                    <field name="name" string="Component" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="category_id"/>
+                    <separator/>
+                    <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                    <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                        <filter name="group_uom" string="Unit of Measure" context="{'group_by': 'uom_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Actions -->
+        <record id="action_component_category_tree" model="ir.actions.act_window">
+            <field name="name">Component Categories</field>
+            <field name="res_model">drkds.component.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first component category!
+                </p>
+                <p>
+                    Categories help organize your components into logical groups like Pipes, Hardware, Wires, etc.
+                </p>
+            </field>
+        </record>
+        
+        <record id="action_component_tree" model="ir.actions.act_window">
+            <field name="name">Components</field>
+            <field name="res_model">drkds.kit.component</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first component!
+                </p>
+                <p>
+                    Components are the building blocks of your cost calculations. Add pipes, hardware, wires, and other materials here.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

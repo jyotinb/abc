@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Cost Sheet Wizard -->
+        <record id="view_cost_sheet_wizard_form" model="ir.ui.view">
+            <field name="name">drkds.cost.sheet.wizard.form</field>
+            <field name="model">drkds.cost.sheet.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Cost Sheet">
+                    
+                    <!-- Step 1: Template Selection -->
+                    <div attrs="{'invisible': [('step', '!=', 'template')]}">
+                        <h3>Step 1: Select Template</h3>
+                        <group>
+                            <field name="template_id" options="{'no_create': True}"/>
+                            <field name="template_type" readonly="1"/>
+                            <field name="template_description" readonly="1"/>
+                        </group>
+                    </div>
+                    
+                    <!-- Step 2: Project Information -->
+                    <div attrs="{'invisible': [('step', '!=', 'project')]}">
+                        <h3>Step 2: Project Information</h3>
+                        <group>
+                            <group>
+                                <field name="client_id" options="{'no_create_edit': True}"/>
+                                <field name="quotation_number"/>
+                                <field name="project_name"/>
+                            </group>
+                            <group>
+                                <field name="site_location"/>
+                                <field name="installation_position"/>
+                            </group>
+                        </group>
+                    </div>
+                    
+                    <!-- Step 3: Parameters -->
+                    <div attrs="{'invisible': [('step', '!=', 'parameters')]}">
+                        <h3>Step 3: Basic Parameters</h3>
+                        <group>
+                            <group string="Dimensions">
+                                <field name="length_8m"/>
+                                <field name="length_4m"/>
+                                <field name="no_8m_bays"/>
+                                <field name="no_4m_spans"/>
+                            </group>
+                            <group string="Grid Configuration">
+                                <field name="grid_size_bay"/>
+                                <field name="grid_size_span"/>
+                                <field name="corridor_length"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="total_area" readonly="1"/>
+                        </group>
+                    </div>
+                    
+                    <!-- Step 4: Summary -->
+                    <div attrs="{'invisible': [('step', '!=', 'summary')]}">
+                        <h3>Step 4: Summary</h3>
+                        <group>
+                            <group string="Project Details">
+                                <field name="template_id" readonly="1"/>
+                                <field name="client_id" readonly="1"/>
+                                <field name="project_name" readonly="1"/>
+                                <field name="site_location" readonly="1"/>
+                            </group>
+                            <group string="Calculations">
+                                <field name="total_area" readonly="1"/>
+                                <field name="estimated_cost" readonly="1" widget="monetary"/>
+                            </group>
+                        </group>
+                        <div class="alert alert-info">
+                            <strong>Ready to Create!</strong>
+                            <p>Your cost sheet will be created with the above parameters. You can modify all values after creation.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden fields -->
+                    <field name="step" invisible="1"/>
+                    
+                    <footer>
+                        <!-- Navigation buttons -->
+                        <button string="Previous" 
+                                name="action_previous_step" 
+                                type="object" 
+                                class="btn-secondary"
+                                attrs="{'invisible': [('step', '=', 'template')]}"/>
+                        
+                        <button string="Next" 
+                                name="action_next_step" 
+                                type="object" 
+                                class="btn-primary"
+                                attrs="{'invisible': [('step', '=', 'summary')]}"/>
+                        
+                        <button string="Create Cost Sheet" 
+                                name="action_create_cost_sheet" 
+                                type="object" 
+                                class="btn-primary"
+                                attrs="{'invisible': [('step', '!=', 'summary')]}"/>
+                        
+                        <button string="Quick Create" 
+                                name="action_quick_create" 
+                                type="object" 
+                                class="btn-secondary"
+                                attrs="{'invisible': [('step', 'not in', ['project', 'parameters'])]}"/>
+                        
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Template Wizard -->
+        <record id="view_template_wizard_form" model="ir.ui.view">
+            <field name="name">drkds.template.wizard.form</field>
+            <field name="model">drkds.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Template">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="template_type"/>
+                        </group>
+                        <group>
+                            <field name="source_template_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    
+                    <div class="alert alert-info" attrs="{'invisible': [('source_template_id', '=', False)]}">
+                        <strong>Copy Template:</strong>
+                        <p>All parameters and components will be copied from the selected template.</p>
+                    </div>
+                    
+                    <footer>
+                        <button string="Create Template" 
+                                name="action_create_template" 
+                                type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Actions -->
+        <record id="action_cost_sheet_wizard" model="ir.actions.act_window">
+            <field name="name">Create Cost Sheet</field>
+            <field name="res_model">drkds.cost.sheet.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <record id="action_template_wizard" model="ir.actions.act_window">
+            <field name="name">Create Template</field>
+            <field name="res_model">drkds.template.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</odoo>

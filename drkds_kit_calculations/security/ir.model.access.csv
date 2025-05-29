@@ -1,0 +1,49 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_component_category_simple,Component Category Simple User,model_drkds_component_category,group_simple_user,1,0,0,0
+access_component_category_pricelist,Component Category Pricelist Manager,model_drkds_component_category,group_pricelist_manager,1,0,0,0
+access_component_category_template,Component Category Template Manager,model_drkds_component_category,group_template_manager,1,1,1,0
+access_component_category_admin,Component Category Admin,model_drkds_component_category,group_admin,1,1,1,1
+access_component_simple,Component Simple User,model_drkds_kit_component,group_simple_user,1,0,0,0
+access_component_pricelist,Component Pricelist Manager,model_drkds_kit_component,group_pricelist_manager,1,1,0,0
+access_component_template,Component Template Manager,model_drkds_kit_component,group_template_manager,1,1,1,0
+access_component_admin,Component Admin,model_drkds_kit_component,group_admin,1,1,1,1
+access_template_simple,Template Simple User,model_drkds_cost_template,group_simple_user,1,0,0,0
+access_template_pricelist,Template Pricelist Manager,model_drkds_cost_template,group_pricelist_manager,1,0,0,0
+access_template_template,Template Template Manager,model_drkds_cost_template,group_template_manager,1,1,1,1
+access_template_admin,Template Admin,model_drkds_cost_template,group_admin,1,1,1,1
+access_template_component_simple,Template Component Simple User,model_drkds_template_component,group_simple_user,1,0,0,0
+access_template_component_pricelist,Template Component Pricelist Manager,model_drkds_template_component,group_pricelist_manager,1,0,0,0
+access_template_component_template,Template Component Template Manager,model_drkds_template_component,group_template_manager,1,1,1,1
+access_template_component_admin,Template Component Admin,model_drkds_template_component,group_admin,1,1,1,1
+access_template_parameter_simple,Template Parameter Simple User,model_drkds_template_parameter,group_simple_user,1,0,0,0
+access_template_parameter_pricelist,Template Parameter Pricelist Manager,model_drkds_template_parameter,group_pricelist_manager,1,0,0,0
+access_template_parameter_template,Template Parameter Template Manager,model_drkds_template_parameter,group_template_manager,1,1,1,1
+access_template_parameter_admin,Template Parameter Admin,model_drkds_template_parameter,group_admin,1,1,1,1
+access_cost_sheet_simple,Cost Sheet Simple User,model_drkds_cost_sheet,group_simple_user,1,1,1,0
+access_cost_sheet_pricelist,Cost Sheet Pricelist Manager,model_drkds_cost_sheet,group_pricelist_manager,1,1,1,0
+access_cost_sheet_template,Cost Sheet Template Manager,model_drkds_cost_sheet,group_template_manager,1,1,1,1
+access_cost_sheet_admin,Cost Sheet Admin,model_drkds_cost_sheet,group_admin,1,1,1,1
+access_cost_parameter_simple,Cost Parameter Simple User,model_drkds_cost_parameter,group_simple_user,1,1,1,0
+access_cost_parameter_pricelist,Cost Parameter Pricelist Manager,model_drkds_cost_parameter,group_pricelist_manager,1,1,1,0
+access_cost_parameter_template,Cost Parameter Template Manager,model_drkds_cost_parameter,group_template_manager,1,1,1,1
+access_cost_parameter_admin,Cost Parameter Admin,model_drkds_cost_parameter,group_admin,1,1,1,1
+access_bom_line_simple,BOM Line Simple User,model_drkds_cost_bom_line,group_simple_user,1,1,0,0
+access_bom_line_pricelist,BOM Line Pricelist Manager,model_drkds_cost_bom_line,group_pricelist_manager,1,1,0,0
+access_bom_line_template,BOM Line Template Manager,model_drkds_cost_bom_line,group_template_manager,1,1,1,1
+access_bom_line_admin,BOM Line Admin,model_drkds_cost_bom_line,group_admin,1,1,1,1
+access_change_log_simple,Change Log Simple User,model_drkds_change_log,group_simple_user,1,0,0,0
+access_change_log_pricelist,Change Log Pricelist Manager,model_drkds_change_log,group_pricelist_manager,1,0,0,0
+access_change_log_template,Change Log Template Manager,model_drkds_change_log,group_template_manager,1,0,0,0
+access_change_log_admin,Change Log Admin,model_drkds_change_log,group_admin,1,0,0,1
+access_dashboard_simple,Dashboard Simple User,model_drkds_dashboard,group_simple_user,1,0,0,0
+access_dashboard_pricelist,Dashboard Pricelist Manager,model_drkds_dashboard,group_pricelist_manager,1,0,0,0
+access_dashboard_template,Dashboard Template Manager,model_drkds_dashboard,group_template_manager,1,0,0,0
+access_dashboard_admin,Dashboard Admin,model_drkds_dashboard,group_admin,1,0,0,0
+access_cost_analysis_simple,Cost Analysis Simple User,model_drkds_cost_analysis,group_simple_user,1,0,0,0
+access_cost_analysis_pricelist,Cost Analysis Pricelist Manager,model_drkds_cost_analysis,group_pricelist_manager,1,0,0,0
+access_cost_analysis_template,Cost Analysis Template Manager,model_drkds_cost_analysis,group_template_manager,1,0,0,0
+access_cost_analysis_admin,Cost Analysis Admin,model_drkds_cost_analysis,group_admin,1,0,0,0
+access_component_usage_simple,Component Usage Simple User,model_drkds_component_usage,group_simple_user,1,0,0,0
+access_component_usage_pricelist,Component Usage Pricelist Manager,model_drkds_component_usage,group_pricelist_manager,1,0,0,0
+access_component_usage_template,Component Usage Template Manager,model_drkds_component_usage,group_template_manager,1,0,0,0
+access_component_usage_admin,Component Usage Admin,model_drkds_component_usage,group_admin,1,0,0,0

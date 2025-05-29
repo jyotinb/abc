@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Change Log Tree View -->
+        <record id="view_change_log_tree" model="ir.ui.view">
+            <field name="name">drkds.change.log.tree</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <tree string="Change Logs" 
+                      decoration-info="action_type == 'create'" 
+                      decoration-warning="action_type == 'update'"
+                      decoration-success="action_type == 'calculation'"
+                      decoration-danger="action_type == 'delete'"
+                      decoration-muted="action_type == 'access'">
+                    
+                    <field name="create_date"/>
+                    <field name="user_name"/>
+                    <field name="action_type"/>
+                    <field name="model_name"/>
+                    <field name="object_name"/>
+                    <field name="field_name"/>
+                    <field name="change_summary"/>
+                    <field name="severity"/>
+                    <field name="category"/>
+                    <field name="ip_address" groups="group_admin"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Change Log Form View -->
+        <record id="view_change_log_form" model="ir.ui.view">
+            <field name="name">drkds.change.log.form</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <form string="Change Log Entry" create="false" edit="false">
+                    <header>
+                        <button name="action_view_related_object" 
+                                string="View Related Object" 
+                                type="object" 
+                                class="btn-primary"
+                                attrs="{'invisible': ['|', ('object_model', '=', False), ('object_id', '=', False)]}"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="change_summary"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Change Information">
+                                <field name="user_id" readonly="1"/>
+                                <field name="action_type" readonly="1"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="severity" readonly="1"/>
+                                <field name="category" readonly="1"/>
+                            </group>
+                            <group string="Object Information">
+                                <field name="model_name" readonly="1"/>
+                                <field name="object_name" readonly="1"/>
+                                <field name="object_id" readonly="1"/>
+                                <field name="field_name" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Change Details" attrs="{'invisible': [('old_value', '=', False), ('new_value', '=', False)]}">
+                            <group>
+                                <field name="old_value" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="new_value" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Description">
+                            <field name="description" readonly="1" nolabel="1"/>
+                        </group>
+                        
+                        <group string="Technical Information" groups="group_admin">
+                            <group>
+                                <field name="ip_address" readonly="1"/>
+                                <field name="session_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="object_model" readonly="1"/>
+                                <field name="user_agent" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Additional Information" attrs="{'invisible': [('additional_info', '=', False)]}">
+                            <field name="additional_info" readonly="1" nolabel="1"/>
+                        </group>
+                        
+                        <group string="Error Details" attrs="{'invisible': [('error_traceback', '=', False)]}">
+                            <field name="error_traceback" readonly="1" nolabel="1" widget="text"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Change Log Search View -->
+        <record id="view_change_log_search" model="ir.ui.view">
+            <field name="name">drkds.change.log.search</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <search string="Change Logs">
+                    <field name="description" string="Description" filter_domain="[('description', 'ilike', self)]"/>
+                    <field name="user_id"/>
+                    <field name="object_name"/>
+                    <field name="model_name"/>
+                    <separator/>
+                    
+                    <!-- Action Type Filters -->
+                    <filter name="action_create" string="Create" domain="[('action_type', '=', 'create')]"/>
+                    <filter name="action_update" string="Update" domain="[('action_type', '=', 'update')]"/>
+                    <filter name="action_delete" string="Delete" domain="[('action_type', '=', 'delete')]"/>
+                    <filter name="action_toggle" string="Toggle" domain="[('action_type', '=', 'toggle')]"/>
+                    <filter name="action_calculation" string="Calculation" domain="[('action_type', '=', 'calculation')]"/>
+                    <separator/>
+                    
+                    <!-- Severity Filters -->
+                    <filter name="severity_low" string="Low Severity" domain="[('severity', '=', 'low')]"/>
+                    <filter name="severity_medium" string="Medium Severity" domain="[('severity', '=', 'medium')]"/>
+                    <filter name="severity_high" string="High Severity" domain="[('severity', '=', 'high')]"/>
+                    <filter name="severity_critical" string="Critical" domain="[('severity', '=', 'critical')]"/>
+                    <separator/>
+                    
+                    <!-- Category Filters -->
+                    <filter name="category_security" string="Security" domain="[('category', '=', 'security')]"/>
+                    <filter name="category_data" string="Data Changes" domain="[('category', '=', 'data')]"/>
+                    <filter name="category_calculation" string="Calculations" domain="[('category', '=', 'calculation')]"/>
+                    <filter name="category_configuration" string="Configuration" domain="[('category', '=', 'configuration')]"/>
+                    <separator/>
+                    
+                    <!-- Date Filters -->
+                    <filter name="today" string="Today" domain="[('create_date', '&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                    <filter name="yesterday" string="Yesterday" domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('create_date', '&lt;', (context_today()).strftime('%Y-%m-%d'))]"/>
+                    <filter name="this_week" string="This Week" domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="this_month" string="This Month" domain="[('create_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    
+                    <!-- My Logs Filter -->
+                    <filter name="my_logs" string="My Changes" domain="[('user_id', '=', uid)]"/>
+                    
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                        <filter name="group_action" string="Action Type" context="{'group_by': 'action_type'}"/>
+                        <filter name="group_model" string="Model" context="{'group_by': 'model_name'}"/>
+                        <filter name="group_severity" string="Severity" context="{'group_by': 'severity'}"/>
+                        <filter name="group_category" string="Category" context="{'group_by': 'category'}"/>
+                        <filter name="group_date" string="Date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Change Log Kanban View -->
+        <record id="view_change_log_kanban" model="ir.ui.view">
+            <field name="name">drkds.change.log.kanban</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="user_name"/>
+                    <field name="action_type"/>
+                    <field name="create_date"/>
+                    <field name="change_summary"/>
+                    <field name="severity"/>
+                    <field name="object_name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <field name="change_summary"/>
+                                        </div>
+                                        <div class="text-muted">
+                                            <t t-esc="record.object_name.value"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_content">
+                                    <div class="o_kanban_card_manage_pane">
+                                        <div class="row">
+                                            <div class="col-6 text-muted">
+                                                <span t-attf-class="badge badge-#{record.severity.raw_value === 'critical' ? 'danger' : record.severity.raw_value === 'high' ? 'warning' : record.severity.raw_value === 'medium' ? 'info' : 'secondary'}">
+                                                    <t t-esc="record.severity.value"/>
+                                                </span>
+                                            </div>
+                                            <div class="col-6 text-right text-muted">
+                                                <span t-attf-class="badge badge-#{record.action_type.raw_value === 'create' ? 'success' : record.action_type.raw_value === 'delete' ? 'danger' : 'primary'}">
+                                                    <t t-esc="record.action_type.value"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_footer">
+                                    <div class="text-muted">
+                                        <i class="fa fa-user"/> <t t-esc="record.user_name.value"/>
+                                        <div class="float-right">
+                                            <i class="fa fa-clock-o"/> <t t-esc="record.create_date.value"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <!-- Change Log Calendar View -->
+        <record id="view_change_log_calendar" model="ir.ui.view">
+            <field name="name">drkds.change.log.calendar</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <calendar string="Change Log Calendar" 
+                         date_start="create_date" 
+                         color="user_id"
+                         mode="month"
+                         quick_add="False">
+                    <field name="user_name"/>
+                    <field name="action_type"/>
+                    <field name="change_summary"/>
+                    <field name="severity"/>
+                </calendar>
+            </field>
+        </record>
+        
+        <!-- Change Log Graph View -->
+        <record id="view_change_log_graph" model="ir.ui.view">
+            <field name="name">drkds.change.log.graph</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <graph string="Change Log Analysis" type="bar">
+                    <field name="create_date" type="row" interval="day"/>
+                    <field name="action_type" type="col"/>
+                </graph>
+            </field>
+        </record>
+        
+        <!-- Change Log Pivot View -->
+        <record id="view_change_log_pivot" model="ir.ui.view">
+            <field name="name">drkds.change.log.pivot</field>
+            <field name="model">drkds.change.log</field>
+            <field name="arch" type="xml">
+                <pivot string="Change Log Analysis">
+                    <field name="user_id" type="row"/>
+                    <field name="action_type" type="col"/>
+                    <field name="create_date" type="row" interval="month"/>
+                </pivot>
+            </field>
+        </record>
+        
+        <!-- Actions -->
+        <record id="action_change_log_tree" model="ir.actions.act_window">
+            <field name="name">Change Logs</field>
+            <field name="res_model">drkds.change.log</field>
+            <field name="view_mode">tree,kanban,form,calendar,graph,pivot</field>
+            <field name="context">{'search_default_this_week': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No change logs found!
+                </p>
+                <p>
+                    Change logs track all system modifications including user actions,
+                    data changes, calculations, and configuration updates.
+                </p>
+            </field>
+        </record>
+        
+        <!-- System Activity Action (Admin Only) -->
+        <record id="action_system_activity" model="ir.actions.act_window">
+            <field name="name">System Activity</field>
+            <field name="res_model">drkds.change.log</field>
+            <field name="view_mode">graph,pivot,tree,kanban</field>
+            <field name="context">{'search_default_this_month': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    System Activity Dashboard
+                </p>
+                <p>
+                    Analyze system usage patterns, user activity, and change trends.
+                </p>
+            </field>
+        </record>
+        
+        <!-- User Activity Report Action -->
+        <record id="action_user_activity_report" model="ir.actions.act_window">
+            <field name="name">User Activity Report</field>
+            <field name="res_model">drkds.change.log</field>
+            <field name="view_mode">pivot,graph,tree</field>
+            <field name="context">{'search_default_this_month': 1, 'group_by': ['user_id', 'action_type']}</field>
+            <field name="domain">[('action_type', 'in', ['create', 'update', 'delete', 'toggle', 'calculation'])]</field>
+        </record>
+        
+    </data>
+</odoo>

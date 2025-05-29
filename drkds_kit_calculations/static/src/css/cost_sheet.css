@@ -1,0 +1,353 @@
+/* DRKDS Kit Calculations - Custom Styles */
+
+/* Cost Sheet Form Enhancements */
+.drkds_cost_sheet_form {
+    background: #f8f9fa;
+}
+
+/* Summary Cards */
+.drkds_summary_card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.drkds_summary_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.drkds_summary_card .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 5px;
+}
+
+.drkds_summary_card .card-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.drkds_summary_card .card-icon {
+    float: right;
+    font-size: 32px;
+    opacity: 0.3;
+    margin-top: -10px;
+}
+
+/* BOM Line Styles */
+.drkds_bom_line_disabled {
+    background-color: #f8f9fa !important;
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+.drkds_bom_line_mandatory {
+    border-left: 3px solid #dc3545;
+}
+
+.drkds_component_toggle {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.drkds_component_toggle:hover {
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+/* Status Indicators */
+.drkds_status_draft {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.drkds_status_calculated {
+    color: #0d6efd;
+    background-color: #cff4fc;
+    border: 1px solid #b6effb;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.drkds_status_confirmed {
+    color: #198754;
+    background-color: #d1e7dd;
+    border: 1px solid #badbcc;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Parameter Input Styles */
+.drkds_parameter_section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.drkds_parameter_section h4 {
+    color: #495057;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 8px;
+}
+
+.drkds_parameter_input {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px 12px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.drkds_parameter_input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Template Selection */
+.drkds_template_card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.drkds_template_card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.drkds_template_card.selected {
+    border-color: #0d6efd;
+    background-color: #f8f9ff;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+.drkds_template_card .template-title {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 5px;
+}
+
+.drkds_template_card .template-type {
+    color: #6c757d;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* Component Toggle Buttons */
+.drkds_toggle_btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drkds_toggle_btn.enabled {
+    background-color: #198754;
+    color: white;
+}
+
+.drkds_toggle_btn.enabled:hover {
+    background-color: #157347;
+}
+
+.drkds_toggle_btn.disabled {
+    background-color: #6c757d;
+    color: white;
+}
+
+.drkds_toggle_btn.disabled:hover {
+    background-color: #5c636a;
+}
+
+/* Wizard Styles */
+.drkds_wizard_step {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drkds_wizard_step h3 {
+    color: #495057;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.drkds_wizard_progress {
+    height: 4px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.drkds_wizard_progress_bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    transition: width 0.3s ease;
+}
+
+/* Change Log Styles */
+.drkds_log_entry {
+    border-left: 4px solid #dee2e6;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background: #f8f9fa;
+    border-radius: 0 4px 4px 0;
+}
+
+.drkds_log_entry.severity-low {
+    border-left-color: #28a745;
+}
+
+.drkds_log_entry.severity-medium {
+    border-left-color: #ffc107;
+}
+
+.drkds_log_entry.severity-high {
+    border-left-color: #fd7e14;
+}
+
+.drkds_log_entry.severity-critical {
+    border-left-color: #dc3545;
+}
+
+.drkds_log_timestamp {
+    font-size: 11px;
+    color: #6c757d;
+    float: right;
+}
+
+.drkds_log_user {
+    font-weight: 600;
+    color: #495057;
+}
+
+.drkds_log_action {
+    background-color: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Dashboard Styles */
+.drkds_dashboard_widget {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+.drkds_dashboard_widget h4 {
+    color: #495057;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.drkds_stat_number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.drkds_stat_label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .drkds_summary_card {
+        margin: 5px;
+        padding: 15px;
+    }
+    
+    .drkds_summary_card .card-value {
+        font-size: 20px;
+    }
+    
+    .drkds_template_card {
+        margin: 5px 0;
+    }
+    
+    .drkds_dashboard_widget {
+        margin: 10px 5px;
+        padding: 15px;
+    }
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.drkds_fade_in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.drkds_pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Print Styles */
+@media print {
+    .drkds_summary_card {
+        box-shadow: none;
+        border: 1px solid #000;
+        background: white !important;
+        color: black !important;
+    }
+    
+    .drkds_toggle_btn,
+    .btn {
+        display: none !important;
+    }
+    
+    .drkds_bom_line_disabled {
+        display: none !important;
+    }
+}

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Dashboard Main View -->
+        <record id="view_dashboard_form" model="ir.ui.view">
+            <field name="name">drkds.dashboard.form</field>
+            <field name="model">drkds.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="DRKDS Dashboard" create="false" edit="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>Kit Calculations Dashboard</h1>
+                        </div>
+                        
+                        <!-- Summary Statistics -->
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-primary">
+                                        <i class="fa fa-file-text-o fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Total Cost Sheets</div>
+                                    <div class="text-muted">
+                                        <field name="total_cost_sheets" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-success">
+                                        <i class="fa fa-check-circle fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Confirmed Sheets</div>
+                                    <div class="text-muted">
+                                        <field name="confirmed_cost_sheets" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-info">
+                                        <i class="fa fa-cubes fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Active Components</div>
+                                    <div class="text-muted">
+                                        <field name="active_components" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-warning">
+                                        <i class="fa fa-list-alt fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Templates</div>
+                                    <div class="text-muted">
+                                        <field name="active_templates" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="row mt32">
+                            <div class="col-md-6">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-plus-circle fa-2x text-primary"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Quick Actions</div>
+                                        <div class="text-muted">Create new cost sheet or template</div>
+                                        <div class="mt8">
+                                            <button name="action_create_cost_sheet" 
+                                                    string="New Cost Sheet" 
+                                                    type="object" 
+                                                    class="btn btn-primary btn-sm mr8"/>
+                                            <button name="action_create_template" 
+                                                    string="New Template" 
+                                                    type="object" 
+                                                    class="btn btn-secondary btn-sm"
+                                                    groups="group_template_manager"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-money fa-2x text-success"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Total Value</div>
+                                        <div class="text-muted">
+                                            <field name="total_cost_value" widget="monetary"/>
+                                        </div>
+                                        <div class="text-muted mt4">
+                                            Average: <field name="average_cost_value" widget="monetary"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Activity -->
+                        <separator string="Recent Activity" class="mt32"/>
+                        <field name="recent_cost_sheets" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="client_id"/>
+                                <field name="template_id"/>
+                                <field name="enabled_components_total"/>
+                                <field name="state"/>
+                                <field name="create_date"/>
+                            </tree>
+                        </field>
+                        
+                        <!-- System Health -->
+                        <separator string="System Health" class="mt32" groups="group_admin"/>
+                        <div class="row" groups="group_admin">
+                            <div class="col-md-4">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-users fa-2x text-info"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Active Users (30 days)</div>
+                                        <div class="text-muted">
+                                            <field name="active_users_count" widget="integer"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-history fa-2x text-warning"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Change Logs (7 days)</div>
+                                        <div class="text-muted">
+                                            <field name="recent_changes_count" widget="integer"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-calculator fa-2x text-success"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Calculations (30 days)</div>
+                                        <div class="text-muted">
+                                            <field name="calculations_count" widget="integer"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Charts Section -->
+                        <separator string="Analytics" class="mt32" groups="group_admin"/>
+                        <div class="row" groups="group_admin">
+                            <div class="col-md-6">
+                                <h4>Cost Sheets by Status</h4>
+                                <field name="cost_sheets_by_status_chart" widget="chart"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Monthly Activity</h4>
+                                <field name="monthly_activity_chart" widget="chart"/>
+                            </div>
+                        </div>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Dashboard Model (Transient) -->
+        <record id="view_dashboard_action" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">drkds.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'form_view_initial_mode': 'readonly'}</field>
+        </record>
+        
+        <!-- Cost Analysis Report Views -->
+        <record id="view_cost_analysis_tree" model="ir.ui.view">
+            <field name="name">drkds.cost.analysis.tree</field>
+            <field name="model">drkds.cost.analysis</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Analysis">
+                    <field name="client_id"/>
+                    <field name="template_type"/>
+                    <field name="cost_sheet_count"/>
+                    <field name="total_amount"/>
+                    <field name="average_amount"/>
+                    <field name="min_amount"/>
+                    <field name="max_amount"/>
+                    <field name="date_range"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_cost_analysis_graph" model="ir.ui.view">
+            <field name="name">drkds.cost.analysis.graph</field>
+            <field name="model">drkds.cost.analysis</field>
+            <field name="arch" type="xml">
+                <graph string="Cost Analysis" type="bar">
+                    <field name="client_id" type="row"/>
+                    <field name="total_amount" type="measure"/>
+                    <field name="cost_sheet_count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        
+        <record id="view_cost_analysis_pivot" model="ir.ui.view">
+            <field name="name">drkds.cost.analysis.pivot</field>
+            <field name="model">drkds.cost.analysis</field>
+            <field name="arch" type="xml">
+                <pivot string="Cost Analysis">
+                    <field name="client_id" type="row"/>
+                    <field name="template_type" type="col"/>
+                    <field name="total_amount" type="measure"/>
+                    <field name="cost_sheet_count" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        
+        <!-- Cost Analysis Action -->
+        <record id="action_cost_analysis_report" model="ir.actions.act_window">
+            <field name="name">Cost Analysis Report</field>
+            <field name="res_model">drkds.cost.analysis</field>
+            <field name="view_mode">tree,graph,pivot</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Cost Analysis Report
+                </p>
+                <p>
+                    Analyze cost patterns, client spending, and template usage across your cost sheets.
+                </p>
+            </field>
+        </record>
+        
+        <!-- Component Usage Report Views -->
+        <record id="view_component_usage_tree" model="ir.ui.view">
+            <field name="name">drkds.component.usage.tree</field>
+            <field name="model">drkds.component.usage</field>
+            <field name="arch" type="xml">
+                <tree string="Component Usage Analysis">
+                    <field name="component_id"/>
+                    <field name="component_category"/>
+                    <field name="usage_count"/>
+                    <field name="total_quantity"/>
+                    <field name="total_amount"/>
+                    <field name="average_rate"/>
+                    <field name="templates_used"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_component_usage_graph" model="ir.ui.view">
+            <field name="name">drkds.component.usage.graph</field>
+            <field name="model">drkds.component.usage</field>
+            <field name="arch" type="xml">
+                <graph string="Component Usage" type="pie">
+                    <field name="component_id" type="row"/>
+                    <field name="usage_count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        
+        <!-- Component Usage Action -->
+        <record id="action_component_usage_report" model="ir.actions.act_window">
+            <field name="name">Component Usage Report</field>
+            <field name="res_model">drkds.component.usage</field>
+            <field name="view_mode">tree,graph,pivot</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Component Usage Analysis
+                </p>
+                <p>
+                    Track which components are used most frequently and their impact on costs.
+                </p>
+            </field>
+        </record>
+        
+        <!-- User Activity Dashboard -->
+        <record id="view_user_activity_dashboard" model="ir.ui.view">
+            <field name="name">drkds.user.activity.dashboard</field>
+            <field name="model">drkds.user.activity</field>
+            <field name="arch" type="xml">
+                <form string="User Activity Dashboard" create="false" edit="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>User Activity Dashboard</h1>
+                        </div>
+                        
+                        <div class="row mt16">
+                            <div class="col-md-3">
+                                <div class="o_setting_box">
+                                    <div class="text-center">
+                                        <div class="o_stat_value">
+                                            <field name="total_users"/>
+                                        </div>
+                                        <div class="o_stat_text">Total Users</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="o_setting_box">
+                                    <div class="text-center">
+                                        <div class="o_stat_value text-success">
+                                            <field name="active_users"/>
+                                        </div>
+                                        <div class="o_stat_text">Active Users</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="o_setting_box">
+                                    <div class="text-center">
+                                        <div class="o_stat_value text-info">
+                                            <field name="cost_sheets_created"/>
+                                        </div>
+                                        <div class="o_stat_text">Sheets Created</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="o_setting_box">
+                                    <div class="text-center">
+                                        <div class="o_stat_value text-warning">
+                                            <field name="calculations_performed"/>
+                                        </div>
+                                        <div class="o_stat_text">Calculations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <separator string="User Activity Details" class="mt32"/>
+                        <field name="user_activity_lines" nolabel="1">
+                            <tree>
+                                <field name="user_id"/>
+                                <field name="cost_sheets_count"/>
+                                <field name="calculations_count"/>
+                                <field name="components_toggled"/>
+                                <field name="last_activity"/>
+                                <field name="user_group"/>
+                            </tree>
+                        </field>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Main Dashboard Action -->
+        <record id="action_dashboard" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">drkds.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'create': False, 'edit': False}</field>
+        </record>
+        
+    </data>
+</odoo>

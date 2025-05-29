@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Component Categories -->
+        <record id="category_pipes_gi" model="drkds.component.category">
+            <field name="name">GI Pipes and Structures</field>
+            <field name="code">GI_PIPES</field>
+            <field name="description">Galvanized Iron pipes and structural components</field>
+        </record>
+        
+        <record id="category_pipes_alu" model="drkds.component.category">
+            <field name="name">Aluminum Pipes</field>
+            <field name="code">ALU_PIPES</field>
+            <field name="description">Aluminum pipes and tubes</field>
+        </record>
+        
+        <record id="category_hardware" model="drkds.component.category">
+            <field name="name">Hardware and Clamps</field>
+            <field name="code">HARDWARE</field>
+            <field name="description">Clamps, joiners, and hardware components</field>
+        </record>
+        
+        <record id="category_wire_rope" model="drkds.component.category">
+            <field name="name">Wire and Rope</field>
+            <field name="code">WIRE_ROPE</field>
+            <field name="description">Wire ropes and cables</field>
+        </record>
+        
+        <record id="category_pulleys" model="drkds.component.category">
+            <field name="name">Pulleys and Mechanisms</field>
+            <field name="code">PULLEYS</field>
+            <field name="description">Pulleys, tighteners, and mechanical components</field>
+        </record>
+        
+        <record id="category_nets_fabric" model="drkds.component.category">
+            <field name="name">Nets and Fabrics</field>
+            <field name="code">NETS_FABRIC</field>
+            <field name="description">Shade nets, fabrics, and related materials</field>
+        </record>
+        
+        <record id="category_fasteners" model="drkds.component.category">
+            <field name="name">Fasteners and Accessories</field>
+            <field name="code">FASTENERS</field>
+            <field name="description">Bolts, screws, and miscellaneous fasteners</field>
+        </record>
+        
+    </data>
+</odoo>

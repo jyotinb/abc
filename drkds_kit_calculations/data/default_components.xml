@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Sample Components -->
+        <record id="component_gi_pipe_60mm" model="drkds.kit.component">
+            <field name="name">GI Pipe 3 mm x 60 mm x 6000 mm</field>
+            <field name="code">GI_P_60_6000</field>
+            <field name="category_id" ref="category_pipes_gi"/>
+            <field name="uom_id" ref="uom.product_uom_meter"/>
+            <field name="current_rate">180.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <record id="component_bearing_clamp_60mm" model="drkds.kit.component">
+            <field name="name">Bearing Clamp 60 mm</field>
+            <field name="code">BC_60</field>
+            <field name="category_id" ref="category_hardware"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="current_rate">350.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <!-- Sample Template -->
+        <record id="template_nvph_8x4_default" model="drkds.cost.template">
+            <field name="name">NVPH 8x4 Standard</field>
+            <field name="code">NVPH_8X4_STD</field>
+            <field name="template_type">nvph_8x4</field>
+            <field name="description">Standard NVPH 8x4 template</field>
+        </record>
+        
+        <!-- Template Parameters -->
+        <record id="param_length_8m" model="drkds.template.parameter">
+            <field name="template_id" ref="template_nvph_8x4_default"/>
+            <field name="name">Length at 8 mtr bay</field>
+            <field name="code">length_8m</field>
+            <field name="parameter_type">float</field>
+            <field name="sequence">10</field>
+            <field name="required">True</field>
+            <field name="default_value">48</field>
+        </record>
+        
+        <!-- Template Components -->
+        <record id="tc_gi_pipe_60mm" model="drkds.template.component">
+            <field name="template_id" ref="template_nvph_8x4_default"/>
+            <field name="component_id" ref="component_gi_pipe_60mm"/>
+            <field name="sequence">10</field>
+            <field name="default_enabled">True</field>
+            <field name="quantity_formula">length_8m</field>
+        </record>
+        
+    </data>
+</odoo>
