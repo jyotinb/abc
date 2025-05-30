@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Template Tree View -->
+        <record id="view_template_tree" model="ir.ui.view">
+            <field name="name">kit.template.tree</field>
+            <field name="model">kit.template</field>
+            <field name="arch" type="xml">
+                <tree string="Templates" decoration-muted="not active">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="template_type"/>
+                    <field name="component_count"/>
+                    <field name="parameter_count"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Template Form View - REMOVED CROSS-REFERENCE -->
+        <record id="view_template_form" model="ir.ui.view">
+            <field name="name">kit.template.form</field>
+            <field name="model">kit.template</field>
+            <field name="arch" type="xml">
+                <form string="Template">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Template Name"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="template_type"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="component_count" readonly="1"/>
+                                <field name="parameter_count" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <field name="description" placeholder="Template description and usage notes..."/>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Components" name="components">
+                                <field name="component_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="component_id"/>
+                                        <field name="component_category"/>
+                                        <field name="current_rate" readonly="1"/>
+                                        <field name="default_enabled"/>
+                                        <field name="is_mandatory"/>
+                                        <field name="quantity_formula" placeholder="e.g., length_8m * 2"/>
+                                        <field name="rate_formula" placeholder="e.g., current_rate * 1.2"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page string="Parameters" name="parameters">
+                                <field name="parameter_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="parameter_type"/>
+                                        <field name="required"/>
+                                        <field name="default_value"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Template Search View -->
+        <record id="view_template_search" model="ir.ui.view">
+            <field name="name">kit.template.search</field>
+            <field name="model">kit.template</field>
+            <field name="arch" type="xml">
+                <search string="Templates">
+                    <field name="name" string="Template" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="template_type"/>
+                    <separator/>
+                    <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                    <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter name="nvph_8x4" string="NVPH 8x4" domain="[('template_type', '=', 'nvph_8x4')]"/>
+                    <filter name="nvph_9x4" string="NVPH 9.6x4" domain="[('template_type', '=', 'nvph_9x4')]"/>
+                    <filter name="custom" string="Custom" domain="[('template_type', '=', 'custom')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_template_type" string="Template Type" context="{'group_by': 'template_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Template Action -->
+        <record id="action_template_tree" model="ir.actions.act_window">
+            <field name="name">Templates</field>
+            <field name="res_model">kit.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first template!
+                </p>
+                <p>
+                    Templates define the structure for cost calculations.
+                    Configure components, parameters, and formulas.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

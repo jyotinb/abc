@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Cost Sheet Tree View -->
+        <record id="view_cost_sheet_tree" model="ir.ui.view">
+            <field name="name">kit.cost.sheet.tree</field>
+            <field name="model">kit.cost.sheet</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Sheets" decoration-info="state == 'draft'" decoration-success="state == 'calculated'" decoration-warning="state == 'confirmed'">
+                    <field name="name"/>
+                    <field name="project_name"/>
+                    <field name="client_name"/>
+                    <field name="template_id"/>
+                    <field name="total_area"/>
+                    <field name="enabled_amount"/>
+                    <field name="rate_per_sqm"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Cost Sheet Form View -->
+        <record id="view_cost_sheet_form" model="ir.ui.view">
+            <field name="name">kit.cost.sheet.form</field>
+            <field name="model">kit.cost.sheet</field>
+            <field name="arch" type="xml">
+                <form string="Cost Sheet">
+                    <header>
+                        <button name="action_calculate" 
+                                string="Calculate" 
+                                type="object" 
+                                class="btn-primary"
+                                invisible="state != 'draft'"/>
+                        <button name="action_confirm" 
+                                string="Confirm" 
+                                type="object" 
+                                class="btn-primary"
+                                invisible="state != 'calculated'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,calculated,confirmed"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <!-- Summary Cards -->
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-primary">
+                                        <i class="fa fa-calculator fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Total Amount</div>
+                                    <div class="text-muted">
+                                        <field name="enabled_amount" widget="monetary"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-info">
+                                        <i class="fa fa-expand fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Total Area</div>
+                                    <div class="text-muted">
+                                        <field name="total_area"/> m²
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-success">
+                                        <i class="fa fa-money fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Rate per m²</div>
+                                    <div class="text-muted">
+                                        <field name="rate_per_sqm" widget="monetary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <notebook>
+                            <page string="Project Info" name="project_info">
+                                <group>
+                                    <group>
+                                        <field name="template_id" readonly="state != 'draft'"/>
+                                        <field name="project_name"/>
+                                        <field name="client_name"/>
+                                    </group>
+                                    <group>
+                                        <field name="site_location"/>
+                                        <field name="quotation_number"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Parameters" name="parameters">
+                                <field name="parameter_ids" readonly="state == 'confirmed'">
+                                    <tree editable="bottom">
+                                        <field name="parameter_name"/>
+                                        <field name="parameter_type"/>
+                                        <field name="value_float" invisible="parameter_type != 'float'" required="parameter_type == 'float'"/>
+                                        <field name="value_integer" invisible="parameter_type != 'integer'" required="parameter_type == 'integer'"/>
+                                        <field name="value_char" invisible="parameter_type != 'char'" required="parameter_type == 'char'"/>
+                                        <field name="value_boolean" invisible="parameter_type != 'boolean'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page string="Components" name="components">
+                                <field name="component_ids" readonly="state == 'confirmed'">
+                                    <tree editable="bottom" decoration-muted="not is_enabled">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="is_enabled" widget="boolean_toggle"/>
+                                        <field name="component_name"/>
+                                        <field name="component_category"/>
+                                        <field name="quantity"/>
+                                        <field name="uom"/>
+                                        <field name="rate" groups="drkds_kit_calculator.group_kit_calculator_manager"/>
+                                        <field name="amount" sum="Total"/>
+                                        <field name="is_mandatory" invisible="1"/>
+                                        <button name="toggle_component" 
+                                                type="object" 
+                                                icon="fa-toggle-on" 
+                                                invisible="not is_enabled"
+                                                title="Disable Component"/>
+                                        <button name="toggle_component" 
+                                                type="object" 
+                                                icon="fa-toggle-off" 
+                                                invisible="is_enabled"
+                                                title="Enable Component"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page string="Notes" name="notes">
+                                <field name="notes" placeholder="Project notes and specifications..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                   <!--  <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div> -->
+                </form>
+            </field>
+        </record>
+        
+        <!-- Cost Sheet Search View -->
+        <record id="view_cost_sheet_search" model="ir.ui.view">
+            <field name="name">kit.cost.sheet.search</field>
+            <field name="model">kit.cost.sheet</field>
+            <field name="arch" type="xml">
+                <search string="Cost Sheets">
+                    <field name="name" string="Cost Sheet" filter_domain="['|', ('name', 'ilike', self), ('quotation_number', 'ilike', self)]"/>
+                    <field name="project_name"/>
+                    <field name="client_name"/>
+                    <field name="template_id"/>
+                    <separator/>
+                    <filter name="my_sheets" string="My Cost Sheets" domain="[('create_uid', '=', uid)]"/>
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="calculated" string="Calculated" domain="[('state', '=', 'calculated')]"/>
+                    <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <separator/>
+                    <filter name="this_month" string="This Month" domain="[('create_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_client" string="Client" context="{'group_by': 'client_name'}"/>
+                        <filter name="group_template" string="Template" context="{'group_by': 'template_id'}"/>
+                        <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                        <filter name="group_date" string="Date" context="{'group_by': 'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Cost Sheet Action -->
+        <record id="action_cost_sheet_tree" model="ir.actions.act_window">
+            <field name="name">Cost Sheets</field>
+            <field name="res_model">kit.cost.sheet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_my_sheets': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first cost sheet!
+                </p>
+                <p>
+                    Cost sheets help calculate material costs for your projects.
+                    Use the wizard to get started quickly.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

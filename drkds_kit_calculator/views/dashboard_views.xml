@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Dashboard Form View -->
+        <record id="view_kit_dashboard_form" model="ir.ui.view">
+            <field name="name">kit.dashboard.form</field>
+            <field name="model">kit.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Kit Calculator Dashboard" create="false" edit="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>Kit Calculator Dashboard</h1>
+                            <p>Professional cost calculation system overview</p>
+                        </div>
+                        
+                        <!-- Summary Statistics -->
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-primary">
+                                        <i class="fa fa-file-text-o fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Total Cost Sheets</div>
+                                    <div class="text-muted">
+                                        <field name="total_cost_sheets" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-success">
+                                        <i class="fa fa-check-circle fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Confirmed Sheets</div>
+                                    <div class="text-muted">
+                                        <field name="confirmed_sheets" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-info">
+                                        <i class="fa fa-cubes fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Components</div>
+                                    <div class="text-muted">
+                                        <field name="total_components" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-warning">
+                                        <i class="fa fa-list-alt fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Templates</div>
+                                    <div class="text-muted">
+                                        <field name="total_templates" widget="integer"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Financial Overview -->
+                        <div class="row mt32">
+                            <div class="col-md-6">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-money fa-2x text-success"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Total Value</div>
+                                        <div class="text-muted">
+                                            <field name="total_value" widget="monetary"/>
+                                        </div>
+                                        <div class="text-muted mt4">
+                                            Average: <field name="average_value" widget="monetary"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <i class="fa fa-plus-circle fa-2x text-primary"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <div class="o_setting_right_pane_label">Quick Actions</div>
+                                        <div class="text-muted">Create new cost calculations</div>
+                                        <div class="mt8">
+                                            <button name="action_create_cost_sheet" 
+                                                    string="New Cost Sheet" 
+                                                    type="object" 
+                                                    class="btn btn-primary"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Activity -->
+                        <separator string="Recent Cost Sheets" class="mt32"/>
+                        <div class="alert alert-info">
+                            <strong>Getting Started:</strong>
+                            <ul class="mb-0">
+                                <li>Create components in Configuration → Components</li>
+                                <li>Set up templates in Configuration → Templates</li>
+                                <li>Generate cost sheets using the wizard</li>
+                                <li>Configure user permissions in Settings</li>
+                            </ul>
+                        </div>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Dashboard Action - FIXED -->
+        <record id="action_kit_dashboard" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">kit.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'create': False, 'edit': False}</field>
+        </record>
+        
+    </data>
+</odoo>

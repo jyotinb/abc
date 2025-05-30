@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Cost Calculator Wizard -->
+        <record id="view_cost_calculator_wizard_form" model="ir.ui.view">
+            <field name="name">kit.cost.calculator.wizard.form</field>
+            <field name="model">kit.cost.calculator.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Cost Sheet">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>Kit Cost Calculator</h1>
+                            <p>Create a new cost sheet with template-based calculations</p>
+                        </div>
+                        
+                        <group string="Template Selection">
+                            <group>
+                                <field name="template_id" options="{'no_create': True}"/>
+                                <field name="template_description" readonly="1" invisible="not template_description"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Project Information">
+                            <group>
+                                <field name="project_name"/>
+                                <field name="client_name"/>
+                            </group>
+                            <group>
+                                <field name="site_location"/>
+                                <field name="quotation_number"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Parameters">
+                            <group>
+                                <field name="length_8m"/>
+                                <field name="no_8m_bays"/>
+                                <field name="length_4m"/>
+                                <field name="no_4m_spans"/>
+                            </group>
+                            <group>
+                                <field name="grid_size_bay"/>
+                                <field name="grid_size_span"/>
+                                <field name="corridor_length"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Estimation">
+                            <group>
+                                <field name="total_area" readonly="1"/>
+                                <field name="estimated_cost" readonly="1" widget="monetary"/>
+                            </group>
+                        </group>
+                        
+                        <div class="alert alert-info">
+                            <strong>Ready to Create!</strong>
+                            <p>The cost sheet will be created with the above parameters. You can modify all values after creation.</p>
+                        </div>
+                    </sheet>
+                    
+                    <footer>
+                        <button string="Create Cost Sheet" 
+                                name="action_create_cost_sheet" 
+                                type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Wizard Action - REQUIRED -->
+        <record id="action_cost_calculator_wizard" model="ir.actions.act_window">
+            <field name="name">Create Cost Sheet</field>
+            <field name="res_model">kit.cost.calculator.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</odoo>

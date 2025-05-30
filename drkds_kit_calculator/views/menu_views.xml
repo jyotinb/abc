@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu -->
+        <menuitem id="menu_kit_calculator_main" 
+                  name="Kit Calculator" 
+                  sequence="10"/>
+        
+        <!-- Cost Sheets -->
+        <menuitem id="menu_cost_sheets" 
+                  name="Cost Sheets"
+                  parent="menu_kit_calculator_main"
+                  action="action_cost_sheet_tree"
+                  sequence="20"/>
+        
+        <!-- Dashboard -->
+        <menuitem id="menu_kit_dashboard" 
+                  name="Dashboard"
+                  parent="menu_kit_calculator_main"
+                  action="action_kit_dashboard"
+                  sequence="10"/>
+        
+        <!-- Configuration -->
+        <menuitem id="menu_configuration" 
+                  name="Configuration"
+                  parent="menu_kit_calculator_main"
+                  sequence="30"
+                  groups="group_kit_calculator_manager"/>
+        
+        <!-- Components -->
+        <menuitem id="menu_components" 
+                  name="Components"
+                  parent="menu_configuration"
+                  action="action_component_tree"
+                  sequence="10"/>
+        
+        <!-- Templates -->
+        <menuitem id="menu_templates" 
+                  name="Templates"
+                  parent="menu_configuration"
+                  action="action_template_tree"
+                  sequence="20"/>
+        
+    </data>
+</odoo>

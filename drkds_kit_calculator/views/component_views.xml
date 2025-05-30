@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Component Tree View -->
+        <record id="view_component_tree" model="ir.ui.view">
+            <field name="name">kit.component.tree</field>
+            <field name="model">kit.component</field>
+            <field name="arch" type="xml">
+                <tree string="Components" editable="bottom" decoration-muted="not active">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    <field name="current_rate" groups="drkds_kit_calculator.group_kit_calculator_manager"/>
+                    <field name="rate_with_multiplier" readonly="1"/>
+                    <field name="uom"/>
+                    <field name="weight_per_unit"/>
+                    <field name="standard_length"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Component Form View -->
+        <record id="view_component_form" model="ir.ui.view">
+            <field name="name">kit.component.form</field>
+            <field name="model">kit.component</field>
+            <field name="arch" type="xml">
+                <form string="Component">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Component Name"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="category"/>
+                                <field name="uom"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="current_rate" groups="drkds_kit_calculator.group_kit_calculator_manager"/>
+                                <field name="rate_multiplier" groups="drkds_kit_calculator.group_kit_calculator_manager"/>
+                                <field name="rate_with_multiplier" readonly="1"/>
+                                <field name="weight_per_unit"/>
+                                <field name="standard_length"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <field name="description" placeholder="Component description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Component Search View -->
+        <record id="view_component_search" model="ir.ui.view">
+            <field name="name">kit.component.search</field>
+            <field name="model">kit.component</field>
+            <field name="arch" type="xml">
+                <search string="Components">
+                    <field name="name" string="Component" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="category"/>
+                    <separator/>
+                    <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                    <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter name="gi_pipes" string="GI Pipes" domain="[('category', '=', 'gi_pipes')]"/>
+                    <filter name="aluminum" string="Aluminum" domain="[('category', '=', 'aluminum')]"/>
+                    <filter name="hardware" string="Hardware" domain="[('category', '=', 'hardware')]"/>
+                    <filter name="wire_rope" string="Wire &amp; Rope" domain="[('category', '=', 'wire_rope')]"/>
+                    <filter name="nets" string="Nets &amp; Fabrics" domain="[('category', '=', 'nets')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_category" string="Category" context="{'group_by': 'category'}"/>
+                        <filter name="group_uom" string="Unit" context="{'group_by': 'uom'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- Component Kanban View - FIXED XML SYNTAX -->
+        <record id="view_component_kanban" model="ir.ui.view">
+            <field name="name">kit.component.kanban</field>
+            <field name="model">kit.component</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    <field name="current_rate"/>
+                    <field name="uom"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click" t-attf-class="#{!record.active.raw_value ? 'o_kanban_color_2' : ''}">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <strong><t t-esc="record.name.value"/></strong>
+                                        </div>
+                                        <div class="text-muted" t-if="record.code.value">
+                                            [<t t-esc="record.code.value"/>]
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span class="badge badge-pill badge-info">
+                                                <t t-esc="record.category.value"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <strong>₹<t t-esc="record.current_rate.value"/></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_footer">
+                                    <div class="text-muted">
+                                        <i class="fa fa-cube"/> <t t-esc="record.uom.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <!-- Component Action -->
+        <record id="action_component_tree" model="ir.actions.act_window">
+            <field name="name">Components</field>
+            <field name="res_model">kit.component</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first component!
+                </p>
+                <p>
+                    Components are the building blocks of your calculations.
+                    Add pipes, hardware, wires, and other materials here.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

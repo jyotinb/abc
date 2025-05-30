@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Sample Components -->
+        <record id="component_gi_pipe_60mm" model="kit.component">
+            <field name="name">GI Pipe 3mm x 60mm x 6000mm</field>
+            <field name="code">GI_P_60_6000</field>
+            <field name="category">gi_pipes</field>
+            <field name="uom">meter</field>
+            <field name="current_rate">180.00</field>
+            <field name="rate_multiplier">1.2</field>
+            <field name="standard_length">6.0</field>
+        </record>
+        
+        <record id="component_gi_pipe_80mm" model="kit.component">
+            <field name="name">GI Pipe 3mm x 80mm x 6000mm</field>
+            <field name="code">GI_P_80_6000</field>
+            <field name="category">gi_pipes</field>
+            <field name="uom">meter</field>
+            <field name="current_rate">220.00</field>
+            <field name="rate_multiplier">1.2</field>
+            <field name="standard_length">6.0</field>
+        </record>
+        
+        <record id="component_bearing_clamp_60" model="kit.component">
+            <field name="name">Bearing Clamp 60mm</field>
+            <field name="code">BC_60</field>
+            <field name="category">hardware</field>
+            <field name="uom">piece</field>
+            <field name="current_rate">350.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <record id="component_bearing_clamp_80" model="kit.component">
+            <field name="name">Bearing Clamp 80mm</field>
+            <field name="code">BC_80</field>
+            <field name="category">hardware</field>
+            <field name="uom">piece</field>
+            <field name="current_rate">420.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <record id="component_wire_rope_6mm" model="kit.component">
+            <field name="name">Wire Rope 6mm</field>
+            <field name="code">WR_6MM</field>
+            <field name="category">wire_rope</field>
+            <field name="uom">meter</field>
+            <field name="current_rate">45.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <record id="component_shade_net_75" model="kit.component">
+            <field name="name">Shade Net 75%</field>
+            <field name="code">SN_75</field>
+            <field name="category">nets</field>
+            <field name="uom">sqm</field>
+            <field name="current_rate">25.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <record id="component_u_bolt_m12" model="kit.component">
+            <field name="name">U-Bolt M12</field>
+            <field name="code">UB_M12</field>
+            <field name="category">fasteners</field>
+            <field name="uom">piece</field>
+            <field name="current_rate">75.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+        <record id="component_pulley_100mm" model="kit.component">
+            <field name="name">Pulley 100mm</field>
+            <field name="code">PL_100</field>
+            <field name="category">pulleys</field>
+            <field name="uom">piece</field>
+            <field name="current_rate">850.00</field>
+            <field name="rate_multiplier">1.2</field>
+        </record>
+        
+    </data>
+</odoo>
