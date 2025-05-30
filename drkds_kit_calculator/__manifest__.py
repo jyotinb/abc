@@ -2,17 +2,19 @@
 
 {
     'name': 'DRKDS Kit Calculator',
-    'version': '17.0.1.0.0',
+    'version': '17.0.2.0.0',
     'category': 'Manufacturing',
-    'summary': 'Professional Kit Cost Calculator with Dynamic Templates',
+    'summary': 'Professional Kit Cost Calculator with Advanced Formula Support',
     'description': '''
         Complete kit cost calculation system featuring:
-        - Dynamic template-based calculations
-        - Multi-level component management
-        - Real-time cost updates
+        - Advanced template system with formula builder
+        - Three types for parameters and components: Fixed, Input, Calculated
+        - Interactive formula builder with field selection
+        - Multi-level component management (Qty, Rate, Length)
+        - Real-time cost updates and validation
         - Professional quotation generation
-        - User-friendly interface
-        - Comprehensive reporting
+        - User-friendly interface with enhanced UX
+        - Comprehensive reporting and analytics
     ''',
     'author': 'DRKDS Solutions',
     'website': 'https://www.drkds.com',
@@ -27,12 +29,15 @@
         'data/component_data.xml',
         'data/template_data.xml',
         
-        # Views (in dependency order - no cross-references)
+        # Views (in dependency order)
         'views/component_views.xml',
         'views/template_views.xml',
         'views/cost_sheet_views.xml',
         'views/dashboard_views.xml',
+        
+        # Wizards
         'wizard/cost_calculator_wizard_views.xml',
+        'wizard/formula_builder_wizard_views.xml',
         
         # Menu (references all actions - must be last)
         'views/menu_views.xml',

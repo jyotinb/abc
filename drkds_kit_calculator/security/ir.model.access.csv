@@ -17,3 +17,7 @@ access_kit_cost_parameter_user,kit.cost.parameter.user,model_kit_cost_parameter,
 access_kit_cost_parameter_manager,kit.cost.parameter.manager,model_kit_cost_parameter,,1,1,1,1
 access_kit_cost_line_user,kit.cost.line.user,model_kit_cost_line,base.group_user,1,1,1,1
 access_kit_cost_line_manager,kit.cost.line.manager,model_kit_cost_line,,1,1,1,1
+access_kit_formula_builder_wizard_user,kit.formula.builder.wizard.user,model_kit_formula_builder_wizard,base.group_user,1,1,1,1
+access_kit_formula_builder_wizard_manager,kit.formula.builder.wizard.manager,model_kit_formula_builder_wizard,,1,1,1,1
+access_kit_formula_field_user,kit.formula.field.user,model_kit_formula_field,base.group_user,1,1,1,1
+access_kit_formula_field_manager,kit.formula.field.manager,model_kit_formula_field,,1,1,1,1

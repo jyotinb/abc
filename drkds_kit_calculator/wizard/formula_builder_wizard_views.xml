@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Formula Builder Wizard Views -->
+        <record id="view_formula_builder_wizard_form" model="ir.ui.view">
+            <field name="name">kit.formula.builder.wizard.form</field>
+            <field name="model">kit.formula.builder.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Formula Builder">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <i class="fa fa-calculator text-primary"/> Formula Builder
+                            </h1>
+                            <p class="text-muted">Build formulas using available fields and mathematical operations</p>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="formula_type" readonly="1"/>
+                                <field name="field_name" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="template_id" readonly="1"/>
+                                <field name="cost_sheet_id" readonly="1" invisible="not cost_sheet_id"/>
+                            </group>
+                        </group>
+                        
+                        <separator string="Formula"/>
+                        <group>
+                            <field name="formula" nolabel="1" 
+                                   placeholder="Enter your formula using fields and operators below..."
+                                   widget="text"/>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Available Fields" name="fields">
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <p class="text-muted">
+                                            <i class="fa fa-info-circle"/> Click on any field name to insert it into your formula
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <button name="action_refresh_fields" 
+                                                string="Refresh Fields" 
+                                                type="object" 
+                                                class="btn btn-secondary btn-sm"
+                                                icon="fa-refresh"/>
+                                    </div>
+                                </div>
+                                
+                                <field name="available_fields" nolabel="1" mode="tree">
+                                    <tree>
+                                        <field name="display_name"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="type"/>
+                                        <field name="data_type"/>
+                                        <button name="action_insert_field" 
+                                                type="object" 
+                                                string="Insert" 
+                                                icon="fa-plus"
+                                                class="btn-sm btn-primary"
+                                                title="Insert this field into formula"/>
+                                    </tree>
+                                </field>
+                                
+                                <!-- Debug Info -->
+                                <div class="alert alert-info mt-3" invisible="available_fields">
+                                    <h5><i class="fa fa-exclamation-triangle"/> No Fields Available</h5>
+                                    <p>If you don't see any fields:</p>
+                                    <ul>
+                                        <li>Make sure the template has parameters and components defined</li>
+                                        <li>Try clicking the "Refresh Fields" button above</li>
+                                        <li>Check that you opened this from a valid template or cost sheet</li>
+                                    </ul>
+                                </div>
+                            </page>
+                            
+                            <page string="Mathematical Operations" name="operations">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5><i class="fa fa-plus-circle text-info"/> Basic Operations</h5>
+                                        <div class="btn-group-vertical d-block mb-3">
+                                            <button name="action_insert_operator" 
+                                                    string="+ (Addition)" 
+                                                    type="object" 
+                                                    context="{'operator': '+'}"
+                                                    class="btn btn-outline-secondary btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="- (Subtraction)" 
+                                                    type="object" 
+                                                    context="{'operator': '-'}"
+                                                    class="btn btn-outline-secondary btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="* (Multiplication)" 
+                                                    type="object" 
+                                                    context="{'operator': '*'}"
+                                                    class="btn btn-outline-secondary btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="/ (Division)" 
+                                                    type="object" 
+                                                    context="{'operator': '/'}"
+                                                    class="btn btn-outline-secondary btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="** (Power)" 
+                                                    type="object" 
+                                                    context="{'operator': '**'}"
+                                                    class="btn btn-outline-secondary btn-sm mb-1"/>
+                                        </div>
+                                        
+                                        <h5><i class="fa fa-code text-warning"/> Parentheses</h5>
+                                        <div class="btn-group mb-3">
+                                            <button name="action_insert_operator" 
+                                                    string="(" 
+                                                    type="object" 
+                                                    context="{'operator': '('}"
+                                                    class="btn btn-outline-secondary btn-sm"/>
+                                            <button name="action_insert_operator" 
+                                                    string=")" 
+                                                    type="object" 
+                                                    context="{'operator': ')'}"
+                                                    class="btn btn-outline-secondary btn-sm"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <h5><i class="fa fa-function text-success"/> Mathematical Functions</h5>
+                                        <div class="btn-group-vertical d-block mb-3">
+                                            <button name="action_insert_operator" 
+                                                    string="math.sqrt() - Square Root" 
+                                                    type="object" 
+                                                    context="{'operator': 'math.sqrt()'}"
+                                                    class="btn btn-outline-info btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="abs() - Absolute Value" 
+                                                    type="object" 
+                                                    context="{'operator': 'abs()'}"
+                                                    class="btn btn-outline-info btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="min() - Minimum" 
+                                                    type="object" 
+                                                    context="{'operator': 'min()'}"
+                                                    class="btn btn-outline-info btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="max() - Maximum" 
+                                                    type="object" 
+                                                    context="{'operator': 'max()'}"
+                                                    class="btn btn-outline-info btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="math.ceil() - Round Up" 
+                                                    type="object" 
+                                                    context="{'operator': 'math.ceil()'}"
+                                                    class="btn btn-outline-info btn-sm mb-1"/>
+                                            <button name="action_insert_operator" 
+                                                    string="round() - Round" 
+                                                    type="object" 
+                                                    context="{'operator': 'round()'}"
+                                                    class="btn btn-outline-info btn-sm mb-1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <h5><i class="fa fa-lightbulb-o"/> Formula Examples:</h5>
+                                    <ul class="mb-0">
+                                        <li><code>length_8m * no_8m_bays</code> - Simple multiplication</li>
+                                        <li><code>(width + height) * 2</code> - Using parentheses</li>
+                                        <li><code>math.ceil(corridor_length / 10)</code> - Round up division</li>
+                                        <li><code>max(min_qty, length_8m * 0.5)</code> - Using functions</li>
+                                    </ul>
+                                </div>
+                            </page>
+                            
+                            <page string="Validation" name="validation">
+                                <group>
+                                    <field name="validation_result" readonly="1" nolabel="1" 
+                                           widget="text" 
+                                           placeholder="Click 'Validate Formula' to check your formula"/>
+                                    <button name="action_validate_formula" 
+                                            string="Validate Formula" 
+                                            type="object" 
+                                            class="btn btn-info"
+                                            icon="fa-check-circle"/>
+                                </group>
+                                
+                                <div class="alert alert-warning mt-3">
+                                    <h5><i class="fa fa-exclamation-triangle"/> Important Notes:</h5>
+                                    <ul class="mb-0">
+                                        <li>Field names are case-sensitive</li>
+                                        <li>Use mathematical operators correctly</li>
+                                        <li>Parentheses must be balanced</li>
+                                        <li>Always validate before saving</li>
+                                    </ul>
+                                </div>
+                            </page>
+                            
+                            <page string="Debug Info" name="debug">
+                                <group string="Context Information">
+                                    <field name="target_model" readonly="1"/>
+                                    <field name="target_id" readonly="1"/>
+                                    <field name="target_field" readonly="1"/>
+                                </group>
+                                
+                                <group string="Available Fields Count">
+                                    <p>
+                                        Total fields available: <span class="badge badge-info"><field name="available_fields" readonly="1"/></span>
+                                    </p>
+                                    <p class="text-muted">
+                                        If this shows 0 fields, there might be an issue with the template configuration or field population.
+                                    </p>
+                                </group>
+                            </page>
+                        </notebook>
+                        
+                    </sheet>
+                    
+                    <footer>
+                        <button string="Save Formula" 
+                                name="action_save_formula" 
+                                type="object" 
+                                class="btn-primary"
+                                icon="fa-save"/>
+                        <button string="Validate &amp; Save" 
+                                name="action_validate_and_save" 
+                                type="object" 
+                                class="btn-success"
+                                icon="fa-check"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Formula Field Tree View -->
+        <record id="view_formula_field_tree" model="ir.ui.view">
+            <field name="name">kit.formula.field.tree</field>
+            <field name="model">kit.formula.field</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="display_name"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="data_type"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Formula Builder Wizard Action -->
+        <record id="action_formula_builder_wizard" model="ir.actions.act_window">
+            <field name="name">Formula Builder</field>
+            <field name="res_model">kit.formula.builder.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</odoo>

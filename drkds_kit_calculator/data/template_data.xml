@@ -7,71 +7,100 @@
             <field name="name">NVPH 8x4 Standard</field>
             <field name="code">NVPH_8X4</field>
             <field name="template_type">nvph_8x4</field>
-            <field name="description">Standard Net Vertical Protection House 8x4 configuration</field>
+            <field name="description">Standard Net Vertical Protection House 8x4 configuration with advanced formula support</field>
         </record>
         
-        <!-- Template Parameters -->
+        <!-- Enhanced Template Parameters with Types -->
         <record id="param_length_8m" model="kit.template.parameter">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="name">Length at 8m Bay</field>
             <field name="code">length_8m</field>
-            <field name="parameter_type">float</field>
+            <field name="parameter_type">input</field>
+            <field name="data_type">float</field>
             <field name="sequence">10</field>
             <field name="default_value">48</field>
+            <field name="description">Total length covered by 8m bay structures</field>
         </record>
         
         <record id="param_no_8m_bays" model="kit.template.parameter">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="name">Number of 8m Bays</field>
             <field name="code">no_8m_bays</field>
-            <field name="parameter_type">integer</field>
+            <field name="parameter_type">input</field>
+            <field name="data_type">integer</field>
             <field name="sequence">20</field>
             <field name="default_value">6</field>
+            <field name="description">Count of 8m bay sections</field>
         </record>
         
         <record id="param_length_4m" model="kit.template.parameter">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="name">Length at 4m Span</field>
             <field name="code">length_4m</field>
-            <field name="parameter_type">float</field>
+            <field name="parameter_type">input</field>
+            <field name="data_type">float</field>
             <field name="sequence">30</field>
             <field name="default_value">48</field>
+            <field name="description">Total length covered by 4m span structures</field>
         </record>
         
         <record id="param_no_4m_spans" model="kit.template.parameter">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="name">Number of 4m Spans</field>
             <field name="code">no_4m_spans</field>
-            <field name="parameter_type">integer</field>
+            <field name="parameter_type">input</field>
+            <field name="data_type">integer</field>
             <field name="sequence">40</field>
             <field name="default_value">12</field>
+            <field name="description">Count of 4m span sections</field>
         </record>
         
         <record id="param_total_area" model="kit.template.parameter">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="name">Total Area</field>
             <field name="code">total_area</field>
-            <field name="parameter_type">float</field>
+            <field name="parameter_type">calculated</field>
+            <field name="data_type">float</field>
             <field name="sequence">50</field>
             <field name="default_value">2304</field>
+            <field name="formula">length_8m * no_8m_bays * 8 + length_4m * no_4m_spans * 4</field>
+            <field name="description">Total covered area calculated from bays and spans</field>
         </record>
         
         <record id="param_corridor_length" model="kit.template.parameter">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="name">Corridor Length</field>
             <field name="code">corridor_length</field>
-            <field name="parameter_type">float</field>
+            <field name="parameter_type">input</field>
+            <field name="data_type">float</field>
             <field name="sequence">60</field>
             <field name="default_value">50</field>
+            <field name="description">Length of corridor or access path</field>
         </record>
         
-        <!-- Template Components -->
+        <record id="param_safety_factor" model="kit.template.parameter">
+            <field name="template_id" ref="template_nvph_8x4"/>
+            <field name="name">Safety Factor</field>
+            <field name="code">safety_factor</field>
+            <field name="parameter_type">fixed</field>
+            <field name="data_type">float</field>
+            <field name="sequence">70</field>
+            <field name="default_value">1.1</field>
+            <field name="description">Safety multiplier for material calculations</field>
+        </record>
+        
+        <!-- Enhanced Template Components with Formula Types -->
         <record id="tl_gi_pipe_60" model="kit.template.line">
             <field name="template_id" ref="template_nvph_8x4"/>
             <field name="component_id" ref="component_gi_pipe_60mm"/>
             <field name="sequence">10</field>
             <field name="default_enabled">True</field>
-            <field name="quantity_formula">length_8m</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">length_8m * safety_factor</field>
+            <field name="rate_type">fixed</field>
+            <field name="rate_value">180.00</field>
+            <field name="length_type">input</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_gi_pipe_80" model="kit.template.line">
@@ -79,7 +108,12 @@
             <field name="component_id" ref="component_gi_pipe_80mm"/>
             <field name="sequence">20</field>
             <field name="default_enabled">True</field>
-            <field name="quantity_formula">length_4m</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">length_4m * safety_factor</field>
+            <field name="rate_type">calculated</field>
+            <field name="rate_formula">220.00 * 1.2</field>
+            <field name="length_type">input</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_bearing_clamp_60" model="kit.template.line">
@@ -87,7 +121,12 @@
             <field name="component_id" ref="component_bearing_clamp_60"/>
             <field name="sequence">30</field>
             <field name="default_enabled">True</field>
-            <field name="quantity_formula">no_8m_bays * 2</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">no_8m_bays * 2</field>
+            <field name="rate_type">fixed</field>
+            <field name="rate_value">350.00</field>
+            <field name="length_type">fixed</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_bearing_clamp_80" model="kit.template.line">
@@ -95,7 +134,12 @@
             <field name="component_id" ref="component_bearing_clamp_80"/>
             <field name="sequence">40</field>
             <field name="default_enabled">True</field>
-            <field name="quantity_formula">no_4m_spans * 2</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">no_4m_spans * 2</field>
+            <field name="rate_type">fixed</field>
+            <field name="rate_value">420.00</field>
+            <field name="length_type">fixed</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_wire_rope" model="kit.template.line">
@@ -103,7 +147,12 @@
             <field name="component_id" ref="component_wire_rope_6mm"/>
             <field name="sequence">50</field>
             <field name="default_enabled">True</field>
-            <field name="quantity_formula">length_8m + length_4m + corridor_length</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">(length_8m + length_4m + corridor_length) * safety_factor</field>
+            <field name="rate_type">fixed</field>
+            <field name="rate_value">45.00</field>
+            <field name="length_type">fixed</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_shade_net" model="kit.template.line">
@@ -111,7 +160,12 @@
             <field name="component_id" ref="component_shade_net_75"/>
             <field name="sequence">60</field>
             <field name="default_enabled">True</field>
-            <field name="quantity_formula">total_area</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">total_area * 1.05</field>
+            <field name="rate_type">fixed</field>
+            <field name="rate_value">25.00</field>
+            <field name="length_type">fixed</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_u_bolt" model="kit.template.line">
@@ -119,7 +173,12 @@
             <field name="component_id" ref="component_u_bolt_m12"/>
             <field name="sequence">70</field>
             <field name="default_enabled">False</field>
-            <field name="quantity_formula">no_8m_bays * 4</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">no_8m_bays * 4 + no_4m_spans * 2</field>
+            <field name="rate_type">calculated</field>
+            <field name="rate_formula">75.00 * safety_factor</field>
+            <field name="length_type">fixed</field>
+            <field name="length_value">1.0</field>
         </record>
         
         <record id="tl_pulley" model="kit.template.line">
@@ -127,7 +186,12 @@
             <field name="component_id" ref="component_pulley_100mm"/>
             <field name="sequence">80</field>
             <field name="default_enabled">False</field>
-            <field name="quantity_formula">math.ceil(corridor_length / 10)</field>
+            <field name="qty_type">calculated</field>
+            <field name="qty_formula">math.ceil(corridor_length / 10)</field>
+            <field name="rate_type">fixed</field>
+            <field name="rate_value">850.00</field>
+            <field name="length_type">input</field>
+            <field name="length_value">1.0</field>
         </record>
         
     </data>

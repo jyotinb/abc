@@ -16,12 +16,14 @@
                     <field name="enabled_amount"/>
                     <field name="rate_per_sqm"/>
                     <field name="state"/>
+                    <field name="auto_calculate"/>
+                    <field name="last_calculation"/>
                     <field name="create_date"/>
                 </tree>
             </field>
         </record>
         
-        <!-- Cost Sheet Form View -->
+        <!-- Enhanced Cost Sheet Form View with Auto-Calculation -->
         <record id="view_cost_sheet_form" model="ir.ui.view">
             <field name="name">kit.cost.sheet.form</field>
             <field name="model">kit.cost.sheet</field>
@@ -33,6 +35,13 @@
                                 type="object" 
                                 class="btn-primary"
                                 invisible="state != 'draft'"/>
+                        <button name="action_recalculate" 
+                                string="Recalculate" 
+                                type="object" 
+                                class="btn-info"
+                                icon="fa-refresh"
+                                invisible="state == 'confirmed'"
+                                help="Manually recalculate all formulas"/>
                         <button name="action_confirm" 
                                 string="Confirm" 
                                 type="object" 
@@ -46,6 +55,27 @@
                             <h1>
                                 <field name="name" readonly="1"/>
                             </h1>
+                            <div class="oe_right oe_button_box">
+                                <field name="auto_calculate" widget="boolean_button"
+                                       options="{'terminology': {'string_true': 'Auto Calculate ON', 'hover_true': 'Auto calculation is enabled', 'string_false': 'Auto Calculate OFF', 'hover_false': 'Auto calculation is disabled'}}"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Auto-Calculation Status -->
+                        <div class="alert alert-info" invisible="not auto_calculate">
+                            <i class="fa fa-magic"/> <strong>Auto-Calculation Enabled:</strong> 
+                            Calculated fields will update automatically when you change parameter values.
+                            <span invisible="not last_calculation">
+                                Last calculated: <field name="last_calculation" readonly="1"/>
+                            </span>
+                        </div>
+                        
+                        <div class="alert alert-warning" invisible="auto_calculate">
+                            <i class="fa fa-pause"/> <strong>Auto-Calculation Disabled:</strong> 
+                            Use the "Recalculate" button to manually update calculated fields.
+                            <span invisible="not last_calculation">
+                                Last calculated: <field name="last_calculation" readonly="1"/>
+                            </span>
                         </div>
                         
                         <!-- Summary Cards -->
@@ -89,6 +119,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-6 col-lg-3 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <div class="text-warning">
+                                        <i class="fa fa-clock-o fa-2x"/>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane_label">Last Calculation</div>
+                                    <div class="text-muted">
+                                        <field name="last_calculation" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <notebook>
@@ -102,45 +145,117 @@
                                     <group>
                                         <field name="site_location"/>
                                         <field name="quotation_number"/>
+                                        <field name="auto_calculate"/>
                                     </group>
                                 </group>
                             </page>
                             
                             <page string="Parameters" name="parameters">
+                                <div class="alert alert-info mb-3">
+                                    <i class="fa fa-info-circle"/> 
+                                    <strong>Parameter Types:</strong>
+                                    <span class="badge badge-secondary">Fixed</span> = Constant values | 
+                                    <span class="badge badge-primary">Input</span> = User-entered values | 
+                                    <span class="badge badge-success">Calculated</span> = Formula-based values
+                                </div>
+                                
                                 <field name="parameter_ids" readonly="state == 'confirmed'">
                                     <tree editable="bottom">
                                         <field name="parameter_name"/>
-                                        <field name="parameter_type"/>
-                                        <field name="value_float" invisible="parameter_type != 'float'" required="parameter_type == 'float'"/>
-                                        <field name="value_integer" invisible="parameter_type != 'integer'" required="parameter_type == 'integer'"/>
-                                        <field name="value_char" invisible="parameter_type != 'char'" required="parameter_type == 'char'"/>
-                                        <field name="value_boolean" invisible="parameter_type != 'boolean'"/>
+                                        <field name="parameter_type" readonly="1"/>
+                                        <field name="data_type" readonly="1"/>
+                                        <field name="value_float" invisible="data_type != 'float'" readonly="parameter_type == 'calculated'"/>
+                                        <field name="value_integer" invisible="data_type != 'integer'" readonly="parameter_type == 'calculated'"/>
+                                        <field name="value_char" invisible="data_type != 'char'" readonly="parameter_type == 'calculated'"/>
+                                        <field name="value_boolean" invisible="data_type != 'boolean'" readonly="parameter_type == 'calculated'"/>
+                                        <field name="formula" invisible="parameter_type != 'calculated'" 
+                                               widget="text"
+                                               placeholder="Enter formula or use builder"/>
+                                        <button name="action_edit_parameter_formula" 
+                                                type="object" 
+                                                icon="fa-calculator" 
+                                                invisible="parameter_type != 'calculated'"
+                                                title="Formula Builder"
+                                                class="btn-sm btn-primary"/>
                                     </tree>
                                 </field>
                             </page>
                             
                             <page string="Components" name="components">
+                                <div class="alert alert-info mb-3">
+                                    <i class="fa fa-info-circle"/> 
+                                    <strong>Component Types:</strong>
+                                    Each component can have different types for Quantity, Rate, and Length calculations.
+                                    <span class="badge badge-secondary">Fixed</span> = Template values | 
+                                    <span class="badge badge-primary">Input</span> = User-entered | 
+                                    <span class="badge badge-success">Calculated</span> = Formula-based
+                                </div>
+                                
                                 <field name="component_ids" readonly="state == 'confirmed'">
                                     <tree editable="bottom" decoration-muted="not is_enabled">
                                         <field name="sequence" widget="handle"/>
                                         <field name="is_enabled" widget="boolean_toggle"/>
                                         <field name="component_name"/>
                                         <field name="component_category"/>
-                                        <field name="quantity"/>
+                                        
+                                        <!-- Quantity -->
+                                        <field name="qty_type" string="Qty Type"/>
+                                        <field name="quantity" readonly="qty_type == 'calculated'" string="Quantity"/>
+                                        <field name="qty_formula" invisible="qty_type != 'calculated'" 
+                                               string="Qty Formula"
+                                               widget="text"
+                                               placeholder="Enter formula or use builder"/>
+                                        <button name="action_edit_qty_formula" 
+                                                type="object" 
+                                                icon="fa-calculator" 
+                                                invisible="qty_type != 'calculated'"
+                                                title="Quantity Formula Builder"
+                                                class="btn-sm btn-info"/>
+                                        
+                                        <!-- Rate -->
+                                        <field name="rate_type" string="Rate Type"/>
+                                        <field name="rate" readonly="rate_type == 'calculated'" groups="drkds_kit_calculator.group_kit_calculator_manager" string="Rate"/>
+                                        <field name="rate_formula" invisible="rate_type != 'calculated'" 
+                                               string="Rate Formula"
+                                               widget="text"
+                                               placeholder="Enter formula or use builder"/>
+                                        <button name="action_edit_rate_formula" 
+                                                type="object" 
+                                                icon="fa-calculator" 
+                                                invisible="rate_type != 'calculated'"
+                                                title="Rate Formula Builder"
+                                                class="btn-sm btn-warning"/>
+                                        
+                                        <!-- Length -->
+                                        <field name="length_type" string="Length Type"/>
+                                        <field name="length" readonly="length_type == 'calculated'" string="Length"/>
+                                        <field name="length_formula" invisible="length_type != 'calculated'" 
+                                               string="Length Formula"
+                                               widget="text"
+                                               placeholder="Enter formula or use builder"/>
+                                        <button name="action_edit_length_formula" 
+                                                type="object" 
+                                                icon="fa-calculator" 
+                                                invisible="length_type != 'calculated'"
+                                                title="Length Formula Builder"
+                                                class="btn-sm btn-success"/>
+                                        
                                         <field name="uom"/>
-                                        <field name="rate" groups="drkds_kit_calculator.group_kit_calculator_manager"/>
                                         <field name="amount" sum="Total"/>
                                         <field name="is_mandatory" invisible="1"/>
+                                        
                                         <button name="toggle_component" 
                                                 type="object" 
                                                 icon="fa-toggle-on" 
                                                 invisible="not is_enabled"
-                                                title="Disable Component"/>
+                                                title="Disable Component"
+                                                class="btn-sm"/>
                                         <button name="toggle_component" 
                                                 type="object" 
                                                 icon="fa-toggle-off" 
                                                 invisible="is_enabled"
-                                                title="Enable Component"/>
+                                                title="Enable Component"
+                                                class="btn-sm"/>
                                     </tree>
                                 </field>
                             </page>
@@ -150,11 +265,6 @@
                             </page>
                         </notebook>
                     </sheet>
-                    
-                   <!--  <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                    </div> -->
                 </form>
             </field>
         </record>
@@ -174,6 +284,8 @@
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                     <filter name="calculated" string="Calculated" domain="[('state', '=', 'calculated')]"/>
                     <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter name="auto_calc_on" string="Auto Calculate ON" domain="[('auto_calculate', '=', True)]"/>
+                    <filter name="auto_calc_off" string="Auto Calculate OFF" domain="[('auto_calculate', '=', False)]"/>
                     <separator/>
                     <filter name="this_month" string="This Month" domain="[('create_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
                     <separator/>
@@ -181,6 +293,7 @@
                         <filter name="group_client" string="Client" context="{'group_by': 'client_name'}"/>
                         <filter name="group_template" string="Template" context="{'group_by': 'template_id'}"/>
                         <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                        <filter name="group_auto_calc" string="Auto Calculate" context="{'group_by': 'auto_calculate'}"/>
                         <filter name="group_date" string="Date" context="{'group_by': 'create_date:month'}"/>
                     </group>
                 </search>
@@ -198,7 +311,7 @@
                     Create your first cost sheet!
                 </p>
                 <p>
-                    Cost sheets help calculate material costs for your projects.
+                    Cost sheets help calculate material costs for your projects with advanced formula support.
                     Use the wizard to get started quickly.
                 </p>
             </field>
