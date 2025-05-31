@@ -6,6 +6,9 @@ import ast
 import operator
 import math
 import re
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class KitCostSheet(models.Model):
     _name = 'kit.cost.sheet'
@@ -127,28 +130,43 @@ class KitCostSheet(models.Model):
             }
             
         except Exception as e:
+            _logger.error(f"Calculation Error in cost sheet {self.id}: {e}", exc_info=True)
             raise UserError(_('Calculation Error: %s') % str(e))
     
     def action_recalculate(self):
         """Manual recalculation action - recalculate with current values"""
         self.ensure_one()
-        try:
-            # Just recalculate with current values, don't reset
-            self._calculate_all_formulas()
-            self.last_calculation = fields.Datetime.now()
-            
-            # Force UI refresh by returning a reload action
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
-            
-        except Exception as e:
-            raise UserError(_('Recalculation Error: %s') % str(e))
+        
+        # Use database transaction for better reliability
+        with self.env.cr.savepoint():
+            try:
+                _logger.info(f"Starting recalculation for cost sheet {self.id}")
+                
+                # Force recalculation with current values
+                self._calculate_all_formulas()
+                self.last_calculation = fields.Datetime.now()
+                
+                # Explicit commit within savepoint
+                # No flush needed - write() handles persistence
+                
+                _logger.info(f"Recalculation completed successfully for cost sheet {self.id}")
+                
+                # Force UI refresh by returning a reload action
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'reload',
+                }
+                
+            except Exception as e:
+                _logger.error(f"Recalculation Error in cost sheet {self.id}: {e}", exc_info=True)
+                # Rollback happens automatically with savepoint
+                raise UserError(_('Recalculation Error: %s') % str(e))
     
     def reset_to_template_values(self):
         """Reset all values to template defaults"""
         self.ensure_one()
+        
+        _logger.info(f"Resetting cost sheet {self.id} to template values")
         
         # Reset parameters to template defaults
         for param in self.parameter_ids:
@@ -182,23 +200,35 @@ class KitCostSheet(models.Model):
                 line.quantity = template_line.qty_value or 0.0
                 line.rate = template_line.rate_value or line.component_id.current_rate
                 line.length = template_line.length_value or 1.0
+        
+        # Database persistence handled by Odoo automatically
 
     def action_reset_and_recalculate(self):
         """Reset to template values then recalculate"""
         self.ensure_one()
-        try:
-            self.reset_to_template_values()
-            self._calculate_all_formulas()
-            self.last_calculation = fields.Datetime.now()
-            
-            # Force UI refresh by returning a reload action
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
-            
-        except Exception as e:
-            raise UserError(_('Reset and Recalculation Error: %s') % str(e))
+        
+        with self.env.cr.savepoint():
+            try:
+                _logger.info(f"Reset and recalculation started for cost sheet {self.id}")
+                
+                self.reset_to_template_values()
+                self._calculate_all_formulas()
+                self.last_calculation = fields.Datetime.now()
+                
+                # Explicit commit within savepoint
+                # No flush needed - write() handles persistence
+                
+                _logger.info(f"Reset and recalculation completed for cost sheet {self.id}")
+                
+                # Force UI refresh by returning a reload action
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'reload',
+                }
+                
+            except Exception as e:
+                _logger.error(f"Reset and Recalculation Error in cost sheet {self.id}: {e}", exc_info=True)
+                raise UserError(_('Reset and Recalculation Error: %s') % str(e))
     
     def _sanitize_name(self, name):
         """Sanitize component name for use in formulas"""
@@ -212,22 +242,235 @@ class KitCostSheet(models.Model):
         return sanitized or "Component"
     
     def _calculate_all_formulas(self):
-        """Calculate all formulas - read formulas from template"""
-        # Build parameter context
+        """Calculate all formulas - use actual calculated values, not cached fields"""
+        _logger.info(f"=== CALCULATION START for cost sheet {self.id} ===")
+        
+        # Step 1: Calculate parameters first
         context = {'math': math}
         
-        # First pass: get fixed and input parameters
+        # Get current parameter values
         for param in self.parameter_ids:
             if param.parameter_type in ['fixed', 'input']:
                 context[param.parameter_code] = param.get_numeric_value()
         
-        # Second pass: calculate calculated parameters using template formulas
+        # Calculate parameters with dependency resolution
         calculated_params = self.parameter_ids.filtered(lambda p: p.parameter_type == 'calculated')
+        for iteration in range(10):
+            updated = False
+            for param in calculated_params:
+                if param.parameter_id.formula:
+                    try:
+                        old_value = param.get_numeric_value()
+                        new_value = float(self._safe_eval(param.parameter_id.formula, context))
+                        if abs(new_value - old_value) > 0.001:
+                            if param.data_type == 'float':
+                                param.value_float = new_value
+                            elif param.data_type == 'integer':
+                                param.value_integer = int(new_value)
+                            context[param.parameter_code] = new_value
+                            updated = True
+                    except:
+                        pass
+            if not updated:
+                break
+        
+        # Step 2: Calculate components - track ACTUAL calculated values
+        enabled_lines = self.component_ids.filtered(lambda l: l.is_enabled).sorted('sequence')
+        
+        # Dictionary to track ACTUAL calculated values (not cached fields)
+        actual_values = {}
+        
+        # Initialize with current field values
+        for line in enabled_lines:
+            comp_name = self._sanitize_name(line.component_id.name)
+            actual_values[comp_name] = {
+                'quantity': line.quantity,
+                'rate': line.rate,
+                'length': line.length
+            }
+        
+        # Multiple iterations to resolve dependencies
+        for iteration in range(5):
+            updated = False
+            _logger.debug(f"Component iteration {iteration + 1}")
+            
+            for line in enabled_lines:
+                comp_name = self._sanitize_name(line.component_id.name)
+                
+                # Build context with parameters + ACTUAL calculated values + CALCULATED PARAMETERS
+                comp_context = context.copy()
+                
+                # *** FIX: ADD ALL CALCULATED PARAMETERS TO COMPONENT CONTEXT ***
+                for param in self.parameter_ids:
+                    comp_context[param.parameter_code] = param.get_numeric_value()
+                
+                # Add component values
+                for other_name, values in actual_values.items():
+                    comp_context[f"{other_name}_Qty"] = values['quantity']
+                    comp_context[f"{other_name}_Rate"] = values['rate']
+                    comp_context[f"{other_name}_Length"] = values['length']
+                
+                old_qty, old_rate, old_length = line.quantity, line.rate, line.length
+                
+                # Calculate quantity
+                if line.qty_type == 'calculated' and line.template_line_id and line.template_line_id.qty_formula:
+                    try:
+                        new_qty = float(self._safe_eval(line.template_line_id.qty_formula, comp_context))
+                        line.quantity = new_qty
+                        actual_values[comp_name]['quantity'] = new_qty  # Update ACTUAL value immediately
+                        _logger.debug(f"{line.component_name} qty: {line.template_line_id.qty_formula} = {new_qty}")
+                    except Exception as e:
+                        _logger.warning(f"Quantity calc failed for {line.component_name}: {e}")
+                        line.quantity = 0.0
+                        actual_values[comp_name]['quantity'] = 0.0
+                elif line.qty_type == 'fixed' and line.template_line_id:
+                    new_qty = line.template_line_id.qty_value or 0.0
+                    line.quantity = new_qty
+                    actual_values[comp_name]['quantity'] = new_qty
+                # For input type, keep current value and update actual_values
+                else:
+                    actual_values[comp_name]['quantity'] = line.quantity
+                
+                # Calculate rate
+                if line.rate_type == 'calculated' and line.template_line_id and line.template_line_id.rate_formula:
+                    try:
+                        new_rate = float(self._safe_eval(line.template_line_id.rate_formula, comp_context))
+                        line.rate = new_rate
+                        actual_values[comp_name]['rate'] = new_rate  # Update ACTUAL value immediately
+                        _logger.debug(f"{line.component_name} rate: {line.template_line_id.rate_formula} = {new_rate}")
+                    except Exception as e:
+                        _logger.warning(f"Rate calc failed for {line.component_name}: {e}")
+                        line.rate = line.component_id.current_rate
+                        actual_values[comp_name]['rate'] = line.rate
+                elif line.rate_type == 'fixed' and line.template_line_id:
+                    new_rate = line.template_line_id.rate_value or line.component_id.current_rate
+                    line.rate = new_rate
+                    actual_values[comp_name]['rate'] = new_rate
+                else:
+                    actual_values[comp_name]['rate'] = line.rate
+                
+                # Calculate length
+                if line.length_type == 'calculated' and line.template_line_id and line.template_line_id.length_formula:
+                    try:
+                        new_length = float(self._safe_eval(line.template_line_id.length_formula, comp_context))
+                        line.length = new_length
+                        actual_values[comp_name]['length'] = new_length  # Update ACTUAL value immediately
+                        _logger.debug(f"{line.component_name} length: {line.template_line_id.length_formula} = {new_length}")
+                    except Exception as e:
+                        _logger.warning(f"Length calc failed for {line.component_name}: {e}")
+                        line.length = 1.0
+                        actual_values[comp_name]['length'] = 1.0
+                elif line.length_type == 'fixed' and line.template_line_id:
+                    new_length = line.template_line_id.length_value or 1.0
+                    line.length = new_length
+                    actual_values[comp_name]['length'] = new_length
+                else:
+                    actual_values[comp_name]['length'] = line.length
+                
+                # Check if anything changed
+                if (abs(line.quantity - old_qty) > 0.001 or 
+                    abs(line.rate - old_rate) > 0.01 or 
+                    abs(line.length - old_length) > 0.001):
+                    updated = True
+                    _logger.debug(f"Updated {line.component_name}: qty={old_qty}->{line.quantity}")
+            
+            # If nothing changed, we're done
+            if not updated:
+                _logger.debug(f"Components converged after {iteration + 1} iterations")
+                break
+        
+        _logger.info(f"=== CALCULATION COMPLETED ===")
+        
+        # Log final values for debugging
+        for line in enabled_lines:
+            comp_name = self._sanitize_name(line.component_id.name)
+            _logger.debug(f"Final {line.component_name}: qty={line.quantity}, rate={line.rate}, length={line.length}")
+            _logger.debug(f"Actual values: {actual_values[comp_name]}")
+    
+    def _reset_to_clean_state(self):
+        """Reset ONLY calculated values to template defaults - preserve user inputs"""
+        _logger.debug("Resetting ONLY calculated values to clean template state")
+        
+        for line in self.component_ids:
+            if line.template_line_id:
+                # Reset ONLY calculated fields to template defaults
+                # Keep input/fixed values as they are (user may have changed them)
+                
+                # Reset quantity only if it's calculated type
+                if line.qty_type == 'calculated':
+                    line.quantity = line.template_line_id.qty_value or 1.0
+                # For input/fixed qty_type: keep current user value
+                
+                # Reset rate only if it's calculated type  
+                if line.rate_type == 'calculated':
+                    line.rate = line.template_line_id.rate_value or line.component_id.current_rate
+                # For input/fixed rate_type: keep current user value
+                
+                # Reset length only if it's calculated type
+                if line.length_type == 'calculated':
+                    line.length = line.template_line_id.length_value or 1.0
+                # For input/fixed length_type: keep current user value
+                
+                _logger.debug(f"Reset {line.component_name}: qty_type={line.qty_type}, rate_type={line.rate_type}, length_type={line.length_type}")
+        
+        # Reset ONLY calculated parameters to defaults (preserve user input parameters)
+        for param in self.parameter_ids.filtered(lambda p: p.parameter_type == 'calculated'):
+            if param.parameter_id.default_value:
+                try:
+                    default_val = param.parameter_id.default_value
+                    if param.data_type == 'float':
+                        param.value_float = float(default_val)
+                    elif param.data_type == 'integer':
+                        param.value_integer = int(default_val)
+                    elif param.data_type == 'char':
+                        param.value_char = default_val
+                    elif param.data_type == 'boolean':
+                        param.value_boolean = default_val.lower() in ('true', '1')
+                        
+                    _logger.debug(f"Reset calculated parameter {param.parameter_code} to {default_val}")
+                except:
+                    # If default value is invalid, set to zero/empty
+                    if param.data_type == 'float':
+                        param.value_float = 0.0
+                    elif param.data_type == 'integer':
+                        param.value_integer = 0
+                    elif param.data_type == 'char':
+                        param.value_char = ''
+                    elif param.data_type == 'boolean':
+                        param.value_boolean = False
+    
+    def _build_fresh_parameter_context(self):
+        """Build fresh parameter context from current database state"""
+        context = {'math': math}
+        
+        # Re-read parameters from database
+        self.parameter_ids.read()
+        
+        # First pass: get fixed and input parameters
+        for param in self.parameter_ids:
+            if param.parameter_type in ['fixed', 'input']:
+                value = param.get_numeric_value()
+                context[param.parameter_code] = value
+                _logger.debug(f"Parameter {param.parameter_code}: {value} (type: {param.parameter_type})")
+        
+        return context
+    
+    def _calculate_parameters(self, context):
+        """Calculate calculated parameters with dependency resolution"""
+        calculated_params = self.parameter_ids.filtered(lambda p: p.parameter_type == 'calculated')
+        
+        if not calculated_params:
+            _logger.debug("No calculated parameters to process")
+            return
+        
+        _logger.info(f"Calculating {len(calculated_params)} calculated parameters")
         
         # Calculate in iterations to handle dependencies
         max_iterations = 10
         for iteration in range(max_iterations):
             updated = False
+            _logger.debug(f"Parameter iteration {iteration + 1}")
+            
             for param in calculated_params:
                 # Get formula from template
                 formula = param.parameter_id.formula
@@ -238,68 +481,139 @@ class KitCostSheet(models.Model):
                             new_value = float(value)
                             # Check if this is actually a new/different value
                             current_value = param.get_numeric_value()
+                            
                             if abs(new_value - current_value) > 0.001:  # Avoid floating point precision issues
                                 context[param.parameter_code] = new_value
-                                # Update the parameter value
+                                
+                                # Update the parameter value using write() for better persistence
                                 if param.data_type == 'float':
-                                    param.value_float = new_value
+                                    param.write({'value_float': new_value})
                                 elif param.data_type == 'integer':
-                                    param.value_integer = int(new_value)
+                                    param.write({'value_integer': int(new_value)})
+                                
                                 updated = True
+                                _logger.debug(f"Updated parameter {param.parameter_code}: {current_value} -> {new_value}")
                     except Exception as e:
-                        # Skip if formula can't be evaluated yet
+                        _logger.warning(f"Failed to calculate parameter {param.parameter_code} with formula '{formula}': {e}")
                         continue
             
             if not updated:
+                _logger.debug(f"Parameter calculation converged after {iteration + 1} iterations")
                 break
+        else:
+            _logger.warning(f"Parameter calculation did not converge after {max_iterations} iterations")
+    
+    def _calculate_components(self, context):
+        """Calculate component values using template formulas with dependency resolution"""
+        # Re-read component state and get enabled lines
+        self.component_ids.read()
+        enabled_lines = self.component_ids.filtered(lambda l: l.is_enabled).sorted('sequence')
         
-        # Calculate component values using template formulas
-        enabled_lines = self.component_ids.filtered(lambda l: l.is_enabled)
+        if not enabled_lines:
+            _logger.debug("No enabled components to calculate")
+            return
         
-        # Calculate component formulas
-        for line in enabled_lines:
-            # Build component context fresh each time
-            comp_context = context.copy()
+        _logger.info(f"Calculating {len(enabled_lines)} enabled components")
+        
+        # Use multiple iterations to resolve component dependencies
+        max_iterations = 5
+        for iteration in range(max_iterations):
+            updated = False
+            _logger.debug(f"Component calculation iteration {iteration + 1}")
             
-            # Add OTHER component values to context (not current line)
-            for other_line in enabled_lines:
-                if other_line.id != line.id:
-                    comp_name = self._sanitize_name(other_line.component_id.name)
-                    comp_context[f"{comp_name}_Qty"] = other_line.quantity
-                    comp_context[f"{comp_name}_Rate"] = other_line.rate
-                    comp_context[f"{comp_name}_Length"] = other_line.length
+            # Calculate component formulas in sequence order
+            for line in enabled_lines:
+                _logger.debug(f"Processing component {line.sequence}: {line.component_name}")
+                
+                # Build component context fresh for each component with CURRENT values
+                comp_context = context.copy()
+                
+                # Add ALL OTHER component values to context (with fresh values)
+                for other_line in enabled_lines:
+                    if other_line.id != line.id:
+                        # Re-read to get latest calculated values
+                        other_line.read(['quantity', 'rate', 'length'])
+                        comp_name = self._sanitize_name(other_line.component_id.name)
+                        comp_context[f"{comp_name}_Qty"] = other_line.quantity
+                        comp_context[f"{comp_name}_Rate"] = other_line.rate
+                        comp_context[f"{comp_name}_Length"] = other_line.length
+                        _logger.debug(f"Added to context: {comp_name}_Qty={other_line.quantity}")
+                
+                # Store original values for comparison
+                original_quantity = line.quantity
+                original_rate = line.rate
+                original_length = line.length
+                
+                # Calculate quantity using template formula
+                new_quantity = line.quantity
+                if line.qty_type == 'calculated' and line.template_line_id and line.template_line_id.qty_formula:
+                    try:
+                        quantity = self._safe_eval(line.template_line_id.qty_formula, comp_context)
+                        new_quantity = float(quantity) if quantity is not None else 0.0
+                        _logger.debug(f"Calculated quantity for {line.component_name}: {line.template_line_id.qty_formula} = {new_quantity}")
+                    except Exception as e:
+                        _logger.warning(f"Failed to calculate quantity for {line.component_name}: {e}")
+                        new_quantity = 0.0
+                elif line.qty_type == 'fixed' and line.template_line_id:
+                    new_quantity = line.template_line_id.qty_value or 0.0
+                
+                # Calculate rate using template formula
+                new_rate = line.rate
+                if line.rate_type == 'calculated' and line.template_line_id and line.template_line_id.rate_formula:
+                    try:
+                        rate = self._safe_eval(line.template_line_id.rate_formula, comp_context)
+                        new_rate = float(rate) if rate is not None else line.component_id.current_rate
+                        _logger.debug(f"Calculated rate for {line.component_name}: {line.template_line_id.rate_formula} = {new_rate}")
+                    except Exception as e:
+                        _logger.warning(f"Failed to calculate rate for {line.component_name}: {e}")
+                        new_rate = line.component_id.current_rate
+                elif line.rate_type == 'fixed' and line.template_line_id:
+                    new_rate = line.template_line_id.rate_value or line.component_id.current_rate
+                
+                # Calculate length using template formula
+                new_length = line.length
+                if line.length_type == 'calculated' and line.template_line_id and line.template_line_id.length_formula:
+                    try:
+                        length = self._safe_eval(line.template_line_id.length_formula, comp_context)
+                        new_length = float(length) if length is not None else 1.0
+                        _logger.debug(f"Calculated length for {line.component_name}: {line.template_line_id.length_formula} = {new_length}")
+                    except Exception as e:
+                        _logger.warning(f"Failed to calculate length for {line.component_name}: {e}")
+                        new_length = 1.0
+                elif line.length_type == 'fixed' and line.template_line_id:
+                    new_length = line.template_line_id.length_value or 1.0
+                
+                # Check if values actually changed (avoid unnecessary updates)
+                if (abs(new_quantity - original_quantity) > 0.001 or 
+                    abs(new_rate - original_rate) > 0.01 or 
+                    abs(new_length - original_length) > 0.001):
+                    
+                    # Update component values immediately
+                    line.write({
+                        'quantity': new_quantity,
+                        'rate': new_rate,
+                        'length': new_length,
+                    })
+                    
+                    # Force immediate database flush
+                    self.env.flush_all()
+                    
+                    updated = True
+                    _logger.debug(f"Updated {line.component_name}: qty={original_quantity}->{new_quantity}, rate={original_rate}->{new_rate}, length={original_length}->{new_length}")
             
-            # Calculate quantity using template formula
-            if line.qty_type == 'calculated' and line.template_line_id.qty_formula:
-                try:
-                    quantity = self._safe_eval(line.template_line_id.qty_formula, comp_context)
-                    line.quantity = float(quantity) if quantity is not None else 0.0
-                except Exception as e:
-                    line.quantity = 0.0
-            elif line.qty_type == 'fixed' and line.template_line_id:
-                line.quantity = line.template_line_id.qty_value or 0.0
+            # If no values changed in this iteration, we're done
+            if not updated:
+                _logger.debug(f"Component calculation converged after {iteration + 1} iterations")
+                break
+                
+            # Small delay and cache clear between iterations
+            self.env.invalidate_all()
             
-            # Calculate rate using template formula
-            if line.rate_type == 'calculated' and line.template_line_id.rate_formula:
-                try:
-                    rate = self._safe_eval(line.template_line_id.rate_formula, comp_context)
-                    line.rate = float(rate) if rate is not None else line.component_id.current_rate
-                except Exception as e:
-                    line.rate = line.component_id.current_rate
-            elif line.rate_type == 'fixed' and line.template_line_id:
-                line.rate = line.template_line_id.rate_value or line.component_id.current_rate
-            
-            # Calculate length using template formula
-            if line.length_type == 'calculated' and line.template_line_id.length_formula:
-                try:
-                    length = self._safe_eval(line.template_line_id.length_formula, comp_context)
-                    line.length = float(length) if length is not None else 1.0
-                except Exception as e:
-                    line.length = 1.0
-            elif line.length_type == 'fixed' and line.template_line_id:
-                line.length = line.template_line_id.length_value or 1.0
+        else:
+            _logger.warning(f"Component calculation did not converge after {max_iterations} iterations")
     
     def _safe_eval(self, expression, context):
+        """Safely evaluate mathematical expressions"""
         if not expression:
             return 0
         
@@ -311,8 +625,11 @@ class KitCostSheet(models.Model):
         
         try:
             node = ast.parse(expression, mode='eval')
-            return eval(compile(node, '<string>', 'eval'), allowed_names)
+            result = eval(compile(node, '<string>', 'eval'), allowed_names)
+            _logger.debug(f"Formula '{expression}' evaluated to: {result}")
+            return result
         except Exception as e:
+            _logger.error(f"Formula Error in '{expression}': {e}")
             raise UserError(_('Formula Error in "%s": %s') % (expression, str(e)))
     
     def action_confirm(self):
@@ -320,6 +637,129 @@ class KitCostSheet(models.Model):
         if self.state != 'calculated':
             raise UserError(_('Please calculate the cost sheet first.'))
         self.state = 'confirmed'
+    
+    def debug_fundamentals(self):
+        """Debug the fundamental issues we might be missing"""
+        _logger.info("=== FUNDAMENTAL DEBUG START ===")
+        
+        # Test 1: Basic formula evaluation
+        _logger.info("--- TEST 1: Basic Formula Evaluation ---")
+        context = {'length_8m': 48, 'safety_factor': 1.1, 'math': math}
+        test_formulas = [
+            "length_8m * 2",
+            "length_8m * safety_factor", 
+            "48 * 1.1",
+            "math.ceil(10.5)"
+        ]
+        
+        for formula in test_formulas:
+            try:
+                result = self._safe_eval(formula, context)
+                _logger.info(f"✅ {formula} = {result}")
+            except Exception as e:
+                _logger.error(f"❌ {formula} failed: {e}")
+        
+        # Test 2: Parameter data
+        _logger.info("--- TEST 2: Parameter Data ---")
+        for param in self.parameter_ids:
+            _logger.info(f"Parameter: {param.parameter_name}")
+            _logger.info(f"  Code: {param.parameter_code}")
+            _logger.info(f"  Type: {param.parameter_type}")
+            _logger.info(f"  Current Value: {param.get_numeric_value()}")
+            _logger.info(f"  Template Formula: '{param.parameter_id.formula or 'EMPTY'}'")
+        
+        # Test 3: Component template data
+        _logger.info("--- TEST 3: Component Template Data ---")
+        for line in self.component_ids:
+            _logger.info(f"\nComponent: {line.component_name}")
+            _logger.info(f"  Component ID: {line.component_id.id}")
+            _logger.info(f"  Template Line ID: {line.template_line_id.id if line.template_line_id else 'MISSING'}")
+            
+            if line.template_line_id:
+                _logger.info(f"  qty_type: {line.qty_type}")
+                _logger.info(f"  qty_formula: '{line.template_line_id.qty_formula or 'EMPTY'}'")
+                _logger.info(f"  rate_type: {line.rate_type}")
+                _logger.info(f"  rate_formula: '{line.template_line_id.rate_formula or 'EMPTY'}'")
+                _logger.info(f"  length_type: {line.length_type}")
+                _logger.info(f"  length_formula: '{line.template_line_id.length_formula or 'EMPTY'}'")
+            else:
+                _logger.error(f"  ❌ NO TEMPLATE LINE LINKED!")
+            
+            _logger.info(f"  Current Values: qty={line.quantity}, rate={line.rate}, length={line.length}")
+        
+        # Test 4: Component name sanitization
+        _logger.info("--- TEST 4: Component Name Sanitization ---")
+        for line in self.component_ids:
+            original_name = line.component_id.name
+            sanitized = self._sanitize_name(original_name)
+            _logger.info(f"'{original_name}' → '{sanitized}'")
+            _logger.info(f"  Context keys: {sanitized}_Qty, {sanitized}_Rate, {sanitized}_Length")
+        
+        # Test 5: Check if formulas reference correct field names
+        _logger.info("--- TEST 5: Formula Field Name Check ---")
+        all_component_names = [self._sanitize_name(line.component_id.name) for line in self.component_ids]
+        
+        for line in self.component_ids:
+            if line.template_line_id and line.template_line_id.qty_formula:
+                formula = line.template_line_id.qty_formula
+                _logger.info(f"Formula: '{formula}'")
+                
+                # Check if formula references any component names
+                for comp_name in all_component_names:
+                    if comp_name in formula:
+                        _logger.info(f"  ✅ References: {comp_name}")
+                
+                # Look for unknown references
+                import re
+                refs = re.findall(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', formula)
+                unknown_refs = []
+                for ref in refs:
+                    if ref not in ['math', 'abs', 'min', 'max', 'round', 'ceil', 'floor']:
+                        # Check if it's a parameter
+                        param_codes = [p.parameter_code for p in self.parameter_ids]
+                        if ref not in param_codes and not any(ref.startswith(cn) for cn in all_component_names):
+                            unknown_refs.append(ref)
+                
+                if unknown_refs:
+                    _logger.warning(f"  ⚠️ Unknown references: {unknown_refs}")
+        
+        # Test 6: Actual calculation attempt
+        _logger.info("--- TEST 6: Single Component Calculation Test ---")
+        context = {'math': math}
+        
+        # Add parameters to context
+        for param in self.parameter_ids:
+            if param.parameter_type in ['fixed', 'input']:
+                context[param.parameter_code] = param.get_numeric_value()
+        
+        # Add current component values to context
+        for line in self.component_ids:
+            comp_name = self._sanitize_name(line.component_id.name)
+            context[f"{comp_name}_Qty"] = line.quantity
+            context[f"{comp_name}_Rate"] = line.rate
+            context[f"{comp_name}_Length"] = line.length
+        
+        _logger.info(f"Context keys: {list(context.keys())}")
+        
+        # Try to calculate first component with calculated qty
+        for line in self.component_ids:
+            if line.qty_type == 'calculated' and line.template_line_id and line.template_line_id.qty_formula:
+                formula = line.template_line_id.qty_formula
+                _logger.info(f"\nTesting calculation for: {line.component_name}")
+                _logger.info(f"Formula: {formula}")
+                _logger.info(f"Current quantity: {line.quantity}")
+                
+                try:
+                    result = self._safe_eval(formula, context)
+                    _logger.info(f"✅ Calculation result: {result}")
+                    _logger.info(f"Difference from current: {abs(float(result) - line.quantity)}")
+                except Exception as e:
+                    _logger.error(f"❌ Calculation failed: {e}")
+                
+                break  # Test only first one
+        
+        _logger.info("=== FUNDAMENTAL DEBUG END ===")
+        return True
 
 
 class KitCostParameter(models.Model):
@@ -345,6 +785,7 @@ class KitCostParameter(models.Model):
     value_boolean = fields.Boolean(string='Boolean Value')
     
     def get_numeric_value(self):
+        """Get numeric value for calculations"""
         if self.data_type == 'float':
             return self.value_float
         elif self.data_type == 'integer':
@@ -425,10 +866,18 @@ class KitCostLine(models.Model):
                 line.amount = 0.0
     
     def toggle_component(self):
+        """Toggle component enabled/disabled state"""
         self.ensure_one()
         if self.is_mandatory and self.is_enabled:
             raise ValidationError(_("Cannot disable mandatory component."))
+        
+        old_state = self.is_enabled
         self.is_enabled = not self.is_enabled
+        
+        # Force database flush for immediate persistence
+        self.env.flush_all()
+        
+        _logger.info(f"Toggled component {self.component_name}: {old_state} -> {self.is_enabled}")
     
     def action_edit_qty_formula(self):
         """Edit quantity formula in template (not cost sheet)"""
