@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="length_1_0" model="length.master">
+            <field name="length_value">1.0</field>
+        </record>
+        <record id="length_1_5" model="length.master">
+            <field name="length_value">1.5</field>
+        </record>
+        <record id="length_2_0" model="length.master">
+            <field name="length_value">2.0</field>
+        </record>
+        <record id="length_3_0" model="length.master">
+            <field name="length_value">3.0</field>
+        </record>
+        <record id="length_6_0" model="length.master">
+            <field name="length_value">6.0</field>
+        </record>
+    </data>
+</odoo>

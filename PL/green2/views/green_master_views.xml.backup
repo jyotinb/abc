@@ -1,0 +1,438 @@
+<odoo>
+    <!-- Component Line Views -->
+    <record id="view_component_line_tree" model="ir.ui.view">
+        <field name="name">component.line.tree</field>
+        <field name="model">component.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="true" delete="true">
+                <field name="name" string="Component Name"/>
+                <field name="required" string="Required"/>
+                <field name="nos" string="Nos" sum="Total Nos"/>
+                <field name="length" string="Length" sum="Total Length"/>
+                <field name="pipe_id" string="Pipe Type" options="{'no_create_edit': True}"/>
+                <field name="pipe_type" string="Pipe" readonly="1"/>
+                <field name="pipe_size" string="Size (mm)" readonly="1"/>
+                <field name="wall_thickness" string="WT (mm)" readonly="1"/>
+                <field name="total_length" string="Total Length" readonly="1" sum="Total"/>
+                <field name="total_weight" string="Total Weight" readonly="1" sum="Total"/>
+                <field name="total_cost" string="Total Cost" readonly="1" sum="Total"/>
+                <field name="section" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Green Master Tree View -->
+    <record id="view_green_master_tree" model="ir.ui.view">
+        <field name="name">green.master.tree</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <tree string="Greenhouse Master List">
+                <field name="customer"/>
+                <field name="city"/>
+                <field name="structure_type"/>
+                <field name="total_span_length"/>
+                <field name="total_bay_length"/>
+                <field name="grand_total_cost" string="Total Cost" sum="Total Cost"/>
+                <button name="action_calculate_process" string="Calculate" type="object" class="btn-primary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Green Master Form View -->
+    <record id="view_green_master_form" model="ir.ui.view">
+        <field name="name">green.master.form</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <form string="Greenhouse Master">
+                <header>
+                    <button name="action_calculate_process" string="Calculate Components" type="object" class="btn-primary"/>
+                    <button name="print_report" string="Print Report" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_calculate_process" icon="fa-calculator">
+                            <field string="Total Cost" name="grand_total_cost" widget="monetary"/>
+                        </button>
+                    </div>
+                    
+                    <notebook>
+                        <!-- Basic Information -->
+                        <page string="Basic Information">
+                            <group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="address"/>
+                                    <field name="city"/>
+                                    <field name="mobile"/>
+                                </group>
+                                <group>
+                                    <field name="email"/>
+                                    <field name="reference"/>
+                                    <field name="structure_type"/>
+                                    <field name="plot_size"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Structure Configuration -->
+                        <page string="Structure Configuration">
+                            <group col="4">
+                                <group string="Dimensions Input">
+                                    <field name="total_span_length"/>
+                                    <field name="total_bay_length"/>
+                                    <field name="span_width"/>
+                                    <field name="bay_width"/>
+                                    <field name="top_ridge_height"/>
+                                    <field name="column_height"/>
+                                    <field name="big_arch_length"/>
+                                    <field name="small_arch_length"/>
+                                </group>
+                                <group string="Calculated Values">
+                                    <field name="span_length" readonly="1"/>
+                                    <field name="bay_length" readonly="1"/>
+                                    <field name="structure_size" readonly="1"/>
+                                    <field name="no_of_bays" readonly="1"/>
+                                    <field name="no_of_spans" readonly="1"/>
+                                    <field name="bottom_height" readonly="1"/>
+                                    <field name="arch_height" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ASC Configuration -->
+                        <page string="ASC Configuration">
+                            <group>
+                                <group string="ASC Settings">
+                                    <field name="is_side_coridoors"/>
+                                    <field name="width_front_span_coridoor" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                                    <field name="width_back_span_coridoor" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                                    <field name="width_front_bay_coridoor" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                                    <field name="width_back_bay_coridoor" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                                    <field name="support_hockeys" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="ASC Components" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                            <field name="asc_component_ids" attrs="{'invisible': [('is_side_coridoors', '=', False)]}" context="{'default_section': 'asc'}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="required"/>
+                                    <field name="nos"/>
+                                    <field name="length"/>
+                                    <field name="pipe_id" options="{'no_create_edit': True}"/>
+                                    <field name="pipe_type" readonly="1"/>
+                                    <field name="pipe_size" readonly="1"/>
+                                    <field name="wall_thickness" readonly="1"/>
+                                    <field name="total_length" readonly="1"/>
+                                    <field name="total_cost" readonly="1"/>
+                                    <field name="section" invisible="1"/>
+                                </tree>
+                            </field>
+                            <group attrs="{'invisible': [('is_side_coridoors', '=', False)]}">
+                                <field name="total_asc_cost" readonly="1" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- Frame Configuration -->
+                        <page string="Frame Configuration">
+                            <group>
+                                <group string="Frame Settings">
+                                    <field name="no_column_big_frame"/>
+                                    <field name="no_anchor_frame_lines" attrs="{'invisible': [('no_column_big_frame', '=', '0')]}"/>
+                                    <field name="thick_column"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Frame Components"/>
+                            <field name="frame_component_ids" context="{'default_section': 'frame'}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="required"/>
+                                    <field name="nos"/>
+                                    <field name="length"/>
+                                    <field name="pipe_id" options="{'no_create_edit': True}"/>
+                                    <field name="pipe_type" readonly="1"/>
+                                    <field name="pipe_size" readonly="1"/>
+                                    <field name="wall_thickness" readonly="1"/>
+                                    <field name="total_length" readonly="1"/>
+                                    <field name="total_cost" readonly="1"/>
+                                    <field name="section" invisible="1"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="total_frame_cost" readonly="1" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- Truss Configuration -->
+                        <page string="Truss Configuration">
+                            <group>
+                                <group string="Bottom Chord Settings">
+                                    <field name="is_bottom_chord"/>
+                                    <field name="v_support_bottom_chord_frame" attrs="{'invisible': [('is_bottom_chord', '=', False)]}"/>
+                                </group>
+                                <group string="Arch Support Settings">
+                                    <field name="is_arch_support_big"/>
+                                    <field name="is_arch_support_small_big_arch"/>
+                                    <field name="is_arch_support_small_small_arch"/>
+                                </group>
+                                <group string="Vent Support Settings">
+                                    <field name="no_vent_big_arch_support_frame"/>
+                                    <field name="no_vent_small_arch_support_frame"/>
+                                </group>
+                                <group string="Purlin Settings">
+                                    <field name="bay_side_border_purlin"/>
+                                    <field name="span_side_border_purlin"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Truss Components"/>
+                            <field name="truss_component_ids" context="{'default_section': 'truss'}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="required"/>
+                                    <field name="nos"/>
+                                    <field name="length"/>
+                                    <field name="pipe_id" options="{'no_create_edit': True}"/>
+                                    <field name="pipe_type" readonly="1"/>
+                                    <field name="pipe_size" readonly="1"/>
+                                    <field name="wall_thickness" readonly="1"/>
+                                    <field name="total_length" readonly="1"/>
+                                    <field name="total_cost" readonly="1"/>
+                                    <field name="section" invisible="1"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="total_truss_cost" readonly="1" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- Lower Section -->
+                        <page string="Lower Section">
+                            <group>
+                                <group string="Screen Settings">
+                                    <field name="side_screen_guard"/>
+                                    <field name="side_screen_guard_box"/>
+                                    <field name="no_side_screen_guard_box" attrs="{'invisible': [('side_screen_guard_box', '=', False)]}"/>
+                                </group>
+                                <group string="Cross Bracing">
+                                    <field name="front_back_c_c_cross_bracing_x"/>
+                                    <field name="middle_c_c_cross_bracing_x"/>
+                                    <field name="cross_bracing_column_arch"/>
+                                    <field name="cross_bracing_column_bottom"/>
+                                </group>
+                                <group string="Gutter Settings">
+                                    <field name="gutter_ippf_full"/>
+                                    <field name="gutter_ippf_drainage_extension"/>
+                                    <field name="gutter_funnel_ippf"/>
+                                    <field name="gutter_end_cap"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Lower Section Components"/>
+                            <field name="lower_component_ids" context="{'default_section': 'lower'}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="required"/>
+                                    <field name="nos"/>
+                                    <field name="length"/>
+                                    <field name="pipe_id" options="{'no_create_edit': True}"/>
+                                    <field name="pipe_type" readonly="1"/>
+                                    <field name="pipe_size" readonly="1"/>
+                                    <field name="wall_thickness" readonly="1"/>
+                                    <field name="total_length" readonly="1"/>
+                                    <field name="total_cost" readonly="1"/>
+                                    <field name="section" invisible="1"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="total_lower_cost" readonly="1" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- Cost Summary -->
+                        <page string="Cost Summary">
+                            <group>
+                                <group string="Section Totals">
+                                    <field name="total_asc_cost" readonly="1" widget="monetary"/>
+                                    <field name="total_frame_cost" readonly="1" widget="monetary"/>
+                                    <field name="total_truss_cost" readonly="1" widget="monetary"/>
+                                    <field name="total_lower_cost" readonly="1" widget="monetary"/>
+                                </group>
+                                <group string="Grand Total">
+                                    <field name="grand_total_cost" readonly="1" widget="monetary" style="font-size: 18px; font-weight: bold;"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Pipe Management Views -->
+    <record id="view_pipe_management_tree" model="ir.ui.view">
+        <field name="name">pipe.management.tree</field>
+        <field name="model">pipe.management</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="pipe_size"/>
+                <field name="wall_thickness"/>
+                <field name="weight"/>
+                <field name="rate"/>
+                <field name="total_cost"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pipe_management_form" model="ir.ui.view">
+        <field name="name">pipe.management.form</field>
+        <field name="model">pipe.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="pipe_size"/>
+                    <field name="wall_thickness"/>
+                    <field name="weight"/>
+                    <field name="rate"/>
+                    <field name="total_cost" readonly="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_green_master" model="ir.actions.act_window">
+        <field name="name">Greenhouse Master</field>
+        <field name="res_model">green.master</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_pipe_management" model="ir.actions.act_window">
+        <field name="name">Pipe Management</field>
+        <field name="res_model">pipe.management</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_greenhouse_management" name="Greenhouse Management" sequence="10"/>
+    <menuitem id="menu_green_master" name="Greenhouse Master" parent="menu_greenhouse_management" action="action_green_master" sequence="10"/>
+    <menuitem id="menu_pipe_management" name="Pipe Management" parent="menu_greenhouse_management" action="action_pipe_management" sequence="20"/>
+
+    <!-- Report -->
+    <record id="report_print_green_master" model="ir.actions.report">
+        <field name="name">Green Master Report</field>
+        <field name="model">green.master</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">greenh.green_master_report_template</field>
+        <field name="report_file">greenh.green_master_report_template</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="green_master_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2 style="text-align: center;">Greenhouse Master Report</h2>
+                    
+                    <h3>Basic Information</h3>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td><strong>Customer:</strong></td>
+                            <td><span t-esc="o.customer"/></td>
+                            <td><strong>Structure Type:</strong></td>
+                            <td><span t-esc="o.structure_type"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>City:</strong></td>
+                            <td><span t-esc="o.city"/></td>
+                            <td><strong>Mobile:</strong></td>
+                            <td><span t-esc="o.mobile"/></td>
+                        </tr>
+                    </table>
+
+                    <h3>Structure Details</h3>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td><strong>Total Span Length:</strong></td>
+                            <td><span t-esc="o.total_span_length"/> m</td>
+                            <td><strong>Span Width:</strong></td>
+                            <td><span t-esc="o.span_width"/> m</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Bay Length:</strong></td>
+                            <td><span t-esc="o.total_bay_length"/> m</td>
+                            <td><strong>Bay Width:</strong></td>
+                            <td><span t-esc="o.bay_width"/> m</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Number of Spans:</strong></td>
+                            <td><span t-esc="o.no_of_spans"/></td>
+                            <td><strong>Number of Bays:</strong></td>
+                            <td><span t-esc="o.no_of_bays"/></td>
+                        </tr>
+                    </table>
+
+                    <!-- Component Sections -->
+                    <t t-if="o.asc_component_ids">
+                        <h3>ASC Components</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Component Name</th>
+                                    <th>Nos</th>
+                                    <th>Length</th>
+                                    <th>Pipe Type</th>
+                                    <th>Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.asc_component_ids" t-as="component">
+                                    <tr>
+                                        <td><span t-esc="component.name"/></td>
+                                        <td><span t-esc="component.nos"/></td>
+                                        <td><span t-esc="component.length"/></td>
+                                        <td><span t-esc="component.pipe_type"/></td>
+                                        <td><span t-esc="component.total_cost"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+
+                    <h3>Cost Summary</h3>
+                    <table class="table table-bordered">
+                        <tr t-if="o.total_asc_cost > 0">
+                            <td>ASC Components</td>
+                            <td style="text-align: right;"><span t-esc="o.total_asc_cost"/></td>
+                        </tr>
+                        <tr t-if="o.total_frame_cost > 0">
+                            <td>Frame Components</td>
+                            <td style="text-align: right;"><span t-esc="o.total_frame_cost"/></td>
+                        </tr>
+                        <tr t-if="o.total_truss_cost > 0">
+                            <td>Truss Components</td>
+                            <td style="text-align: right;"><span t-esc="o.total_truss_cost"/></td>
+                        </tr>
+                        <tr t-if="o.total_lower_cost > 0">
+                            <td>Lower Section Components</td>
+                            <td style="text-align: right;"><span t-esc="o.total_lower_cost"/></td>
+                        </tr>
+                        <tr style="background-color: #dc3545; color: white; font-weight: bold;">
+                            <td>GRAND TOTAL</td>
+                            <td style="text-align: right;"><span t-esc="o.grand_total_cost"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
