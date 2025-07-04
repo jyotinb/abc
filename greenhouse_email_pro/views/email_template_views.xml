@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Email Template List View -->
+        <record id="view_email_template_tree" model="ir.ui.view">
+            <field name="name">email.marketing.template.tree</field>
+            <field name="model">email.marketing.template</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="template_type"/>
+                    <field name="greenhouse_category"/>
+                    <field name="growing_season"/>
+                    <field name="compliance_score"/>
+                    <field name="is_compliant"/>
+                    <field name="success_rate"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Email Template Form View -->
+        <record id="view_email_template_form" model="ir.ui.view">
+            <field name="name">email.marketing.template.form</field>
+            <field name="model">email.marketing.template</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_run_compliance_check" type="object" string="Check Compliance" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Template Name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="template_type"/>
+                                <field name="greenhouse_category"/>
+                                <field name="growing_season"/>
+                                <field name="target_audience"/>
+                            </group>
+                            <group>
+                                <field name="compliance_score"/>
+                                <field name="is_compliant"/>
+                                <field name="success_rate"/>
+                                <field name="usage_count"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Email Content">
+                                <group>
+                                    <field name="subject"/>
+                                    <field name="body_html" widget="html"/>
+                                </group>
+                            </page>
+                            <page string="Sender Information">
+                                <group>
+                                    <field name="sender_name"/>
+                                    <field name="sender_email"/>
+                                    <field name="reply_to_email"/>
+                                    <field name="company_address"/>
+                                </group>
+                            </page>
+                            <page string="Symbols">
+                                <field name="symbol_ids">
+                                    <tree>
+                                        <field name="symbol"/>
+                                        <field name="name"/>
+                                        <field name="category"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Email Template Action -->
+        <record id="action_email_template" model="ir.actions.act_window">
+            <field name="name">Email Templates</field>
+            <field name="res_model">email.marketing.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+    </data>
+</odoo>

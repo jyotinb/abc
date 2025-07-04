@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu -->
+        <menuitem id="menu_greenhouse_email_root" 
+                  name="Greenhouse Email Pro" 
+                  sequence="10"/>
+        
+        <!-- Templates Menu -->
+        <menuitem id="menu_email_templates" 
+                  name="Email Templates" 
+                  parent="menu_greenhouse_email_root" 
+                  sequence="10"/>
+        
+        <!-- Campaigns Menu -->
+        <menuitem id="menu_email_campaigns" 
+                  name="Email Campaigns" 
+                  parent="menu_greenhouse_email_root" 
+                  sequence="20"/>
+        
+        <!-- Contacts Menu -->
+        <menuitem id="menu_email_contacts" 
+                  name="Contact Groups" 
+                  parent="menu_greenhouse_email_root" 
+                  sequence="30"/>
+        
+        <!-- Symbol Library Menu -->
+        <menuitem id="menu_symbol_library" 
+                  name="Symbol Library" 
+                  parent="menu_greenhouse_email_root" 
+                  sequence="40"/>
+        
+        <!-- Compliance Menu -->
+        <menuitem id="menu_compliance" 
+                  name="Compliance Checker" 
+                  parent="menu_greenhouse_email_root" 
+                  sequence="50"/>
+        
+    </data>
+</odoo>

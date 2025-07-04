@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Header Components -->
+        <record id="component_greenhouse_header" model="email.template.component">
+            <field name="name">Greenhouse Header</field>
+            <field name="component_type">header</field>
+            <field name="sequence">10</field>
+            <field name="html_content"><![CDATA[
+<div class="greenhouse-header">
+    <h1>🌱 {{company_name}} 🌱</h1>
+    <p>Your Partner in Greenhouse Excellence</p>
+</div>
+            ]]></field>
+        </record>
+        
+        <!-- Text Block -->
+        <record id="component_text_block" model="email.template.component">
+            <field name="name">Text Block</field>
+            <field name="component_type">text</field>
+            <field name="sequence">30</field>
+            <field name="html_content"><![CDATA[
+<div class="text-block">
+    <p>Dear {{partner_name}},</p>
+    <p>Welcome to our latest greenhouse update!</p>
+</div>
+            ]]></field>
+        </record>
+        
+        <!-- Footer -->
+        <record id="component_greenhouse_footer" model="email.template.component">
+            <field name="name">Greenhouse Footer</field>
+            <field name="component_type">footer</field>
+            <field name="sequence">90</field>
+            <field name="html_content"><![CDATA[
+<div class="greenhouse-footer">
+    <p>{{company_name}} - Growing Excellence Together</p>
+    <p>{{company_address}}</p>
+    <p><a href="{{unsubscribe_url}}">Unsubscribe</a></p>
+</div>
+            ]]></field>
+        </record>
+        
+    </data>
+</odoo>

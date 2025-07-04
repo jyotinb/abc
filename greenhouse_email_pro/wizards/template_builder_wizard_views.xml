@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template Builder Wizard Views -->
+        <record id="view_template_builder_wizard_form" model="ir.ui.view">
+            <field name="name">greenhouse.template.builder.wizard.form</field>
+            <field name="model">greenhouse.template.builder.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="template_name"/>
+                            <field name="greenhouse_category"/>
+                            <field name="growing_season"/>
+                        </group>
+                        <footer>
+                            <button name="action_build_template" type="object" string="Build Template" class="btn-primary"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Plants & Flowers -->
+        <record id="symbol_seedling" model="greenhouse.symbol.library">
+            <field name="name">Seedling</field>
+            <field name="symbol">🌱</field>
+            <field name="category">plants</field>
+            <field name="description">Young plant, new growth, starting fresh</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">spring</field>
+        </record>
+        
+        <record id="symbol_evergreen" model="greenhouse.symbol.library">
+            <field name="name">Evergreen Tree</field>
+            <field name="symbol">🌲</field>
+            <field name="category">plants</field>
+            <field name="description">Evergreen trees, conifers, year-round greenery</field>
+            <field name="season_type">year_round</field>
+        </record>
+        
+        <record id="symbol_herb" model="greenhouse.symbol.library">
+            <field name="name">Herb</field>
+            <field name="symbol">🌿</field>
+            <field name="category">plants</field>
+            <field name="description">Herbs, aromatic plants, culinary plants</field>
+            <field name="season_type">year_round</field>
+        </record>
+        
+        <record id="symbol_potted_plant" model="greenhouse.symbol.library">
+            <field name="name">Potted Plant</field>
+            <field name="symbol">🪴</field>
+            <field name="category">plants</field>
+            <field name="description">Indoor plants, container gardening, houseplants</field>
+            <field name="season_type">year_round</field>
+        </record>
+        
+        <record id="symbol_tulip" model="greenhouse.symbol.library">
+            <field name="name">Tulip</field>
+            <field name="symbol">🌷</field>
+            <field name="category">plants</field>
+            <field name="description">Spring flowers, bulbs, colorful blooms</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">spring</field>
+        </record>
+        
+        <record id="symbol_rose" model="greenhouse.symbol.library">
+            <field name="name">Rose</field>
+            <field name="symbol">🌹</field>
+            <field name="category">plants</field>
+            <field name="description">Roses, romantic flowers, premium blooms</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <record id="symbol_sunflower" model="greenhouse.symbol.library">
+            <field name="name">Sunflower</field>
+            <field name="symbol">🌻</field>
+            <field name="category">plants</field>
+            <field name="description">Sunflowers, summer flowers, oil crops</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <!-- Vegetables & Fruits -->
+        <record id="symbol_tomato" model="greenhouse.symbol.library">
+            <field name="name">Tomato</field>
+            <field name="symbol">🍅</field>
+            <field name="category">vegetables</field>
+            <field name="description">Tomatoes, greenhouse staple, fresh produce</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <record id="symbol_carrot" model="greenhouse.symbol.library">
+            <field name="name">Carrot</field>
+            <field name="symbol">🥕</field>
+            <field name="category">vegetables</field>
+            <field name="description">Carrots, root vegetables, orange vegetables</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">fall</field>
+        </record>
+        
+        <record id="symbol_cucumber" model="greenhouse.symbol.library">
+            <field name="name">Cucumber</field>
+            <field name="symbol">🥒</field>
+            <field name="category">vegetables</field>
+            <field name="description">Cucumbers, fresh vegetables, greenhouse crops</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <record id="symbol_pumpkin" model="greenhouse.symbol.library">
+            <field name="name">Pumpkin</field>
+            <field name="symbol">🎃</field>
+            <field name="category">vegetables</field>
+            <field name="description">Pumpkins, winter squash, fall harvest</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">fall</field>
+        </record>
+        
+        <!-- Farming Tools -->
+        <record id="symbol_tractor" model="greenhouse.symbol.library">
+            <field name="name">Tractor</field>
+            <field name="symbol">🚜</field>
+            <field name="category">tools</field>
+            <field name="description">Tractors, farm machinery, large-scale farming</field>
+            <field name="business_context">b2b</field>
+        </record>
+        
+        <record id="symbol_wrench" model="greenhouse.symbol.library">
+            <field name="name">Wrench</field>
+            <field name="symbol">🔧</field>
+            <field name="category">tools</field>
+            <field name="description">Maintenance, repairs, equipment service</field>
+        </record>
+        
+        <!-- Weather & Climate -->
+        <record id="symbol_sun" model="greenhouse.symbol.library">
+            <field name="name">Sun</field>
+            <field name="symbol">☀️</field>
+            <field name="category">weather</field>
+            <field name="description">Sunny weather, solar energy, light</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <record id="symbol_droplet" model="greenhouse.symbol.library">
+            <field name="name">Water Droplet</field>
+            <field name="symbol">💧</field>
+            <field name="category">weather</field>
+            <field name="description">Water, irrigation, hydration</field>
+        </record>
+        
+        <record id="symbol_thermometer" model="greenhouse.symbol.library">
+            <field name="name">Thermometer</field>
+            <field name="symbol">🌡️</field>
+            <field name="category">weather</field>
+            <field name="description">Temperature monitoring, climate control</field>
+        </record>
+        
+        <!-- Automation -->
+        <record id="symbol_robot" model="greenhouse.symbol.library">
+            <field name="name">Robot</field>
+            <field name="symbol">🤖</field>
+            <field name="category">automation</field>
+            <field name="description">Automation, AI, robotic systems</field>
+            <field name="business_context">b2b</field>
+        </record>
+        
+        <record id="symbol_gear" model="greenhouse.symbol.library">
+            <field name="name">Gear</field>
+            <field name="symbol">⚙️</field>
+            <field name="category">automation</field>
+            <field name="description">Mechanical systems, automation, machinery</field>
+        </record>
+        
+        <record id="symbol_bulb" model="greenhouse.symbol.library">
+            <field name="name">Light Bulb</field>
+            <field name="symbol">💡</field>
+            <field name="category">automation</field>
+            <field name="description">LED lighting, grow lights, innovation</field>
+        </record>
+        
+        <!-- Animals -->
+        <record id="symbol_bee" model="greenhouse.symbol.library">
+            <field name="name">Bee</field>
+            <field name="symbol">🐝</field>
+            <field name="category">animals</field>
+            <field name="description">Pollination, bees, beneficial insects</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <record id="symbol_butterfly" model="greenhouse.symbol.library">
+            <field name="name">Butterfly</field>
+            <field name="symbol">🦋</field>
+            <field name="category">animals</field>
+            <field name="description">Pollinators, beautiful insects, garden visitors</field>
+            <field name="is_seasonal" eval="True"/>
+            <field name="season_type">summer</field>
+        </record>
+        
+        <!-- Environment -->
+        <record id="symbol_earth" model="greenhouse.symbol.library">
+            <field name="name">Earth</field>
+            <field name="symbol">🌍</field>
+            <field name="category">environment</field>
+            <field name="description">Environment, sustainability, global impact</field>
+        </record>
+        
+        <record id="symbol_recycle" model="greenhouse.symbol.library">
+            <field name="name">Recycle</field>
+            <field name="symbol">♻️</field>
+            <field name="category">environment</field>
+            <field name="description">Recycling, sustainability, circular economy</field>
+        </record>
+        
+        <!-- Business -->
+        <record id="symbol_chart" model="greenhouse.symbol.library">
+            <field name="name">Chart</field>
+            <field name="symbol">📊</field>
+            <field name="category">business</field>
+            <field name="description">Analytics, growth, business metrics</field>
+            <field name="business_context">b2b</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_greenhouse_symbol_library,greenhouse.symbol.library,model_greenhouse_symbol_library,base.group_user,1,1,1,1
+access_email_marketing_template,email.marketing.template,model_email_marketing_template,base.group_user,1,1,1,1
+access_email_marketing_campaign,email.marketing.campaign,model_email_marketing_campaign,base.group_user,1,1,1,1
+access_email_contact_group,email.contact.group,model_email_contact_group,base.group_user,1,1,1,1
+access_email_template_component,email.template.component,model_email_template_component,base.group_user,1,1,1,1
+access_email_compliance_checker,email.compliance.checker,model_email_compliance_checker,base.group_user,1,1,1,1
