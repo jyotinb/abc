@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Create Length Field Options with Exact Project Form Strings -->
+        <record id="field_option_support_hockeys" model="length.field.option">
+            <field name="name">length_support_hockeys</field>
+            <field name="display_name">Length for Support Hockey</field>
+        </record>
+        
+        <record id="field_option_v_support_bottom_chord" model="length.field.option">
+            <field name="name">length_v_support_bottom_chord_frame</field>
+            <field name="display_name">Length for V Support Bottom Chord</field>
+        </record>
+        
+        <record id="field_option_arch_support_big" model="length.field.option">
+            <field name="name">length_arch_support_big</field>
+            <field name="display_name">Length for Arch Support Big</field>
+        </record>
+        
+        <record id="field_option_arch_support_small_big" model="length.field.option">
+            <field name="name">length_arch_support_small_big_arch</field>
+            <field name="display_name">Length for Arch Support Small for Big Arch</field>
+        </record>
+        
+        <record id="field_option_arch_support_small_small" model="length.field.option">
+            <field name="name">length_arch_support_small_small_arch</field>
+            <field name="display_name">Length for Arch Support Small for Small Arch</field>
+        </record>
+        
+        <record id="field_option_vent_big_arch" model="length.field.option">
+            <field name="name">length_vent_big_arch_support</field>
+            <field name="display_name">Length for Vent Support for Big Arch</field>
+        </record>
+        
+        <record id="field_option_vent_small_arch" model="length.field.option">
+            <field name="name">length_vent_small_arch_support</field>
+            <field name="display_name">Length for Vent Support for Small Arch</field>
+        </record>
+        
+        <record id="field_option_screen_joiner" model="length.field.option">
+            <field name="name">length_side_screen_roll_up_pipe_joiner</field>
+            <field name="display_name">Length for Side Screen Roll Up Pipe Joiner</field>
+        </record>
+        
+        <record id="field_option_screen_guard" model="length.field.option">
+            <field name="name">length_side_screen_guard</field>
+            <field name="display_name">Length for Side Screen Guard</field>
+        </record>
+        
+        <record id="field_option_front_back_bracing" model="length.field.option">
+            <field name="name">length_front_back_c_c_cross_bracing_x</field>
+            <field name="display_name">Length for Front Back Column to Column Cross Bracing X</field>
+        </record>
+        
+        <record id="field_option_middle_bracing" model="length.field.option">
+            <field name="name">length_middle_c_c_cross_bracing_x</field>
+            <field name="display_name">Length for Internal CC Cross Bracing X</field>
+        </record>
+        
+        <record id="field_option_column_arch_bracing" model="length.field.option">
+            <field name="name">length_cross_bracing_column_arch</field>
+            <field name="display_name">Length for Cross Bracing Column Arch</field>
+        </record>
+        
+        <record id="field_option_column_bottom_bracing" model="length.field.option">
+            <field name="name">length_cross_bracing_column_bottom</field>
+            <field name="display_name">Length for Cross Bracing Column Bottom</field>
+        </record>
+        
+        <record id="field_option_guard_spacer" model="length.field.option">
+            <field name="name">length_side_screen_guard_spacer</field>
+            <field name="display_name">Length for Side Screen Guard Spacer</field>
+        </record>
+        
+        <record id="field_option_guard_box_h_pipe" model="length.field.option">
+            <field name="name">length_side_screen_guard_box_h_pipe</field>
+            <field name="display_name">Length for Side Screen Guard Box H Pipe</field>
+        </record>
+        
+        <!-- Create Standard Length Master Records with Field Mappings -->
+        
+        <!-- Small lengths for spacers -->
+        <record id="length_tiny_spacer" model="length.master">
+            <field name="length_value">0.1</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_guard_spacer'))]"/>
+        </record>
+        
+        <record id="length_small_spacer" model="length.master">
+            <field name="length_value">0.2</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_guard_spacer'))]"/>
+        </record>
+        
+        <record id="length_medium_spacer" model="length.master">
+            <field name="length_value">0.3</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_guard_spacer'))]"/>
+        </record>
+        
+        <!-- Joiners -->
+        <record id="length_standard_joiner" model="length.master">
+            <field name="length_value">0.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_joiner'))]"/>
+        </record>
+        
+        <record id="length_extended_joiner" model="length.master">
+            <field name="length_value">0.7</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_joiner'))]"/>
+        </record>
+        
+        <!-- Guards -->
+        <record id="length_standard_guard" model="length.master">
+            <field name="length_value">1.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_guard'))]"/>
+        </record>
+        
+        <record id="length_extended_guard" model="length.master">
+            <field name="length_value">1.2</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_guard'))]"/>
+        </record>
+        
+        <!-- Support Hockeys -->
+        <record id="length_standard_support_hockey" model="length.master">
+            <field name="length_value">1.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_support_hockeys'))]"/>
+        </record>
+        
+        <record id="length_extended_support_hockey" model="length.master">
+            <field name="length_value">2.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_support_hockeys'))]"/>
+        </record>
+        
+        <!-- V Support Bottom Chord -->
+        <record id="length_standard_v_support" model="length.master">
+            <field name="length_value">1.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_v_support_bottom_chord'))]"/>
+        </record>
+        
+        <record id="length_extended_v_support" model="length.master">
+            <field name="length_value">2.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_v_support_bottom_chord'))]"/>
+        </record>
+        
+        <!-- Arch Support Big -->
+        <record id="length_standard_arch_support_big" model="length.master">
+            <field name="length_value">2.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big'))]"/>
+        </record>
+        
+        <record id="length_extended_arch_support_big" model="length.master">
+            <field name="length_value">2.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big'))]"/>
+        </record>
+        
+        <record id="length_large_arch_support_big" model="length.master">
+            <field name="length_value">3.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big'))]"/>
+        </record>
+        
+        <!-- Multi-purpose lengths (available for multiple fields) -->
+        <record id="length_universal_medium" model="length.master">
+            <field name="length_value">2.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_support_hockeys')), (4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_arch_support_big'))]"/>
+        </record>
+        
+        <record id="length_universal_cross_bracing" model="length.master">
+            <field name="length_value">2.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_front_back_bracing')), (4, ref('field_option_middle_bracing')), (4, ref('field_option_column_arch_bracing'))]"/>
+        </record>
+        
+    </data>
+</odoo>
