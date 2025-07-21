@@ -35,7 +35,7 @@
         </field>
     </record>
 
-    <!-- Length Master Form View - No Description, Clean Tags -->
+    <!-- Length Master Form View -->
     <record id="view_length_master_form" model="ir.ui.view">
         <field name="name">length.master.form</field>
         <field name="model">length.master</field>
@@ -62,7 +62,7 @@
         </field>
     </record>
 
-    <!-- Length Master Tree View - No Description -->
+    <!-- Length Master Tree View -->
     <record id="view_length_master_tree" model="ir.ui.view">
         <field name="name">length.master.tree</field>
         <field name="model">length.master</field>
@@ -75,7 +75,7 @@
         </field>
     </record>
 
-    <!-- Green Master Form View - Fixed for OWL -->
+    <!-- Green Master Form View - Complete with All Original Fields -->
     <record id="view_green_master_form" model="ir.ui.view">
         <field name="name">green.master.form</field>
         <field name="model">green.master</field>
@@ -134,8 +134,8 @@
                                 <group string="Configuration">
                                     <field name="gutter_slope"/>
                                     <field name="last_span_gutter"/>
+                                    <field name="last_span_gutter_length" invisible="not last_span_gutter"/>
                                     <field name="foundation_length"/>
-                                    <field name="last_span_gutter_length"/>
                                 </group>
                                 
                                 <group string="Calculated Values" colspan="2">
@@ -656,9 +656,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- Removed the problematic server action - data is now created via XML -->
-    <!-- The Length Master data is automatically created via the data file -->
-
     <record id="action_pipe_management" model="ir.actions.act_window">
         <field name="name">Pipe Management</field>
         <field name="res_model">pipe.management</field>
@@ -688,7 +685,6 @@
     <menuitem id="menu_green_master" name="Greenhouse Projects" parent="menu_greenhouse_management" action="action_green_master" sequence="10"/>
     <menuitem id="menu_component_lines" name="All Components" parent="menu_greenhouse_management" action="action_component_line" sequence="15"/>
     <menuitem id="menu_length_master" name="Length Master" parent="menu_greenhouse_management" action="action_length_master" sequence="20"/>
-    <!-- Removed Setup Length Master Data menu - data is created automatically -->
 
     <!-- Pipe Management Menus -->
     <menuitem id="menu_pipe_master" name="Pipe Master" sequence="20"/>
@@ -707,7 +703,7 @@
         <field name="binding_type">report</field>
     </record>
 
-    <!-- Report Template -->
+    <!-- Complete Report Template with All Components -->
     <template id="green_master_report_template">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
@@ -741,6 +737,12 @@
                             <td style="font-weight: bold;">Mobile:</td>
                             <td><span t-esc="o.mobile or 'N/A'"/></td>
                         </tr>
+                        <tr>
+                            <td style="font-weight: bold;">Email:</td>
+                            <td><span t-esc="o.email or 'N/A'"/></td>
+                            <td style="font-weight: bold;">Reference:</td>
+                            <td><span t-esc="o.reference or 'N/A'"/></td>
+                        </tr>
                     </table>
 
                     <!-- Structure Details -->
@@ -770,6 +772,12 @@
                             <td style="font-weight: bold;">Top Ridge Height:</td>
                             <td><span t-esc="o.top_ridge_height"/> m</td>
                         </tr>
+                        <tr>
+                            <td style="font-weight: bold;">Column Height:</td>
+                            <td><span t-esc="o.column_height"/> m</td>
+                            <td style="font-weight: bold;">Gutter Length:</td>
+                            <td><span t-esc="o.gutter_length"/> m</td>
+                        </tr>
                     </table>
 
                     <!-- Component Sections -->
@@ -780,8 +788,11 @@
                                 <tr>
                                     <th>Component Name</th>
                                     <th>Nos</th>
-                                    <th>Length</th>
+                                    <th>Length (m)</th>
+                                    <th>Total Length (m)</th>
                                     <th>Pipe Type</th>
+                                    <th>Size (mm)</th>
+                                    <th>WT (mm)</th>
                                     <th>Total Cost</th>
                                 </tr>
                             </thead>
@@ -791,12 +802,15 @@
                                         <td><span t-esc="component.name"/></td>
                                         <td><span t-esc="component.nos"/></td>
                                         <td><span t-esc="round(component.length, 2)"/></td>
+                                        <td><span t-esc="round(component.total_length, 2)"/></td>
                                         <td><span t-esc="component.pipe_type or 'N/A'"/></td>
+                                        <td><span t-esc="component.pipe_size or 'N/A'"/></td>
+                                        <td><span t-esc="component.wall_thickness or 'N/A'"/></td>
                                         <td><span t-esc="round(component.total_cost, 2)"/></td>
                                     </tr>
                                 </t>
                                 <tr class="section-total">
-                                    <td colspan="4" style="text-align: right; font-weight: bold;">ASC Total:</td>
+                                    <td colspan="7" style="text-align: right; font-weight: bold;">ASC Total:</td>
                                     <td style="font-weight: bold;"><span t-esc="round(o.total_asc_cost, 2)"/></td>
                                 </tr>
                             </tbody>
@@ -810,8 +824,11 @@
                                 <tr>
                                     <th>Component Name</th>
                                     <th>Nos</th>
-                                    <th>Length</th>
+                                    <th>Length (m)</th>
+                                    <th>Total Length (m)</th>
                                     <th>Pipe Type</th>
+                                    <th>Size (mm)</th>
+                                    <th>WT (mm)</th>
                                     <th>Total Cost</th>
                                 </tr>
                             </thead>
@@ -821,12 +838,15 @@
                                         <td><span t-esc="component.name"/></td>
                                         <td><span t-esc="component.nos"/></td>
                                         <td><span t-esc="round(component.length, 2)"/></td>
+                                        <td><span t-esc="round(component.total_length, 2)"/></td>
                                         <td><span t-esc="component.pipe_type or 'N/A'"/></td>
+                                        <td><span t-esc="component.pipe_size or 'N/A'"/></td>
+                                        <td><span t-esc="component.wall_thickness or 'N/A'"/></td>
                                         <td><span t-esc="round(component.total_cost, 2)"/></td>
                                     </tr>
                                 </t>
                                 <tr class="section-total">
-                                    <td colspan="4" style="text-align: right; font-weight: bold;">Frame Total:</td>
+                                    <td colspan="7" style="text-align: right; font-weight: bold;">Frame Total:</td>
                                     <td style="font-weight: bold;"><span t-esc="round(o.total_frame_cost, 2)"/></td>
                                 </tr>
                             </tbody>
@@ -840,8 +860,11 @@
                                 <tr>
                                     <th>Component Name</th>
                                     <th>Nos</th>
-                                    <th>Length</th>
+                                    <th>Length (m)</th>
+                                    <th>Total Length (m)</th>
                                     <th>Pipe Type</th>
+                                    <th>Size (mm)</th>
+                                    <th>WT (mm)</th>
                                     <th>Total Cost</th>
                                 </tr>
                             </thead>
@@ -851,12 +874,15 @@
                                         <td><span t-esc="component.name"/></td>
                                         <td><span t-esc="component.nos"/></td>
                                         <td><span t-esc="round(component.length, 2)"/></td>
+                                        <td><span t-esc="round(component.total_length, 2)"/></td>
                                         <td><span t-esc="component.pipe_type or 'N/A'"/></td>
+                                        <td><span t-esc="component.pipe_size or 'N/A'"/></td>
+                                        <td><span t-esc="component.wall_thickness or 'N/A'"/></td>
                                         <td><span t-esc="round(component.total_cost, 2)"/></td>
                                     </tr>
                                 </t>
                                 <tr class="section-total">
-                                    <td colspan="4" style="text-align: right; font-weight: bold;">Truss Total:</td>
+                                    <td colspan="7" style="text-align: right; font-weight: bold;">Truss Total:</td>
                                     <td style="font-weight: bold;"><span t-esc="round(o.total_truss_cost, 2)"/></td>
                                 </tr>
                             </tbody>
@@ -870,8 +896,11 @@
                                 <tr>
                                     <th>Component Name</th>
                                     <th>Nos</th>
-                                    <th>Length</th>
+                                    <th>Length (m)</th>
+                                    <th>Total Length (m)</th>
                                     <th>Pipe Type</th>
+                                    <th>Size (mm)</th>
+                                    <th>WT (mm)</th>
                                     <th>Total Cost</th>
                                 </tr>
                             </thead>
@@ -881,12 +910,15 @@
                                         <td><span t-esc="component.name"/></td>
                                         <td><span t-esc="component.nos"/></td>
                                         <td><span t-esc="round(component.length, 2)"/></td>
+                                        <td><span t-esc="round(component.total_length, 2)"/></td>
                                         <td><span t-esc="component.pipe_type or 'N/A'"/></td>
+                                        <td><span t-esc="component.pipe_size or 'N/A'"/></td>
+                                        <td><span t-esc="component.wall_thickness or 'N/A'"/></td>
                                         <td><span t-esc="round(component.total_cost, 2)"/></td>
                                     </tr>
                                 </t>
                                 <tr class="section-total">
-                                    <td colspan="4" style="text-align: right; font-weight: bold;">Lower Section Total:</td>
+                                    <td colspan="7" style="text-align: right; font-weight: bold;">Lower Section Total:</td>
                                     <td style="font-weight: bold;"><span t-esc="round(o.total_lower_cost, 2)"/></td>
                                 </tr>
                             </tbody>
