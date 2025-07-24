@@ -293,10 +293,26 @@ class GreenMaster(models.Model):
         ('0', '0'),( '1','4 Corners'),( '2','Front & Back'),( '3','Both Sides'),( '4','4 Side'),( '5','All')], string='Arch Middle Purlin Small Arch', required=True, default='0')
     arch_middle_purlin_small_arch_pcs = fields.Selection([
         ('0', '0'),('1', '1'),('2', '2')], string='Arch Middle Purlin Small Arch Pcs', required=True, default='0')
+    
+    # NEW GUTTER DROPDOWN SYSTEM
+    gutter_type = fields.Selection([
+        ('none', 'None'),
+        ('ippf', 'IPPF'),
+        ('continuous', 'Continuous'),
+    ], string='Gutter', default='none', required=True)
+    
+    # IPPF Gutter Fields (only show when gutter_type = 'ippf')
     gutter_ippf_full = fields.Boolean('Gutter IPPF Full', default=False)
     gutter_ippf_drainage_extension = fields.Boolean('Gutter IPPF Drainage Extension', default=False)
     gutter_funnel_ippf = fields.Boolean('Gutter Funnel IPPF', default=False)
     gutter_end_cap = fields.Boolean('Gutter End Cap', default=False)
+    
+    # Continuous Gutter Fields (only show when gutter_type = 'continuous')
+    gutter_extension = fields.Selection([
+        ('0', '0'),
+        ('2', '2'),
+        ('4', '4'),
+    ], string='Gutter Extension', default='0')
     
     # Length master relationships with PROPER domain filtering
     length_support_hockeys = fields.Many2one(
@@ -349,6 +365,12 @@ class GreenMaster(models.Model):
         string='Length for Side Screen Guard',
         domain="[('available_for_fields.name', '=', 'length_side_screen_guard'), ('active', '=', True)]"
     )
+    # MOVED TO SCREEN SETTINGS
+    length_side_screen_guard_spacer = fields.Many2one(
+        'length.master', 
+        string='Length for Side Screen Guard Spacer',
+        domain="[('available_for_fields.name', '=', 'length_side_screen_guard_spacer'), ('active', '=', True)]"
+    )
     length_front_back_c_c_cross_bracing_x = fields.Many2one(
         'length.master', 
         string='Length for Front Back Column to Column Cross Bracing X',
@@ -368,11 +390,6 @@ class GreenMaster(models.Model):
         'length.master', 
         string='Length for Cross Bracing Column Bottom',
         domain="[('available_for_fields.name', '=', 'length_cross_bracing_column_bottom'), ('active', '=', True)]"
-    )
-    length_side_screen_guard_spacer = fields.Many2one(
-        'length.master', 
-        string='Length for Side Screen Guard Spacer',
-        domain="[('available_for_fields.name', '=', 'length_side_screen_guard_spacer'), ('active', '=', True)]"
     )
     length_side_screen_guard_box_h_pipe = fields.Many2one(
         'length.master', 
@@ -436,6 +453,27 @@ class GreenMaster(models.Model):
             record.grand_total_cost = (record.total_asc_cost + record.total_frame_cost + 
                                      record.total_truss_cost + record.total_lower_cost)
 
+    # NEW GUTTER ONCHANGE METHODS
+    @api.onchange('gutter_type')
+    def _onchange_gutter_type(self):
+        """Reset gutter fields when gutter type changes"""
+        if self.gutter_type == 'none':
+            # Reset all gutter fields
+            self.gutter_ippf_full = False
+            self.gutter_ippf_drainage_extension = False
+            self.gutter_funnel_ippf = False
+            self.gutter_end_cap = False
+            self.gutter_extension = '0'
+        elif self.gutter_type == 'ippf':
+            # Reset continuous fields
+            self.gutter_extension = '0'
+        elif self.gutter_type == 'continuous':
+            # Reset IPPF fields
+            self.gutter_ippf_full = False
+            self.gutter_ippf_drainage_extension = False
+            self.gutter_funnel_ippf = False
+            self.gutter_end_cap = False
+
     def action_calculate_process(self):
         """Main calculation method - same as original greenh"""
         for record in self:
@@ -465,7 +503,7 @@ class GreenMaster(models.Model):
         }
     
     def _calculate_all_components(self):
-        """Calculate ALL components with all original calculations from greenh"""
+        """Calculate ALL components with all original calculations from greenh plus NEW GUTTER LOGIC"""
         component_vals = []
         
         # =============================================
@@ -655,38 +693,58 @@ class GreenMaster(models.Model):
             no_arch_middle_purlin_big_arch = int(self.arch_middle_purlin_big_arch_pcs) * (self.no_of_spans * self.no_of_bays)
             
         
+        # =============================================
+        # NEW GUTTER CALCULATIONS LOGIC
+        # =============================================
         
-        
-        
-        # Gutter calculations
+        # Initialize gutter variables
         no_gutter_ippf_full = 0
         no_gutter_ippf_drainage_ext = 0
         no_gutter_funnel_ippf_funnel = 0
         no_gutter_end_cap = 0
         
-        if self.gutter_ippf_full:
-            if self.last_span_gutter:
-                no_gutter_ippf_full = (self.no_of_spans + 1) * self.no_of_bays
-            else:
-                no_gutter_ippf_full = (self.no_of_spans - 1) * self.no_of_bays
-                
-        if self.gutter_ippf_drainage_extension:
-            if self.last_span_gutter:
-                no_gutter_ippf_drainage_ext = (self.no_of_spans + 1) * int(self.gutter_slope)
-            else:
-                no_gutter_ippf_drainage_ext = (self.no_of_spans - 1) * int(self.gutter_slope)
-                
-        if self.gutter_funnel_ippf:
-            if self.last_span_gutter:
-                no_gutter_funnel_ippf_funnel = (self.no_of_spans + 1) * int(self.gutter_slope)
-            else:
-                no_gutter_funnel_ippf_funnel = (self.no_of_spans - 1) * int(self.gutter_slope)
-                
-        if self.gutter_end_cap and self.gutter_funnel_ippf and int(self.gutter_slope) == 1:
-            if self.last_span_gutter:
-                no_gutter_end_cap = self.no_of_spans + 1
-            else:
-                no_gutter_end_cap = self.no_of_spans - 1
+        # New continuous gutter variables
+        no_gutters_continuous = 0
+        gutter_length_continuous = 0
+        gutter_purlin_length_continuous = 0
+        gutter_purlin_nos_continuous = 0
+        gutter_purlin_extension_nos = 0
+        gutter_purlin_extension_length = 0
+        
+        if self.gutter_type == 'ippf':
+            # IPPF Gutter calculations (original logic)
+            if self.gutter_ippf_full:
+                if self.last_span_gutter:
+                    no_gutter_ippf_full = (self.no_of_spans + 1) * self.no_of_bays
+                else:
+                    no_gutter_ippf_full = (self.no_of_spans - 1) * self.no_of_bays
+                    
+            if self.gutter_ippf_drainage_extension:
+                if self.last_span_gutter:
+                    no_gutter_ippf_drainage_ext = (self.no_of_spans + 1) * int(self.gutter_slope)
+                else:
+                    no_gutter_ippf_drainage_ext = (self.no_of_spans - 1) * int(self.gutter_slope)
+                    
+            if self.gutter_funnel_ippf:
+                if self.last_span_gutter:
+                    no_gutter_funnel_ippf_funnel = (self.no_of_spans + 1) * int(self.gutter_slope)
+                else:
+                    no_gutter_funnel_ippf_funnel = (self.no_of_spans - 1) * int(self.gutter_slope)
+                    
+            if self.gutter_end_cap and self.gutter_funnel_ippf and int(self.gutter_slope) == 1:
+                if self.last_span_gutter:
+                    no_gutter_end_cap = self.no_of_spans + 1
+                else:
+                    no_gutter_end_cap = self.no_of_spans - 1
+                    
+        elif self.gutter_type == 'continuous':
+            # Continuous Gutter calculations (NEW LOGIC)
+            no_gutters_continuous = self.no_of_spans - 1
+            gutter_length_continuous = self.span_length + int(self.gutter_extension)
+            gutter_purlin_length_continuous = self.bay_width
+            gutter_purlin_nos_continuous = (self.no_of_spans - 1) * self.no_of_bays * 2
+            gutter_purlin_extension_nos = (self.no_of_spans - 1) * 4
+            gutter_purlin_extension_length = int(self.gutter_extension)
         
         # Side screen guard box calculations
         no_side_screen_guard_box_pipe = 0
@@ -1044,15 +1102,6 @@ class GreenMaster(models.Model):
                 self.bay_width
             ))
         
-        
-        
-        if no_arch_middle_purlin_small_arch > 0:
-            component_vals.append(self._create_component_val(
-                'lower', 'Arch Middle Purlin Small Arch', 
-                no_arch_middle_purlin_small_arch, 
-                self.bay_width
-            ))
-        
         if side_screen_guard_spacer > 0:
             spacer_length = self._get_length_master_value(self.length_side_screen_guard_spacer, 0.3)
             component_vals.append(self._create_component_val(
@@ -1062,7 +1111,11 @@ class GreenMaster(models.Model):
                 self.length_side_screen_guard_spacer
             ))
         
-        # Gutter components
+        # =============================================
+        # NEW GUTTER COMPONENTS BASED ON TYPE
+        # =============================================
+        
+        # IPPF Gutter components
         if no_gutter_ippf_full > 0:
             component_vals.append(self._create_component_val(
                 'lower', 'Gutter IPPF Full', 
@@ -1089,6 +1142,28 @@ class GreenMaster(models.Model):
                 'lower', 'Gutter End Cap', 
                 no_gutter_end_cap, 
                 0.1  # Estimated length for end cap
+            ))
+        
+        # Continuous Gutter components (NEW)
+        if no_gutters_continuous > 0:
+            component_vals.append(self._create_component_val(
+                'lower', 'Gutter Continuous', 
+                no_gutters_continuous, 
+                gutter_length_continuous
+            ))
+        
+        if gutter_purlin_nos_continuous > 0:
+            component_vals.append(self._create_component_val(
+                'lower', 'Gutter Purlin', 
+                gutter_purlin_nos_continuous, 
+                gutter_purlin_length_continuous
+            ))
+        
+        if gutter_purlin_extension_nos > 0 and gutter_purlin_extension_length > 0:
+            component_vals.append(self._create_component_val(
+                'lower', 'Gutter Purlin For Extension', 
+                gutter_purlin_extension_nos, 
+                gutter_purlin_extension_length
             ))
         
         # Create all component lines
