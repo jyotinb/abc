@@ -75,7 +75,7 @@
         </field>
     </record>
 
-    <!-- Green Master Form View - Complete with All Original Fields -->
+    <!-- Green Master Form View - Updated with New Gutter System -->
     <record id="view_green_master_form" model="ir.ui.view">
         <field name="name">green.master.form</field>
         <field name="model">green.master</field>
@@ -231,12 +231,13 @@
                             </group>
                         </page>
 
-                        <!-- Lower Section Configuration -->
+                        <!-- Lower Section Configuration - UPDATED WITH NEW GUTTER SYSTEM -->
                         <page string="Lower Section Configuration">
                             <group>
                                 <group string="Screen Settings">
                                     <field name="side_screen_guard"/>
                                     <field name="length_side_screen_guard" invisible="not side_screen_guard"/>
+                                    <field name="length_side_screen_guard_spacer"/>
                                     <field name="side_screen_guard_box"/>
                                     <field name="no_side_screen_guard_box" invisible="not side_screen_guard_box"/>
                                     <field name="length_side_screen_guard_box_h_pipe" invisible="not side_screen_guard_box"/>
@@ -258,12 +259,18 @@
                                     <field name="arch_middle_purlin_small_arch"/>
                                     <field name="arch_middle_purlin_small_arch_pcs" invisible="arch_middle_purlin_small_arch == '0'"/>
                                 </group>
+                                <!-- NEW GUTTER SYSTEM -->
                                 <group string="Gutter Settings">
-                                    <field name="gutter_ippf_full"/>
-                                    <field name="gutter_ippf_drainage_extension"/>
-                                    <field name="gutter_funnel_ippf"/>
-                                    <field name="gutter_end_cap"/>
-                                    <field name="length_side_screen_guard_spacer"/>
+                                    <field name="gutter_type" widget="radio"/>
+                                    
+                                    <!-- IPPF Gutter Fields -->
+                                    <field name="gutter_ippf_full" invisible="gutter_type != 'ippf'"/>
+                                    <field name="gutter_ippf_drainage_extension" invisible="gutter_type != 'ippf'"/>
+                                    <field name="gutter_funnel_ippf" invisible="gutter_type != 'ippf'"/>
+                                    <field name="gutter_end_cap" invisible="gutter_type != 'ippf'"/>
+                                    
+                                    <!-- Continuous Gutter Fields -->
+                                    <field name="gutter_extension" invisible="gutter_type != 'continuous'"/>
                                 </group>
                             </group>
                             
@@ -779,6 +786,12 @@
                             <td><span t-esc="o.column_height"/> m</td>
                             <td style="font-weight: bold;">Gutter Length:</td>
                             <td><span t-esc="o.gutter_length"/> m</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold;">Gutter Type:</td>
+                            <td><span t-esc="o.gutter_type.title()"/></td>
+                            <td style="font-weight: bold;">Gutter Extension:</td>
+                            <td><span t-esc="o.gutter_extension if o.gutter_type == 'continuous' else 'N/A'"/></td>
                         </tr>
                     </table>
 
