@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="pipe_type_gi" model="pipe.type">
+            <field name="name">GI Pipe</field>
+        </record>
+        <record id="pipe_type_ms" model="pipe.type">
+            <field name="name">MS Pipe</field>
+        </record>
+        <record id="pipe_type_ss" model="pipe.type">
+            <field name="name">SS Pipe</field>
+        </record>
+        <record id="pipe_type_square" model="pipe.type">
+            <field name="name">Square Pipe</field>
+        </record>
+        <record id="pipe_type_rectangular" model="pipe.type">
+            <field name="name">Rectangular Pipe</field>
+        </record>
+        <record id="pipe_type_angle" model="pipe.type">
+            <field name="name">Angle</field>
+        </record>
+        <record id="pipe_type_channel" model="pipe.type">
+            <field name="name">Channel</field>
+        </record>
+    </data>
+</odoo>
