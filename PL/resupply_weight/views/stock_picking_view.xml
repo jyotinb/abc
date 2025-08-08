@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form_view_resupply_weight" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.resupply.weight</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+				<field name="is_subcontract_receipt" invisible="1"/>
+				<field name="is_resupply" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='quantity']" position="after">
+			   <!-- For both resupply and subcontract receipt -->
+            <field name="delivered_weight" optional="hide" 
+                   column_invisible="not (parent.is_resupply or parent.is_subcontract_receipt)"/>
+            <field name="delivered_weight_uom_id" optional="hide" 
+                   column_invisible="not (parent.is_resupply or parent.is_subcontract_receipt)"/>
+            <!-- Only for subcontract receipt -->
+            <field name="received_weight" optional="hide" 
+                   column_invisible="not parent.is_subcontract_receipt"/>
+            <field name="received_weight_uom_id" optional="hide" 
+                   column_invisible="not parent.is_subcontract_receipt"/>   
+				   </xpath>
+				   <!-- <xpath expr="//header" position="inside"> -->
+    <!-- <button name="button_test_compute"  -->
+            <!-- string="Test Compute"  -->
+            <!-- type="object"  -->
+            <!-- groups="base.group_system"/> -->
+<!-- </xpath> -->
+        </field>
+    </record>
+</odoo>
