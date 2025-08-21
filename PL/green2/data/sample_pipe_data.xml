@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- GI Pipes -->
+        <record id="sample_pipe_gi_25_2" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_25"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">1.85</field>
+            <field name="rate">85.0</field>
+        </record>
+        
+        <record id="sample_pipe_gi_32_2" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_32"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.35</field>
+            <field name="rate">85.0</field>
+        </record>
+        
+        <record id="sample_pipe_gi_40_2" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_40"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.95</field>
+            <field name="rate">85.0</field>
+        </record>
+        
+        <record id="sample_pipe_gi_50_2" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_50"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">3.65</field>
+            <field name="rate">85.0</field>
+        </record>
+        
+        <record id="sample_pipe_gi_65_2_5" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_65"/>
+            <field name="wall_thickness" ref="wall_thickness_2_5"/>
+            <field name="weight">4.85</field>
+            <field name="rate">85.0</field>
+        </record>
+        
+        <record id="sample_pipe_gi_80_3" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_80"/>
+            <field name="wall_thickness" ref="wall_thickness_3_0"/>
+            <field name="weight">6.95</field>
+            <field name="rate">85.0</field>
+        </record>
+        
+        <record id="sample_pipe_gi_100_3" model="pipe.management">
+            <field name="name" ref="pipe_type_gi"/>
+            <field name="pipe_size" ref="pipe_size_100"/>
+            <field name="wall_thickness" ref="wall_thickness_3_0"/>
+            <field name="weight">8.75</field>
+            <field name="rate">85.0</field>
+        </record>
+
+        <!-- MS Pipes -->
+        <record id="sample_pipe_ms_25_2" model="pipe.management">
+            <field name="name" ref="pipe_type_ms"/>
+            <field name="pipe_size" ref="pipe_size_25"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">1.45</field>
+            <field name="rate">65.0</field>
+        </record>
+        
+        <record id="sample_pipe_ms_32_2" model="pipe.management">
+            <field name="name" ref="pipe_type_ms"/>
+            <field name="pipe_size" ref="pipe_size_32"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">1.85</field>
+            <field name="rate">65.0</field>
+        </record>
+        
+        <record id="sample_pipe_ms_40_2" model="pipe.management">
+            <field name="name" ref="pipe_type_ms"/>
+            <field name="pipe_size" ref="pipe_size_40"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.35</field>
+            <field name="rate">65.0</field>
+        </record>
+        
+        <record id="sample_pipe_ms_50_2_5" model="pipe.management">
+            <field name="name" ref="pipe_type_ms"/>
+            <field name="pipe_size" ref="pipe_size_50"/>
+            <field name="wall_thickness" ref="wall_thickness_2_5"/>
+            <field name="weight">3.15</field>
+            <field name="rate">65.0</field>
+        </record>
+        
+        <record id="sample_pipe_ms_65_3" model="pipe.management">
+            <field name="name" ref="pipe_type_ms"/>
+            <field name="pipe_size" ref="pipe_size_65"/>
+            <field name="wall_thickness" ref="wall_thickness_3_0"/>
+            <field name="weight">4.25</field>
+            <field name="rate">65.0</field>
+        </record>
+
+        <!-- Square Pipes -->
+        <record id="sample_pipe_square_25_1_5" model="pipe.management">
+            <field name="name" ref="pipe_type_square"/>
+            <field name="pipe_size" ref="pipe_size_25x25"/>
+            <field name="wall_thickness" ref="wall_thickness_1_5"/>
+            <field name="weight">1.15</field>
+            <field name="rate">75.0</field>
+        </record>
+        
+        <record id="sample_pipe_square_25_2" model="pipe.management">
+            <field name="name" ref="pipe_type_square"/>
+            <field name="pipe_size" ref="pipe_size_25x25"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">1.45</field>
+            <field name="rate">75.0</field>
+        </record>
+        
+        <record id="sample_pipe_square_40_1_5" model="pipe.management">
+            <field name="name" ref="pipe_type_square"/>
+            <field name="pipe_size" ref="pipe_size_40x40"/>
+            <field name="wall_thickness" ref="wall_thickness_1_5"/>
+            <field name="weight">1.85</field>
+            <field name="rate">75.0</field>
+        </record>
+        
+        <record id="sample_pipe_square_40_2" model="pipe.management">
+            <field name="name" ref="pipe_type_square"/>
+            <field name="pipe_size" ref="pipe_size_40x40"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.35</field>
+            <field name="rate">75.0</field>
+        </record>
+        
+        <record id="sample_pipe_square_50_2" model="pipe.management">
+            <field name="name" ref="pipe_type_square"/>
+            <field name="pipe_size" ref="pipe_size_50x50"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.95</field>
+            <field name="rate">75.0</field>
+        </record>
+        
+        <record id="sample_pipe_square_60_2_5" model="pipe.management">
+            <field name="name" ref="pipe_type_square"/>
+            <field name="pipe_size" ref="pipe_size_60x60"/>
+            <field name="wall_thickness" ref="wall_thickness_2_5"/>
+            <field name="weight">4.15</field>
+            <field name="rate">75.0</field>
+        </record>
+
+        <!-- Stainless Steel Pipes -->
+        <record id="sample_pipe_ss_25_1_5" model="pipe.management">
+            <field name="name" ref="pipe_type_ss"/>
+            <field name="pipe_size" ref="pipe_size_25"/>
+            <field name="wall_thickness" ref="wall_thickness_1_5"/>
+            <field name="weight">1.25</field>
+            <field name="rate">320.0</field>
+        </record>
+        
+        <record id="sample_pipe_ss_32_1_5" model="pipe.management">
+            <field name="name" ref="pipe_type_ss"/>
+            <field name="pipe_size" ref="pipe_size_32"/>
+            <field name="wall_thickness" ref="wall_thickness_1_5"/>
+            <field name="weight">1.65</field>
+            <field name="rate">320.0</field>
+        </record>
+        
+        <record id="sample_pipe_ss_40_2" model="pipe.management">
+            <field name="name" ref="pipe_type_ss"/>
+            <field name="pipe_size" ref="pipe_size_40"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.35</field>
+            <field name="rate">320.0</field>
+        </record>
+
+        <!-- Rectangular Pipes -->
+        <record id="sample_pipe_rect_40x25_1_5" model="pipe.management">
+            <field name="name" ref="pipe_type_rectangular"/>
+            <field name="pipe_size" ref="pipe_size_40x40"/>
+            <field name="wall_thickness" ref="wall_thickness_1_5"/>
+            <field name="weight">1.65</field>
+            <field name="rate">78.0</field>
+        </record>
+        
+        <record id="sample_pipe_rect_50x25_2" model="pipe.management">
+            <field name="name" ref="pipe_type_rectangular"/>
+            <field name="pipe_size" ref="pipe_size_50x50"/>
+            <field name="wall_thickness" ref="wall_thickness_2_0"/>
+            <field name="weight">2.15</field>
+            <field name="rate">78.0</field>
+        </record>
+        
+        <!-- Angles -->
+        <record id="sample_pipe_angle_25x25_3" model="pipe.management">
+            <field name="name" ref="pipe_type_angle"/>
+            <field name="pipe_size" ref="pipe_size_25x25"/>
+            <field name="wall_thickness" ref="wall_thickness_3_0"/>
+            <field name="weight">1.15</field>
+            <field name="rate">58.0</field>
+        </record>
+        
+        <record id="sample_pipe_angle_40x40_3" model="pipe.management">
+            <field name="name" ref="pipe_type_angle"/>
+            <field name="pipe_size" ref="pipe_size_40x40"/>
+            <field name="wall_thickness" ref="wall_thickness_3_0"/>
+            <field name="weight">2.35</field>
+            <field name="rate">58.0</field>
+        </record>
+        
+        <!-- Channels -->
+        <record id="sample_pipe_channel_50_2_5" model="pipe.management">
+            <field name="name" ref="pipe_type_channel"/>
+            <field name="pipe_size" ref="pipe_size_50"/>
+            <field name="wall_thickness" ref="wall_thickness_2_5"/>
+            <field name="weight">3.85</field>
+            <field name="rate">62.0</field>
+        </record>
+        
+        <record id="sample_pipe_channel_65_3" model="pipe.management">
+            <field name="name" ref="pipe_type_channel"/>
+            <field name="pipe_size" ref="pipe_size_65"/>
+            <field name="wall_thickness" ref="wall_thickness_3_0"/>
+            <field name="weight">5.15</field>
+            <field name="rate">62.0</field>
+        </record>
+    </data>
+</odoo>
