@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_greenhouse_type_user,greenhouse.type.user,model_greenhouse_type,base.group_user,1,0,0,0
+access_greenhouse_type_manager,greenhouse.type.manager,model_greenhouse_type,base.group_system,1,1,1,1
+access_greenhouse_section_template_user,greenhouse.section.template.user,model_greenhouse_section_template,base.group_user,1,0,0,0
+access_greenhouse_section_template_manager,greenhouse.section.template.manager,model_greenhouse_section_template,base.group_system,1,1,1,1
+access_greenhouse_project_user,greenhouse.project.user,model_greenhouse_project,base.group_user,1,1,1,1
+access_greenhouse_input_value_user,greenhouse.input.value.user,model_greenhouse_input_value,base.group_user,1,1,1,1
+access_greenhouse_component_result_user,greenhouse.component.result.user,model_greenhouse_component_result,base.group_user,1,1,1,1

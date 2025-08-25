@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Greenhouse Types - User customizable (noupdate="1") -->
+    <data noupdate="1">
+        
+        <!-- NVPH Type -->
+        <record id="type_nvph" model="greenhouse.type">
+            <field name="name">NVPH (Naturally Ventilated Polyhouse)</field>
+            <field name="code">nvph</field>
+            <field name="sequence">10</field>
+            <field name="icon">fa-home</field>
+            <field name="color">1</field>
+            <field name="typical_size">500-5000 sqm</field>
+            <field name="typical_use">Vegetables, Flowers, Herbs</field>
+            <field name="description">Naturally Ventilated Polyhouse is the most common greenhouse type in tropical regions. It uses natural airflow for temperature control and is cost-effective for most crops.</field>
+            <field name="section_ids" eval="[(6, 0, [
+                ref('section_dimensions'),
+                ref('section_dimensions_inputs'),
+                ref('section_frame'),
+                ref('section_truss'),
+                ref('section_side_screen'),
+                ref('section_lower'),
+                ref('section_gutter')
+            ])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 100,
+                "total_bay_length": 50,
+                "span_width": 8,
+                "bay_width": 4,
+                "column_height": 4.5,
+                "top_ridge_height": 6.5,
+                "foundation_length": 0.5,
+                "big_arch_length": 8.5,
+                "small_arch_length": 6.5,
+                "no_column_big_frame": "0",
+                "thick_column": "0",
+                "is_bottom_chord": false,
+                "v_support_bottom_chord_frame": "0",
+                "is_arch_support_big": false,
+                "is_arch_support_big_small": false,
+                "is_arch_support_small_big_arch": false,
+                "is_arch_support_small_small_arch": false,
+                "no_vent_big_arch_support_frame": "0",
+                "no_vent_small_arch_support_frame": "0",
+                "bay_side_border_purlin": "0",
+                "span_side_border_purlin": "0",
+                "side_screen_guard": true,
+                "no_of_curtains": 4,
+                "gutter_type": "continuous",
+                "gutter_slope": "1",
+                "last_span_gutter": false
+            }</field>
+        </record>
+        
+        <!-- NVPH2 Type -->
+        <record id="type_nvph2" model="greenhouse.type">
+            <field name="name">NVPH2 (Advanced NVPH)</field>
+            <field name="code">nvph2</field>
+            <field name="sequence">15</field>
+            <field name="icon">fa-home</field>
+            <field name="color">2</field>
+            <field name="typical_size">1000-10000 sqm</field>
+            <field name="typical_use">High-value Vegetables, Export Quality</field>
+            <field name="description">Advanced NVPH with additional structural support and better ventilation features.</field>
+            <field name="section_ids" eval="[(6, 0, [
+                ref('section_dimensions'),
+                ref('section_dimensions_inputs'),
+                ref('section_frame'),
+                ref('section_truss'),
+                ref('section_asc'),
+                ref('section_side_screen'),
+                ref('section_lower'),
+                ref('section_gutter')
+            ])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 150,
+                "total_bay_length": 75,
+                "span_width": 9.6,
+                "bay_width": 4,
+                "column_height": 5.0,
+                "top_ridge_height": 7.0,
+                "foundation_length": 0.75,
+                "big_arch_length": 9.5,
+                "small_arch_length": 7.5,
+                "no_column_big_frame": "1",
+                "no_anchor_frame_lines": 1,
+                "thick_column": "1",
+                "is_bottom_chord": true,
+                "v_support_bottom_chord_frame": "2",
+                "is_arch_support_big": true,
+                "is_arch_support_big_small": false,
+                "no_vent_big_arch_support_frame": "1",
+                "no_vent_small_arch_support_frame": "2",
+                "bay_side_border_purlin": "1",
+                "span_side_border_purlin": "1",
+                "is_side_coridoors": false,
+                "side_screen_guard": true,
+                "side_screen_guard_box": true,
+                "no_side_screen_guard_box": 2,
+                "no_of_curtains": 6,
+                "gutter_type": "ippf",
+                "gutter_slope": "1",
+                "gutter_ippf_full": true,
+                "gutter_funnel_ippf": true,
+                "last_span_gutter": false
+            }</field>
+        </record>
+        
+        <!-- Tunnel Type -->
+        <record id="type_tunnel" model="greenhouse.type">
+            <field name="name">Tunnel Greenhouse</field>
+            <field name="code">tunnel</field>
+            <field name="sequence">20</field>
+            <field name="icon">fa-circle-o</field>
+            <field name="color">3</field>
+            <field name="typical_size">200-2000 sqm</field>
+            <field name="typical_use">Nursery, Vegetables, Protected Cultivation</field>
+            <field name="description">Simple tunnel structure with curved roof. Cost-effective for small-scale farming and nurseries.</field>
+            <field name="section_ids" eval="[(6, 0, [
+                ref('section_dimensions'),
+                ref('section_dimensions_inputs'),
+                ref('section_frame'),
+                ref('section_truss'),
+                ref('section_side_screen')
+            ])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 50,
+                "total_bay_length": 30,
+                "span_width": 6,
+                "bay_width": 3,
+                "column_height": 3.5,
+                "top_ridge_height": 5.0,
+                "foundation_length": 0.3,
+                "big_arch_length": 6.0,
+                "small_arch_length": 4.5,
+                "no_column_big_frame": "0",
+                "thick_column": "0",
+                "is_bottom_chord": false,
+                "side_screen_guard": false,
+                "gutter_type": "none"
+            }</field>
+        </record>
+        
+        <!-- Fan and Pad Type -->
+        <record id="type_fanpad" model="greenhouse.type">
+            <field name="name">Fan and Pad Greenhouse</field>
+            <field name="code">fanpad</field>
+            <field name="sequence">30</field>
+            <field name="icon">fa-fan</field>
+            <field name="color">4</field>
+            <field name="typical_size">1000-10000 sqm</field>
+            <field name="typical_use">High-value Crops, Export Quality, Year-round Production</field>
+            <field name="description">Climate-controlled greenhouse with fan and pad cooling system. Provides precise temperature and humidity control for premium crop production.</field>
+            <field name="section_ids" eval="[(6, 0, [
+                ref('section_dimensions'),
+                ref('section_dimensions_inputs'),
+                ref('section_frame'),
+                ref('section_truss'),
+                ref('section_asc'),
+                ref('section_side_screen'),
+                ref('section_lower'),
+                ref('section_gutter')
+            ])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 200,
+                "total_bay_length": 100,
+                "span_width": 9.6,
+                "bay_width": 4,
+                "column_height": 5.0,
+                "top_ridge_height": 7.5,
+                "foundation_length": 1.0,
+                "big_arch_length": 10.0,
+                "small_arch_length": 8.0,
+                "no_column_big_frame": "2",
+                "no_anchor_frame_lines": 2,
+                "thick_column": "4",
+                "is_bottom_chord": true,
+                "v_support_bottom_chord_frame": "2",
+                "length_v_support_bottom_chord_frame": 2.0,
+                "is_arch_support_big": true,
+                "is_arch_support_big_small": true,
+                "is_arch_support_small_big_arch": true,
+                "is_arch_support_small_small_arch": true,
+                "no_vent_big_arch_support_frame": "2",
+                "no_vent_small_arch_support_frame": "2",
+                "bay_side_border_purlin": "2",
+                "span_side_border_purlin": "2",
+                "is_side_coridoors": true,
+                "width_front_span_coridoor": 2.0,
+                "width_back_span_coridoor": 2.0,
+                "width_front_bay_coridoor": 0,
+                "width_back_bay_coridoor": 0,
+                "support_hockeys": 2,
+                "side_screen_guard": true,
+                "side_screen_guard_box": true,
+                "no_side_screen_guard_box": 4,
+                "no_of_curtains": 8,
+                "front_back_c_c_cross_bracing_x": true,
+                "middle_c_c_cross_bracing_x": 2,
+                "cross_bracing_column_arch": true,
+                "cross_bracing_column_bottom": true,
+                "arch_middle_purlin_big_arch": "5",
+                "arch_middle_purlin_big_arch_pcs": "2",
+                "arch_middle_purlin_small_arch": "5",
+                "arch_middle_purlin_small_arch_pcs": "1",
+                "gutter_type": "continuous",
+                "gutter_slope": "2",
+                "gutter_extension": "2",
+                "last_span_gutter": false
+            }</field>
+        </record>
+        
+        <!-- Shade Net House Type -->
+        <record id="type_shade_net" model="greenhouse.type">
+            <field name="name">Shade Net House</field>
+            <field name="code">shade_net</field>
+            <field name="sequence">40</field>
+            <field name="icon">fa-th</field>
+            <field name="color">5</field>
+            <field name="typical_size">500-5000 sqm</field>
+            <field name="typical_use">Ornamental Plants, Nursery, Shade-loving Crops</field>
+            <field name="description">Open structure with shade net covering. Provides controlled light intensity and protection from harsh weather.</field>
+            <field name="section_ids" eval="[(6, 0, [
+                ref('section_dimensions'),
+                ref('section_dimensions_inputs'),
+                ref('section_frame'),
+                ref('section_truss'),
+                ref('section_lower')
+            ])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 80,
+                "total_bay_length": 40,
+                "span_width": 8,
+                "bay_width": 4,
+                "column_height": 4.0,
+                "top_ridge_height": 5.5,
+                "foundation_length": 0.5,
+                "big_arch_length": 7.0,
+                "small_arch_length": 5.5,
+                "no_column_big_frame": "0",
+                "thick_column": "1",
+                "is_bottom_chord": false,
+                "front_back_c_c_cross_bracing_x": true,
+                "cross_bracing_column_arch": true,
+                "gutter_type": "none"
+            }</field>
+        </record>
+        
+        <!-- Glass House Type -->
+        <record id="type_glass_house" model="greenhouse.type">
+            <field name="name">Glass House</field>
+            <field name="code">glass_house</field>
+            <field name="sequence">50</field>
+            <field name="icon">fa-building-o</field>
+            <field name="color">6</field>
+            <field name="typical_size">1000-20000 sqm</field>
+            <field name="typical_use">Premium Flowers, Research, High-tech Agriculture</field>
+            <field name="description">Premium glass structure with maximum light transmission and durability. Ideal for high-value crops and research facilities.</field>
+            <field name="section_ids" eval="[(6, 0, [
+                ref('section_dimensions'),
+                ref('section_dimensions_inputs'),
+                ref('section_frame'),
+                ref('section_truss'),
+                ref('section_asc'),
+                ref('section_lower'),
+                ref('section_gutter')
+            ])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 250,
+                "total_bay_length": 125,
+                "span_width": 12.8,
+                "bay_width": 5,
+                "column_height": 6.0,
+                "top_ridge_height": 8.5,
+                "foundation_length": 1.5,
+                "big_arch_length": 12.0,
+                "small_arch_length": 10.0,
+                "no_column_big_frame": "3",
+                "no_anchor_frame_lines": 3,
+                "thick_column": "4",
+                "is_bottom_chord": true,
+                "v_support_bottom_chord_frame": "2",
+                "is_arch_support_big": true,
+                "is_arch_support_big_small": true,
+                "is_arch_support_small_big_arch": true,
+                "is_arch_support_small_small_arch": true,
+                "no_vent_big_arch_support_frame": "3",
+                "no_vent_small_arch_support_frame": "2",
+                "bay_side_border_purlin": "2",
+                "span_side_border_purlin": "2",
+                "is_side_coridoors": true,
+                "width_front_span_coridoor": 3.0,
+                "width_back_span_coridoor": 3.0,
+                "width_front_bay_coridoor": 2.0,
+                "width_back_bay_coridoor": 2.0,
+                "support_hockeys": 3,
+                "front_back_c_c_cross_bracing_x": true,
+                "middle_c_c_cross_bracing_x": 4,
+                "cross_bracing_column_arch": true,
+                "cross_bracing_column_bottom": true,
+                "arch_middle_purlin_big_arch": "5",
+                "arch_middle_purlin_big_arch_pcs": "2",
+                "arch_middle_purlin_small_arch": "5",
+                "arch_middle_purlin_small_arch_pcs": "2",
+                "gutter_type": "continuous",
+                "gutter_slope": "2",
+                "gutter_extension": "4",
+                "last_span_gutter": true
+            }</field>
+        </record>
+        
+    </data>
+</odoo>

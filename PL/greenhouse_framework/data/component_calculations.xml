@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Component Calculation Rules - System controlled (noupdate="0") -->
+    <!-- These should not be modified by users as they contain core calculation logic -->
+    <data noupdate="0">
+        
+        <!-- Store calculation rules as system parameters for easy access -->
+        <record id="param_calculation_variables" model="ir.config_parameter">
+            <field name="key">greenhouse.calculation.variables</field>
+            <field name="value">{
+                "TOTAL_HOCKEYS": "FRONT_SPAN_HOCKEYS + BACK_SPAN_HOCKEYS + FRONT_BAY_HOCKEYS + BACK_BAY_HOCKEYS",
+                "FRONT_SPAN_HOCKEYS": "((GET('bay_length') / GET('span_width')) * (INT(GET('no_column_big_frame')) + 1) + 1) if GET('width_front_span_coridoor', 0) &gt; 0 else 0",
+                "BACK_SPAN_HOCKEYS": "((GET('bay_length') / GET('span_width')) * (INT(GET('no_column_big_frame')) + 1) + 1) if GET('width_back_span_coridoor', 0) &gt; 0 else 0",
+                "FRONT_BAY_HOCKEYS": "(GET('span_length') / GET('bay_width') + 1) if GET('width_front_bay_coridoor', 0) &gt; 0 else 0",
+                "BACK_BAY_HOCKEYS": "(GET('span_length') / GET('bay_width') + 1) if GET('width_back_bay_coridoor', 0) &gt; 0 else 0",
+                
+                "TOTAL_ANCHOR_FRAMES": "GET('no_anchor_frame_lines', 0) * GET('no_of_spans')",
+                "TOTAL_NORMAL_FRAMES": "(GET('no_of_spans') * (GET('no_of_bays') + 1)) - TOTAL_ANCHOR_FRAMES",
+                
+                "MIDDLE_COLUMNS": "TOTAL_ANCHOR_FRAMES if INT(GET('no_column_big_frame')) in [1, 3] else 0",
+                "QUADRUPLE_COLUMNS": "TOTAL_ANCHOR_FRAMES * 2 if INT(GET('no_column_big_frame')) in [2, 3] else 0",
+                "THICK_COLUMNS": "4 if GET('thick_column') == '1' else (GET('no_of_bays') + 1) * 2 if GET('thick_column') == '2' else (GET('no_of_spans') + 1) * 2 if GET('thick_column') == '3' else ((GET('no_of_bays') + 1) * 2) + ((GET('no_of_spans') + 1) * 2) if GET('thick_column') == '4' else 0",
+                "MAIN_COLUMNS": "((GET('no_of_spans') + 1) * (GET('no_of_bays') + 1)) - THICK_COLUMNS",
+                
+                "ARCH_BIG": "(GET('no_of_bays') + 1) * GET('no_of_spans')",
+                "ARCH_SMALL": "ARCH_BIG",
+                
+                "BOTTOM_CHORD_AF_NORMAL": "TOTAL_ANCHOR_FRAMES * (INT(GET('no_column_big_frame')) + 1) if GET('is_bottom_chord') and GET('span_width') &lt;= 6 else TOTAL_ANCHOR_FRAMES if GET('is_bottom_chord') and INT(GET('no_column_big_frame')) == 0 else TOTAL_ANCHOR_FRAMES * 2 if GET('is_bottom_chord') and INT(GET('no_column_big_frame')) == 1 else TOTAL_ANCHOR_FRAMES * 3 if GET('is_bottom_chord') and INT(GET('no_column_big_frame')) == 2 else TOTAL_ANCHOR_FRAMES * 4 if GET('is_bottom_chord') and INT(GET('no_column_big_frame')) == 3 else 0",
+                "BOTTOM_CHORD_AF_MALE": "TOTAL_ANCHOR_FRAMES if GET('is_bottom_chord') and GET('span_width') &gt; 6 and GET('no_column_big_frame') == '0' else 0",
+                "BOTTOM_CHORD_AF_FEMALE": "BOTTOM_CHORD_AF_MALE",
+                "BOTTOM_CHORD_IL_NORMAL": "TOTAL_NORMAL_FRAMES if GET('is_bottom_chord') and GET('span_width') &lt;= 6 else 0",
+                "BOTTOM_CHORD_IL_MALE": "TOTAL_NORMAL_FRAMES if GET('is_bottom_chord') and GET('span_width') &gt; 6 else 0",
+                "BOTTOM_CHORD_IL_FEMALE": "BOTTOM_CHORD_IL_MALE",
+                
+                "V_SUPPORT_BOTTOM_CHORD": "INT(GET('v_support_bottom_chord_frame')) * TOTAL_NORMAL_FRAMES",
+                "ARCH_SUPPORT_STRAIGHT_MIDDLE": "ARCH_BIG - TOTAL_ANCHOR_FRAMES if GET('is_bottom_chord') else 0",
+                
+                "VENT_BIG_ARCH_SUPPORT": "ARCH_BIG * INT(GET('no_vent_big_arch_support_frame'))",
+                "VENT_SMALL_ARCH_SUPPORT": "GET('no_of_bays') * GET('no_of_spans') * INT(GET('no_vent_small_arch_support_frame'))",
+                
+                "BIG_ARCH_PURLIN": "GET('no_of_bays') * GET('no_of_spans')",
+                "SMALL_ARCH_PURLIN": "BIG_ARCH_PURLIN",
+                "GABLE_PURLIN": "0 if GET('last_span_gutter') else GET('no_of_bays') * 2",
+                
+                "BAY_SIDE_BORDER_PURLIN": "INT(GET('bay_side_border_purlin')) * (GET('no_of_bays') * 2 if TOTAL_HOCKEYS == 0 else (FRONT_BAY_HOCKEYS - 1 if FRONT_BAY_HOCKEYS &gt; 0 else GET('no_of_bays')) + (BACK_BAY_HOCKEYS - 1 if BACK_BAY_HOCKEYS &gt; 0 else GET('no_of_bays')))",
+                "SPAN_SIDE_BORDER_PURLIN": "INT(GET('span_side_border_purlin')) * (GET('no_of_spans') * (INT(GET('no_column_big_frame')) + 1) * 2 if TOTAL_HOCKEYS == 0 else (FRONT_SPAN_HOCKEYS - 1 if FRONT_SPAN_HOCKEYS &gt; 0 else GET('no_of_spans') * (INT(GET('no_column_big_frame')) + 1)) + (BACK_SPAN_HOCKEYS - 1 if BACK_SPAN_HOCKEYS &gt; 0 else GET('no_of_spans') * (INT(GET('no_column_big_frame')) + 1)))",
+                
+                "SIDE_SCREEN_ROLL_UP_PIPE": "CEIL((GET('bay_length') / 5.95) * 2) + CEIL((GET('span_length') / 5.95) * 2) if GET('side_screen_guard') or GET('side_screen_guard_box') else 0",
+                "SIDE_SCREEN_ROLL_UP_PIPE_JOINER": "SIDE_SCREEN_ROLL_UP_PIPE - 4 if SIDE_SCREEN_ROLL_UP_PIPE &gt; 0 else 0",
+                "SIDE_SCREEN_GUARD": "TOTAL_HOCKEYS if GET('side_screen_guard') and TOTAL_HOCKEYS &gt; 0 else ((GET('no_of_spans') + 1) * (GET('no_of_bays') + 1)) if GET('side_screen_guard') else 0",
+                "SIDE_SCREEN_GUARD_BOX_PIPE": "GET('no_side_screen_guard_box', 0) * 2 if GET('no_side_screen_guard_box', 0) &gt; 0 else 0",
+                "SIDE_SCREEN_GUARD_BOX_H_PIPE": "SIDE_SCREEN_GUARD_BOX_PIPE",
+                "SIDE_SCREEN_GUARD_SPACER": "(SIDE_SCREEN_GUARD * 2) + (GET('no_side_screen_guard_box', 0) * 4)",
+                
+                "FRONT_BACK_CC_CROSS_BRACING_X": "INT(GET('front_back_c_c_cross_bracing_x')) * (GET('no_of_spans') + 1) * 4",
+                "MIDDLE_CC_CROSS_BRACING_X": "GET('middle_c_c_cross_bracing_x', 0) * (GET('no_of_spans') + 1) * 2",
+                "CROSS_BRACING_COLUMN_ARCH": "INT(GET('cross_bracing_column_arch')) * (GET('no_of_spans') * 4)",
+                "CROSS_BRACING_COLUMN_BOTTOM": "INT(GET('cross_bracing_column_bottom')) * (GET('no_of_spans') * 4)",
+                
+                "ARCH_MIDDLE_PURLIN_BIG_ARCH": "INT(GET('arch_middle_purlin_big_arch_pcs')) * (4 if GET('arch_middle_purlin_big_arch') == '1' else GET('no_of_spans') * 2 if GET('arch_middle_purlin_big_arch') == '2' else GET('no_of_bays') * 2 if GET('arch_middle_purlin_big_arch') == '3' else (GET('no_of_spans') * 2 + GET('no_of_bays') * 2 - 4) if GET('arch_middle_purlin_big_arch') == '4' else GET('no_of_spans') * GET('no_of_bays') if GET('arch_middle_purlin_big_arch') == '5' else 0)",
+                "ARCH_MIDDLE_PURLIN_SMALL_ARCH": "INT(GET('arch_middle_purlin_small_arch_pcs')) * (4 if GET('arch_middle_purlin_small_arch') == '1' else GET('no_of_spans') * 2 if GET('arch_middle_purlin_small_arch') == '2' else GET('no_of_bays') * 2 if GET('arch_middle_purlin_small_arch') == '3' else (GET('no_of_spans') * 2 + GET('no_of_bays') * 2 - 4) if GET('arch_middle_purlin_small_arch') == '4' else GET('no_of_spans') * GET('no_of_bays') if GET('arch_middle_purlin_small_arch') == '5' else 0)",
+                
+                "GUTTER_IPPF_FULL": "(GET('no_of_spans') + 1 if GET('last_span_gutter') else GET('no_of_spans') - 1) * GET('no_of_bays') if GET('gutter_ippf_full') else 0",
+                "GUTTER_IPPF_DRAINAGE_EXT": "(GET('no_of_spans') + 1 if GET('last_span_gutter') else GET('no_of_spans') - 1) * INT(GET('gutter_slope')) if GET('gutter_ippf_drainage_extension') else 0",
+                "GUTTER_FUNNEL_IPPF": "(GET('no_of_spans') + 1 if GET('last_span_gutter') else GET('no_of_spans') - 1) * INT(GET('gutter_slope')) if GET('gutter_funnel_ippf') else 0",
+                "GUTTER_END_CAP": "(GET('no_of_spans') + 1 if GET('last_span_gutter') else GET('no_of_spans') - 1) if GET('gutter_end_cap') and GET('gutter_funnel_ippf') and INT(GET('gutter_slope')) == 1 else 0",
+                
+                "GUTTERS_CONTINUOUS": "GET('no_of_spans') - 1 if GET('gutter_type') == 'continuous' else 0",
+                "GUTTER_PURLIN_CONTINUOUS": "(GET('no_of_spans') - 1) * GET('no_of_bays') * 2 if GET('gutter_type') == 'continuous' else 0",
+                "GUTTER_PURLIN_EXTENSION": "(GET('no_of_spans') - 1) * 4 if GET('gutter_type') == 'continuous' and INT(GET('gutter_extension', 0)) &gt; 0 else 0"
+            }</field>
+        </record>
+        
+    </data>
+</odoo>
