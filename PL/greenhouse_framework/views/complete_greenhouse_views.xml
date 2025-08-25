@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Project Reference -->
+    <record id="seq_greenhouse_project" model="ir.sequence">
+        <field name="name">Greenhouse Project</field>
+        <field name="code">greenhouse.project</field>
+        <field name="prefix">GH/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- GREENHOUSE INPUT VALUE VIEWS -->
+    <!-- ============================================ -->
+    
+    <!-- Input Values Tree View for Sections (Editable) -->
+    <record id="view_greenhouse_input_tree_editable" model="ir.ui.view">
+        <field name="name">greenhouse.input.tree.editable</field>
+        <field name="model">greenhouse.input.value</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="false" delete="false">
+                <field name="sequence" widget="handle"/>
+                <field name="field_label" readonly="1" string="Parameter"/>
+                <field name="value" string="Value"/>
+                <field name="field_type" invisible="1"/>
+                <field name="min_value" optional="show" readonly="1"/>
+                <field name="max_value" optional="show" readonly="1"/>
+                <field name="help_text" optional="show" readonly="1"/>
+                <field name="section_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Input Values Form View -->
+    <record id="view_greenhouse_input_form" model="ir.ui.view">
+        <field name="name">greenhouse.input.form</field>
+        <field name="model">greenhouse.input.value</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="field_code"/>
+                            <field name="field_label"/>
+                            <field name="field_type"/>
+                            <field name="value"/>
+                        </group>
+                        <group>
+                            <field name="section_id"/>
+                            <field name="sequence"/>
+                            <field name="min_value"/>
+                            <field name="max_value"/>
+                        </group>
+                    </group>
+                    <field name="help_text" placeholder="Help text for users..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- GREENHOUSE COMPONENT RESULT VIEWS -->
+    <!-- ============================================ -->
+    
+    <!-- Component Results Tree View for Sections -->
+    <record id="view_greenhouse_result_tree" model="ir.ui.view">
+        <field name="name">greenhouse.result.tree</field>
+        <field name="model">greenhouse.component.result</field>
+        <field name="arch" type="xml">
+            <tree create="false" delete="false">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="quantity" sum="Total Qty"/>
+                <field name="length" string="Length/Unit"/>
+                <field name="total_length" sum="Total Length"/>
+                <field name="pipe_type" optional="show"/>
+                <field name="pipe_size" optional="show"/>
+                <field name="unit_cost" optional="hide"/>
+                <field name="total_cost" sum="Total Cost" optional="show" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Component Results Form View -->
+    <record id="view_greenhouse_result_form" model="ir.ui.view">
+        <field name="name">greenhouse.result.form</field>
+        <field name="model">greenhouse.component.result</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Component Details">
+                            <field name="section_id"/>
+                            <field name="sequence"/>
+                            <field name="description"/>
+                        </group>
+                        <group string="Quantities">
+                            <field name="quantity"/>
+                            <field name="length"/>
+                            <field name="total_length"/>
+                        </group>
+                        <group string="Pipe Information" invisible="not requires_pipe">
+                            <field name="requires_pipe" invisible="1"/>
+                            <field name="pipe_type"/>
+                            <field name="pipe_size"/>
+                            <field name="pipe_selected"/>
+                        </group>
+                        <group string="Cost">
+                            <field name="unit_cost"/>
+                            <field name="total_cost" widget="monetary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Calculation Details">
+                            <group>
+                                <field name="formula_used" readonly="1"/>
+                                <field name="calculated_at" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- GREENHOUSE PROJECT VIEWS -->
+    <!-- ============================================ -->
+    
+    <!-- Project Tree View -->
+    <record id="view_greenhouse_project_tree" model="ir.ui.view">
+        <field name="name">greenhouse.project.tree</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="customer_name"/>
+                <field name="greenhouse_type_id"/>
+                <field name="project_date"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'confirmed'" 
+                       decoration-info="state == 'calculated'" 
+                       decoration-warning="state == 'draft'"/>
+                <field name="total_cost" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Project Kanban View -->
+    <record id="view_greenhouse_project_kanban" model="ir.ui.view">
+        <field name="name">greenhouse.project.kanban</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="customer_name"/>
+                <field name="greenhouse_type_id"/>
+                <field name="state"/>
+                <field name="total_cost"/>
+                <field name="total_components"/>
+                <field name="structure_area"/>
+                <progressbar field="state" colors='{"draft": "warning", "calculated": "info", "confirmed": "success"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click oe_kanban_card">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="reference"/>: <field name="name"/>
+                                </strong>
+                                <div class="text-muted">
+                                    <i class="fa fa-user"/> <field name="customer_name"/>
+                                </div>
+                                <div class="mt-1">
+                                    <span class="badge badge-pill badge-info">
+                                        <field name="greenhouse_type_id"/>
+                                    </span>
+                                </div>
+                                <div class="mt-2">
+                                    <i class="fa fa-cube"/> <strong>Components: </strong><field name="total_components"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-expand"/> <strong>Area: </strong><field name="structure_area"/> m²
+                                </div>
+                                <div class="mt-1">
+                                    <i class="fa fa-money"/> <strong>Total: </strong><field name="total_cost" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- DYNAMIC GREENHOUSE PROJECT FORM VIEW -->
+    <record id="view_greenhouse_project_form" model="ir.ui.view">
+        <field name="name">greenhouse.project.form</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_calculate" string="📊 Calculate" type="object" class="btn-primary"
+                            invisible="state != 'draft'" confirm="This will calculate all components. Continue?"/>
+                    <button name="action_confirm" string="✅ Confirm" type="object" class="btn-success"
+                            invisible="state != 'calculated'"/>
+                    <button name="action_reset" string="🔄 Reset to Draft" type="object"
+                            invisible="state == 'draft'" confirm="This will clear all calculations. Continue?"/>
+                    <button name="action_refresh_sections" string="🔄 Refresh Sections" type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_export_excel" string="📥 Export to Excel" type="object" class="btn-info"
+                            invisible="state != 'calculated'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,calculated,confirmed,done"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Needs Recalculation" bg_color="bg-warning"
+                            invisible="not needs_recalculation or state != 'calculated'"/>
+                    
+                    <field name="needs_recalculation" invisible="1"/>
+                    <field name="active_section_ids" invisible="1"/>
+                    <field name="section_input_page_ids" invisible="1"/>
+                    <field name="section_result_page_ids" invisible="1"/>
+                    
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_components" type="object" class="oe_stat_button" icon="fa-cubes">
+                            <field name="total_components" widget="statinfo" string="Components"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1" invisible="not reference or reference == 'New'"/>
+                            <field name="name" placeholder="Project Name" required="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Customer Information">
+                            <field name="customer_name" required="1"/>
+                            <field name="customer_mobile" widget="phone"/>
+                            <field name="customer_email" widget="email"/>
+                        </group>
+                        <group string="Project Information">
+                            <field name="greenhouse_type_id" options="{'no_create': True}" required="1"/>
+                            <field name="project_date"/>
+                            <field name="calculation_date" readonly="1" invisible="not calculation_date"/>
+                        </group>
+                    </group>
+                    
+                    <field name="customer_address" placeholder="Customer Address..."/>
+                    
+                    <notebook>
+                        <!-- INPUT SHEETS - DYNAMIC BASED ON SECTIONS -->
+                        <page string="📝 Input Sheets" name="input_main">
+                            <!-- This page will be dynamically populated with section tabs -->
+                            <field name="input_value_ids" invisible="1" nolabel="1"/>
+                        </page>
+                        
+                        <!-- RESULTS SHEETS - DYNAMIC BASED ON SECTIONS -->
+                        <page string="📋 Result Sheets" name="results_main">
+                            <div invisible="state != 'draft'" class="alert alert-warning" role="alert">
+                                <i class="fa fa-calculator"/> Please click Calculate to generate results.
+                            </div>
+                            <div invisible="state == 'draft'" class="alert alert-success" role="alert">
+                                <i class="fa fa-check-circle"/> Calculated on <field name="calculation_date" readonly="1" nolabel="1"/>
+                            </div>
+                            <div invisible="not calculation_errors" class="alert alert-danger" role="alert">
+                                <i class="fa fa-exclamation-triangle"/> Calculation Errors:
+                                <field name="calculation_errors" readonly="1" nolabel="1"/>
+                            </div>
+                            <!-- This page will be dynamically populated with result tabs -->
+                            <field name="component_result_ids" invisible="1" nolabel="1"/>
+                        </page>
+                        
+                        <!-- SUMMARY TAB -->
+                        <page string="📊 Summary" name="summary">
+                            <group string="Project Overview">
+                                <group>
+                                    <field name="greenhouse_type_id" readonly="1"/>
+                                    <field name="state" readonly="1"/>
+                                    <field name="project_date" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="total_components" readonly="1"/>
+                                    <field name="total_length" readonly="1" string="Total Length (m)"/>
+                                    <field name="total_cost" readonly="1" widget="monetary"/>
+                                </group>
+                            </group>
+                            
+                            <!-- Key Metrics Dashboard -->
+                            <group string="Key Dimensions" col="4">
+                                <label for="structure_area"/>
+                                <div>
+                                    <field name="structure_area" readonly="1" nolabel="1"/>
+                                    <span> m²</span>
+                                </div>
+                                <label for="no_of_spans_calc"/>
+                                <div>
+                                    <field name="no_of_spans_calc" readonly="1" nolabel="1"/>
+                                    <span> spans</span>
+                                </div>
+                                <label for="no_of_bays_calc"/>
+                                <div>
+                                    <field name="no_of_bays_calc" readonly="1" nolabel="1"/>
+                                    <span> bays</span>
+                                </div>
+                            </group>
+                            
+                            <!-- Component Summary by Section -->
+                            <separator string="Components by Section"/>
+                            <field name="component_result_ids" readonly="1">
+                                <tree>
+                                    <field name="section_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity" sum="Total"/>
+                                    <field name="total_length" sum="Total"/>
+                                    <field name="total_cost" sum="Total" widget="monetary"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <!-- SECTIONS CONFIGURATION -->
+                        <page string="⚙️ Active Sections" name="sections">
+                            <button name="action_load_all_sections" string="Load All Sections" type="object" class="btn-secondary mb-2"/>
+                            <field name="active_section_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="icon"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="is_mandatory"/>
+                                    <field name="requires_pipe"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <!-- CALCULATION ERRORS TAB (only visible if errors) -->
+                        <page string="⚠️ Errors" name="errors" invisible="not calculation_errors">
+                            <group>
+                                <field name="calculation_errors" readonly="1" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Project Search View -->
+    <record id="view_greenhouse_project_search" model="ir.ui.view">
+        <field name="name">greenhouse.project.search</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="customer_name"/>
+                <field name="greenhouse_type_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Calculated" name="calculated" domain="[('state', '=', 'calculated')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <separator/>
+                <filter string="Needs Recalculation" name="needs_recalc" domain="[('needs_recalculation', '=', True)]"/>
+                <separator/>
+                <filter string="This Month" name="this_month" 
+                        domain="[('project_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%%Y-%%m-%%d')),
+                                ('project_date', '&lt;', (context_today() + relativedelta(months=1, day=1)).strftime('%%Y-%%m-%%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_customer" context="{'group_by': 'customer_name'}"/>
+                    <filter string="Greenhouse Type" name="group_type" context="{'group_by': 'greenhouse_type_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Project Date" name="group_date" context="{'group_by': 'project_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Project Pivot View -->
+    <record id="view_greenhouse_project_pivot" model="ir.ui.view">
+        <field name="name">greenhouse.project.pivot</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="greenhouse_type_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="total_cost" type="measure"/>
+                <field name="total_components" type="measure"/>
+                <field name="structure_area" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Project Graph View -->
+    <record id="view_greenhouse_project_graph" model="ir.ui.view">
+        <field name="name">greenhouse.project.graph</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="greenhouse_type_id"/>
+                <field name="total_cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- ACTIONS -->
+    <!-- ============================================ -->
+    
+    <!-- Main Project Action -->
+    <record id="action_greenhouse_project" model="ir.actions.act_window">
+        <field name="name">Greenhouse Projects</field>
+        <field name="res_model">greenhouse.project</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_greenhouse_project_search"/>
+        <field name="context">{'search_default_draft': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Greenhouse Project
+            </p>
+            <p>
+                Start by selecting a greenhouse type and entering your dimensions. 
+                The system will calculate all components automatically!
+            </p>
+        </field>
+    </record>
+
+    <!-- View Components Action (for button) -->
+    <record id="action_view_project_components" model="ir.actions.act_window">
+        <field name="name">Project Components</field>
+        <field name="res_model">greenhouse.component.result</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="context">{'default_project_id': active_id}</field>
+    </record>
+
+</odoo>

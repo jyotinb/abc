@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Simple NVPH Type -->
+        <record id="type_nvph" model="greenhouse.type">
+            <field name="name">NVPH (Naturally Ventilated Polyhouse)</field>
+            <field name="code">nvph</field>
+            <field name="sequence">10</field>
+            <field name="icon">fa-home</field>
+            <field name="color">1</field>
+            <field name="typical_size">500-5000 sqm</field>
+            <field name="typical_use">Vegetables, Flowers, Herbs</field>
+            <field name="description">Naturally Ventilated Polyhouse</field>
+            <field name="section_ids" eval="[(6, 0, [ref('section_dimensions'), ref('section_frame')])]"/>
+            <field name="default_inputs">{
+                "total_span_length": 100,
+                "total_bay_length": 50,
+                "span_width": 8,
+                "bay_width": 4,
+                "column_height": 4.5,
+                "top_ridge_height": 6.5
+            }</field>
+        </record>
+        
+    </data>
+</odoo>

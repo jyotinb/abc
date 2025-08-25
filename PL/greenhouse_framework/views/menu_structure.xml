@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- ROOT MENU - Must be defined first -->
+    <!-- ============================================ -->
+    
+    <!-- Root Menu -->
+    <menuitem id="menu_greenhouse_root" 
+              name="🏠 Greenhouse" 
+              sequence="10"
+              web_icon="greenhouse_framework,static/description/icon.png"/>
+    
+    <!-- ============================================ -->
+    <!-- MAIN MENU ITEMS -->
+    <!-- ============================================ -->
+    
+    <!-- Projects Menu -->
+    <menuitem id="menu_greenhouse_project" 
+              name="📋 Projects" 
+              parent="menu_greenhouse_root" 
+              action="action_greenhouse_project" 
+              sequence="10"/>
+    
+    <!-- Configuration Menu -->
+    <menuitem id="menu_greenhouse_config" 
+              name="⚙️ Configuration" 
+              parent="menu_greenhouse_root" 
+              sequence="100"/>
+    
+    <!-- ============================================ -->
+    <!-- CONFIGURATION SUB-MENUS -->
+    <!-- ============================================ -->
+    
+    <!-- Greenhouse Types -->
+    <menuitem id="menu_greenhouse_type" 
+              name="🏗️ Greenhouse Types" 
+              parent="menu_greenhouse_config" 
+              action="action_greenhouse_type" 
+              sequence="10"/>
+    
+    <!-- Section Templates -->
+    <menuitem id="menu_greenhouse_section_template" 
+              name="📑 Section Templates" 
+              parent="menu_greenhouse_config" 
+              action="action_greenhouse_section_template" 
+              sequence="20"/>
+    
+</odoo>
