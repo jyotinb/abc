@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- data/greenhouse_types_data.xml -->
+    <data noupdate="1">
+
+        <!-- ============================================================ -->
+        <!-- GREENHOUSE TYPE: NVPH -->
+        <!-- ============================================================ -->
+        <record id="type_nvph" model="greenhouse.type">
+            <field name="name">NVPH</field>
+            <field name="code">nvph</field>
+            <field name="description">Natural Ventilated Polyhouse - Advanced greenhouse with complete structural system including trusses, side screens, and gutter systems</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- NVPH Section Assignments -->
+        <record id="nvph_section_basic_dimensions" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_nvph"/>
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="nvph_section_frame_components" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_nvph"/>
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="nvph_section_truss_components" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_nvph"/>
+            <field name="section_id" ref="section_truss_components"/>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="nvph_section_side_screen" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_nvph"/>
+            <field name="section_id" ref="section_side_screen"/>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="nvph_section_lower_section" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_nvph"/>
+            <field name="section_id" ref="section_lower_section"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="nvph_section_gutter_system" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_nvph"/>
+            <field name="section_id" ref="section_gutter_system"/>
+            <field name="sequence">60</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- GREENHOUSE TYPE: TUNNEL -->
+        <!-- ============================================================ -->
+        <record id="type_tunnel" model="greenhouse.type">
+            <field name="name">Tunnel</field>
+            <field name="code">tunnel</field>
+            <field name="description">Simple tunnel greenhouse with basic structural elements - no complex trusses or side screen systems</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Tunnel Section Assignments -->
+        <record id="tunnel_section_basic_dimensions" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_tunnel"/>
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="tunnel_section_frame_components" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_tunnel"/>
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="tunnel_section_lower_section" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_tunnel"/>
+            <field name="section_id" ref="section_lower_section"/>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="tunnel_section_gutter_system" model="greenhouse.type.section">
+            <field name="greenhouse_type_id" ref="type_tunnel"/>
+            <field name="section_id" ref="section_gutter_system"/>
+            <field name="sequence">40</field>
+        </record>
+
+    </data>
+</odoo>

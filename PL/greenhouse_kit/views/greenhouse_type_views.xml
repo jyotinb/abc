@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Greenhouse Type List View -->
+        <record id="view_greenhouse_type_tree" model="ir.ui.view">
+            <field name="name">greenhouse.type.tree</field>
+            <field name="model">greenhouse.type</field>
+            <field name="arch" type="xml">
+                <tree string="Greenhouse Types">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Greenhouse Type Form View -->
+        <record id="view_greenhouse_type_form" model="ir.ui.view">
+            <field name="name">greenhouse.type.form</field>
+            <field name="model">greenhouse.type</field>
+            <field name="arch" type="xml">
+                <form string="Greenhouse Type">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Greenhouse Type Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="description" widget="text"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Sections Configuration" name="sections">
+                                <field name="section_ids">
+                                    <tree string="Assigned Sections" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="section_id" options="{'no_create': True}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Greenhouse Type Action -->
+        <record id="action_greenhouse_type" model="ir.actions.act_window">
+            <field name="name">Greenhouse Types</field>
+            <field name="res_model">greenhouse.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Section Template List View -->
+        <record id="view_greenhouse_section_template_tree" model="ir.ui.view">
+            <field name="name">greenhouse.section.template.tree</field>
+            <field name="model">greenhouse.section.template</field>
+            <field name="arch" type="xml">
+                <tree string="Section Templates">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="input_field_count" string="Input Fields"/>
+                    <field name="calculated_field_count" string="Calculated Fields"/>
+                    <field name="total_fields" string="Total"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Section Template Form View -->
+        <record id="view_greenhouse_section_template_form" model="ir.ui.view">
+            <field name="name">greenhouse.section.template.form</field>
+            <field name="model">greenhouse.section.template</field>
+            <field name="arch" type="xml">
+                <form string="Section Template">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Section Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="input_field_count"/>
+                                <field name="calculated_field_count"/>
+                                <field name="total_fields"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" widget="text"/>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Input Fields" name="input_fields">
+                                <field name="input_field_ids">
+                                    <tree string="Input Fields" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="label"/>
+                                        <field name="data_type"/>
+                                        <field name="required"/>
+                                        <field name="default_value"/>
+                                        <field name="active"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page string="Calculated Fields" name="calculated_fields">
+                                <field name="calculated_field_ids">
+                                    <tree string="Calculated Fields" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="label"/>
+                                        <field name="data_type"/>
+                                        <field name="formula"/>
+                                        <field name="length_per_unit"/>
+                                        <field name="active"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Section Template Action -->
+        <record id="action_greenhouse_section_template" model="ir.actions.act_window">
+            <field name="name">Section Templates</field>
+            <field name="res_model">greenhouse.section.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Field Template List View -->
+        <record id="view_greenhouse_field_template_tree" model="ir.ui.view">
+            <field name="name">greenhouse.field.template.tree</field>
+            <field name="model">greenhouse.field.template</field>
+            <field name="arch" type="xml">
+                <tree string="Field Templates">
+                    <field name="section_id"/>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="field_type" decoration-info="field_type=='input'" decoration-success="field_type=='calculated'"/>
+                    <field name="data_type"/>
+                    <field name="required" />
+                    <field name="formula" />
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Field Template Form View -->
+        <record id="view_greenhouse_field_template_form" model="ir.ui.view">
+            <field name="name">greenhouse.field.template.form</field>
+            <field name="model">greenhouse.field.template</field>
+            <field name="arch" type="xml">
+                <form string="Field Template">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Field Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="section_id"/>
+                                <field name="code"/>
+                                <field name="label"/>
+                                <field name="field_type"/>
+                            </group>
+                            <group>
+                                <field name="data_type"/>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Help Description">
+                            <field name="help" widget="text" nolabel="1"/>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Input Field Settings" name="input_settings">
+                                <group>
+                                    <group string="Validation">
+                                        <field name="required"/>
+                                        <field name="default_value"/>
+                                        <field name="min_value"/>
+                                        <field name="max_value"/>
+                                    </group>
+                                    <group string="Selection Options">
+                                        <field name="selection_options" widget="text" 
+                                               placeholder='["option1", "option2", "option3"]'/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Calculation Settings" name="calc_settings">
+                                <group>
+                                    <group string="Formula">
+                                        <field name="formula" widget="text" 
+                                               placeholder="section_name.field_name * 2.5"/>
+                                    </group>
+                                    <group string="Material Quantity">
+                                        <field name="length_per_unit" 
+                                               placeholder="section_name.field_name"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Field Template Action -->
+        <record id="action_greenhouse_field_template" model="ir.actions.act_window">
+            <field name="name">Field Templates</field>
+            <field name="res_model">greenhouse.field.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu items -->
+        <menuitem id="menu_greenhouse_types" 
+                  name="Greenhouse Types" 
+                  parent="menu_greenhouse_configuration" 
+                  action="action_greenhouse_type" 
+                  sequence="10"/>
+
+        <menuitem id="menu_greenhouse_sections" 
+                  name="Section Templates" 
+                  parent="menu_greenhouse_configuration" 
+                  action="action_greenhouse_section_template" 
+                  sequence="20"/>
+
+        <menuitem id="menu_greenhouse_fields" 
+                  name="Field Templates" 
+                  parent="menu_greenhouse_configuration" 
+                  action="action_greenhouse_field_template" 
+                  sequence="30"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Section Action -->
+        <record id="action_greenhouse_section_template" model="ir.actions.act_window">
+            <field name="name">Section Templates</field>
+            <field name="res_model">greenhouse.section.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

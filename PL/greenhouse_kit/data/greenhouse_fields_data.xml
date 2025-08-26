@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- data/greenhouse_fields_data.xml -->
+    <data noupdate="1">
+
+        <!-- ============================================================ -->
+        <!-- BASIC DIMENSIONS SECTION - INPUT FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="field_total_span_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Total Span Length</field>
+            <field name="code">total_span_length</field>
+            <field name="label">Total Span Length (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">100</field>
+            <field name="min_value">10</field>
+            <field name="max_value">500</field>
+            <field name="sequence">10</field>
+            <field name="help">Total length of the greenhouse in span direction</field>
+        </record>
+
+        <record id="field_total_bay_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Total Bay Length</field>
+            <field name="code">total_bay_length</field>
+            <field name="label">Total Bay Length (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">50</field>
+            <field name="min_value">10</field>
+            <field name="max_value">500</field>
+            <field name="sequence">20</field>
+            <field name="help">Total length of the greenhouse in bay direction</field>
+        </record>
+
+        <record id="field_span_width" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Span Width</field>
+            <field name="code">span_width</field>
+            <field name="label">Span Width (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">8</field>
+            <field name="min_value">4</field>
+            <field name="max_value">12.8</field>
+            <field name="sequence">30</field>
+            <field name="help">Width of each span</field>
+        </record>
+
+        <record id="field_bay_width" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Bay Width</field>
+            <field name="code">bay_width</field>
+            <field name="label">Bay Width (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">4</field>
+            <field name="min_value">3</field>
+            <field name="max_value">6</field>
+            <field name="sequence">40</field>
+            <field name="help">Width of each bay</field>
+        </record>
+
+        <record id="field_plot_size" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Plot Size</field>
+            <field name="code">plot_size</field>
+            <field name="label">Plot Size</field>
+            <field name="field_type">input</field>
+            <field name="data_type">char</field>
+            <field name="default_value">1 Acre</field>
+            <field name="sequence">50</field>
+            <field name="help">Overall plot/land size description</field>
+        </record>
+
+        <!-- Corridor fields for calculations -->
+        <record id="field_width_front_span_corridor" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Front Span Corridor Width</field>
+            <field name="code">width_front_span_corridor</field>
+            <field name="label">Front Span Corridor Width (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">0</field>
+            <field name="min_value">0</field>
+            <field name="max_value">10</field>
+            <field name="sequence">60</field>
+            <field name="help">Width of front corridor in span direction</field>
+        </record>
+
+        <record id="field_width_back_span_corridor" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Back Span Corridor Width</field>
+            <field name="code">width_back_span_corridor</field>
+            <field name="label">Back Span Corridor Width (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">0</field>
+            <field name="min_value">0</field>
+            <field name="max_value">10</field>
+            <field name="sequence">70</field>
+            <field name="help">Width of back corridor in span direction</field>
+        </record>
+
+        <record id="field_width_front_bay_corridor" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Front Bay Corridor Width</field>
+            <field name="code">width_front_bay_corridor</field>
+            <field name="label">Front Bay Corridor Width (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">0</field>
+            <field name="min_value">0</field>
+            <field name="max_value">10</field>
+            <field name="sequence">80</field>
+            <field name="help">Width of front corridor in bay direction</field>
+        </record>
+
+        <record id="field_width_back_bay_corridor" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Back Bay Corridor Width</field>
+            <field name="code">width_back_bay_corridor</field>
+            <field name="label">Back Bay Corridor Width (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">0</field>
+            <field name="min_value">0</field>
+            <field name="max_value">10</field>
+            <field name="sequence">90</field>
+            <field name="help">Width of back corridor in bay direction</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- BASIC DIMENSIONS SECTION - CALCULATED FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="calc_span_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Effective Span Length</field>
+            <field name="code">span_length</field>
+            <field name="label">Effective Span Length (m)</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">float</field>
+            <field name="formula">basic_dimensions.total_span_length - basic_dimensions.width_front_span_corridor - basic_dimensions.width_back_span_corridor</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="calc_bay_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Effective Bay Length</field>
+            <field name="code">bay_length</field>
+            <field name="label">Effective Bay Length (m)</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">float</field>
+            <field name="formula">basic_dimensions.total_bay_length - basic_dimensions.width_front_bay_corridor - basic_dimensions.width_back_bay_corridor</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="calc_structure_size" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Total Structure Size</field>
+            <field name="code">structure_size</field>
+            <field name="label">Total Structure Size (m²)</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">float</field>
+            <field name="formula">(basic_dimensions.span_length + basic_dimensions.width_front_span_corridor + basic_dimensions.width_back_span_corridor) * (basic_dimensions.bay_length + basic_dimensions.width_front_bay_corridor + basic_dimensions.width_back_bay_corridor)</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="calc_no_of_spans" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Number of Spans</field>
+            <field name="code">no_of_spans</field>
+            <field name="label">Number of Spans</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">int(basic_dimensions.bay_length / basic_dimensions.span_width) if basic_dimensions.span_width > 0 else 0</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="calc_no_of_bays" model="greenhouse.field.template">
+            <field name="section_id" ref="section_basic_dimensions"/>
+            <field name="name">Number of Bays</field>
+            <field name="code">no_of_bays</field>
+            <field name="label">Number of Bays</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">int(basic_dimensions.span_length / basic_dimensions.bay_width) if basic_dimensions.bay_width > 0 else 0</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- FRAME COMPONENTS SECTION - INPUT FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="field_column_height" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Column Height</field>
+            <field name="code">column_height</field>
+            <field name="label">Column Height (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">4.5</field>
+            <field name="min_value">2.0</field>
+            <field name="max_value">10.0</field>
+            <field name="sequence">10</field>
+            <field name="help">Height of the greenhouse columns</field>
+        </record>
+
+        <record id="field_top_ridge_height" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Top Ridge Height</field>
+            <field name="code">top_ridge_height</field>
+            <field name="label">Top Ridge Height (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">6.5</field>
+            <field name="min_value">3.0</field>
+            <field name="max_value">15.0</field>
+            <field name="sequence">20</field>
+            <field name="help">Total height at the ridge</field>
+        </record>
+
+        <record id="field_foundation_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Foundation Length</field>
+            <field name="code">foundation_length</field>
+            <field name="label">Foundation Length (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">0.5</field>
+            <field name="min_value">0</field>
+            <field name="max_value">2</field>
+            <field name="sequence">30</field>
+            <field name="help">Depth of foundation below ground</field>
+        </record>
+
+        <record id="field_no_column_big_frame" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Big Columns per Anchor Frame</field>
+            <field name="code">no_column_big_frame</field>
+            <field name="label">Big Columns per Anchor Frame</field>
+            <field name="field_type">input</field>
+            <field name="data_type">selection</field>
+            <field name="selection_options">["0", "1", "2", "3"]</field>
+            <field name="default_value">0</field>
+            <field name="sequence">40</field>
+            <field name="help">Number of additional columns in anchor frames</field>
+        </record>
+
+        <record id="field_no_anchor_frame_lines" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Number of Anchor Frame Lines</field>
+            <field name="code">no_anchor_frame_lines</field>
+            <field name="label">Number of Anchor Frame Lines</field>
+            <field name="field_type">input</field>
+            <field name="data_type">integer</field>
+            <field name="default_value">0</field>
+            <field name="min_value">0</field>
+            <field name="max_value">10</field>
+            <field name="sequence">50</field>
+            <field name="help">Number of reinforced frame lines</field>
+        </record>
+
+        <record id="field_thick_column" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Thick Column Option</field>
+            <field name="code">thick_column</field>
+            <field name="label">Thick Column Option</field>
+            <field name="field_type">input</field>
+            <field name="data_type">selection</field>
+            <field name="selection_options">["0", "1", "2", "3", "4"]</field>
+            <field name="default_value">0</field>
+            <field name="sequence">60</field>
+            <field name="help">0=None, 1=4 Corners, 2=Bay Sides, 3=Span Sides, 4=All Sides</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- FRAME COMPONENTS SECTION - CALCULATED FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="calc_total_anchor_frames" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Total Anchor Frames</field>
+            <field name="code">TOTAL_ANCHOR_FRAMES</field>
+            <field name="label">Total Anchor Frames</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">frame_components.no_anchor_frame_lines * basic_dimensions.no_of_spans</field>
+            <field name="sequence">10</field>
+            <field name="length_per_unit">0</field>
+        </record>
+
+        <record id="calc_total_normal_frames" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Total Normal Frames</field>
+            <field name="code">TOTAL_NORMAL_FRAMES</field>
+            <field name="label">Total Normal Frames</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">(basic_dimensions.no_of_spans * (basic_dimensions.no_of_bays + 1)) - frame_components.TOTAL_ANCHOR_FRAMES</field>
+            <field name="sequence">20</field>
+            <field name="length_per_unit">0</field>
+        </record>
+
+        <record id="calc_middle_columns" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Middle Columns</field>
+            <field name="code">MIDDLE_COLUMNS</field>
+            <field name="label">Middle Columns</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">frame_components.TOTAL_ANCHOR_FRAMES if int(frame_components.no_column_big_frame) in [1, 3] else 0</field>
+            <field name="sequence">30</field>
+            <field name="length_per_unit">frame_components.column_height + frame_components.foundation_length</field>
+        </record>
+
+        <record id="calc_quadruple_columns" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Quadruple Columns</field>
+            <field name="code">QUADRUPLE_COLUMNS</field>
+            <field name="label">Quadruple Columns</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">frame_components.TOTAL_ANCHOR_FRAMES * 2 if int(frame_components.no_column_big_frame) in [2, 3] else 0</field>
+            <field name="sequence">40</field>
+            <field name="length_per_unit">frame_components.column_height + frame_components.foundation_length</field>
+        </record>
+
+        <record id="calc_thick_columns" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Thick Columns</field>
+            <field name="code">THICK_COLUMNS</field>
+            <field name="label">Thick Columns</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">4 if frame_components.thick_column == '1' else ((basic_dimensions.no_of_bays + 1) * 2 if frame_components.thick_column == '2' else ((basic_dimensions.no_of_spans + 1) * 2 if frame_components.thick_column == '3' else (((basic_dimensions.no_of_bays + 1) * 2) + ((basic_dimensions.no_of_spans + 1) * 2) if frame_components.thick_column == '4' else 0)))</field>
+            <field name="sequence">50</field>
+            <field name="length_per_unit">frame_components.column_height + frame_components.foundation_length</field>
+        </record>
+
+        <record id="calc_main_columns" model="greenhouse.field.template">
+            <field name="section_id" ref="section_frame_components"/>
+            <field name="name">Main Columns</field>
+            <field name="code">MAIN_COLUMNS</field>
+            <field name="label">Main Columns</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">((basic_dimensions.no_of_spans + 1) * (basic_dimensions.no_of_bays + 1)) - frame_components.THICK_COLUMNS</field>
+            <field name="sequence">60</field>
+            <field name="length_per_unit">frame_components.column_height + frame_components.foundation_length</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- TRUSS COMPONENTS SECTION - INPUT FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="field_big_arch_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_truss_components"/>
+            <field name="name">Big Arch Length</field>
+            <field name="code">big_arch_length</field>
+            <field name="label">Big Arch Length (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">8.5</field>
+            <field name="min_value">5</field>
+            <field name="max_value">15</field>
+            <field name="sequence">10</field>
+            <field name="help">Length of the main arch</field>
+        </record>
+
+        <record id="field_small_arch_length" model="greenhouse.field.template">
+            <field name="section_id" ref="section_truss_components"/>
+            <field name="name">Small Arch Length</field>
+            <field name="code">small_arch_length</field>
+            <field name="label">Small Arch Length (m)</field>
+            <field name="field_type">input</field>
+            <field name="data_type">float</field>
+            <field name="default_value">6.5</field>
+            <field name="min_value">4</field>
+            <field name="max_value">12</field>
+            <field name="sequence">20</field>
+            <field name="help">Length of the secondary arch</field>
+        </record>
+
+        <record id="field_is_bottom_chord" model="greenhouse.field.template">
+            <field name="section_id" ref="section_truss_components"/>
+            <field name="name">Bottom Chord Required</field>
+            <field name="code">is_bottom_chord</field>
+            <field name="label">Bottom Chord Required?</field>
+            <field name="field_type">input</field>
+            <field name="data_type">boolean</field>
+            <field name="default_value">False</field>
+            <field name="sequence">30</field>
+            <field name="help">Add bottom chord for structural support</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- TRUSS COMPONENTS SECTION - CALCULATED FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="calc_arch_big" model="greenhouse.field.template">
+            <field name="section_id" ref="section_truss_components"/>
+            <field name="name">Big Arch</field>
+            <field name="code">ARCH_BIG</field>
+            <field name="label">Big Arch</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">(basic_dimensions.no_of_bays + 1) * basic_dimensions.no_of_spans</field>
+            <field name="sequence">10</field>
+            <field name="length_per_unit">truss_components.big_arch_length</field>
+        </record>
+
+        <record id="calc_arch_small" model="greenhouse.field.template">
+            <field name="section_id" ref="section_truss_components"/>
+            <field name="name">Small Arch</field>
+            <field name="code">ARCH_SMALL</field>
+            <field name="label">Small Arch</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">truss_components.ARCH_BIG</field>
+            <field name="sequence">20</field>
+            <field name="length_per_unit">truss_components.small_arch_length</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- SIDE SCREEN COMPONENT SECTION - INPUT FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="field_side_screen_guard" model="greenhouse.field.template">
+            <field name="section_id" ref="section_side_screen"/>
+            <field name="name">Side Screen Guard</field>
+            <field name="code">side_screen_guard</field>
+            <field name="label">Side Screen Guard</field>
+            <field name="field_type">input</field>
+            <field name="data_type">boolean</field>
+            <field name="default_value">False</field>
+            <field name="sequence">10</field>
+            <field name="help">Enable side screen guard</field>
+        </record>
+
+        <record id="field_side_screen_guard_box" model="greenhouse.field.template">
+            <field name="section_id" ref="section_side_screen"/>
+            <field name="name">Screen Guard Box</field>
+            <field name="code">side_screen_guard_box</field>
+            <field name="label">Screen Guard Box</field>
+            <field name="field_type">input</field>
+            <field name="data_type">boolean</field>
+            <field name="default_value">False</field>
+            <field name="sequence">30</field>
+            <field name="help">Enable screen guard box</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- SIDE SCREEN COMPONENT SECTION - CALCULATED FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="calc_side_screen_roll_up_pipe" model="greenhouse.field.template">
+            <field name="section_id" ref="section_side_screen"/>
+            <field name="name">Roll Up Pipe</field>
+            <field name="code">SIDE_SCREEN_ROLL_UP_PIPE</field>
+            <field name="label">Roll Up Pipe</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">int((basic_dimensions.bay_length / 5.95) + 0.99) * 2 + int((basic_dimensions.span_length / 5.95) + 0.99) * 2 if side_screen.side_screen_guard or side_screen.side_screen_guard_box else 0</field>
+            <field name="sequence">10</field>
+            <field name="length_per_unit">5.95</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- LOWER SECTION COMPONENT SECTION - INPUT FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="field_front_back_c_c_cross_bracing_x" model="greenhouse.field.template">
+            <field name="section_id" ref="section_lower_section"/>
+            <field name="name">Front/Back CC Cross Bracing</field>
+            <field name="code">front_back_c_c_cross_bracing_x</field>
+            <field name="label">Front/Back CC Cross Bracing</field>
+            <field name="field_type">input</field>
+            <field name="data_type">boolean</field>
+            <field name="default_value">False</field>
+            <field name="sequence">10</field>
+            <field name="help">Enable front and back cross bracing</field>
+        </record>
+
+        <record id="field_middle_c_c_cross_bracing_x" model="greenhouse.field.template">
+            <field name="section_id" ref="section_lower_section"/>
+            <field name="name">Internal CC Cross Bracing Lines</field>
+            <field name="code">middle_c_c_cross_bracing_x</field>
+            <field name="label">Internal CC Cross Bracing Lines</field>
+            <field name="field_type">input</field>
+            <field name="data_type">integer</field>
+            <field name="default_value">0</field>
+            <field name="min_value">0</field>
+            <field name="max_value">10</field>
+            <field name="sequence">20</field>
+            <field name="help">Number of internal cross bracing lines</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- LOWER SECTION COMPONENT SECTION - CALCULATED FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="calc_front_back_cc_cross_bracing_x" model="greenhouse.field.template">
+            <field name="section_id" ref="section_lower_section"/>
+            <field name="name">Front/Back Cross Bracing</field>
+            <field name="code">FRONT_BACK_CC_CROSS_BRACING_X</field>
+            <field name="label">Front/Back Cross Bracing</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">int(lower_section.front_back_c_c_cross_bracing_x) * (basic_dimensions.no_of_spans + 1) * 4</field>
+            <field name="sequence">10</field>
+            <field name="length_per_unit">2.5</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- GUTTER SYSTEM SECTION - INPUT FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="field_gutter_type" model="greenhouse.field.template">
+            <field name="section_id" ref="section_gutter_system"/>
+            <field name="name">Gutter Type</field>
+            <field name="code">gutter_type</field>
+            <field name="label">Gutter Type</field>
+            <field name="field_type">input</field>
+            <field name="data_type">selection</field>
+            <field name="selection_options">["none", "ippf", "continuous"]</field>
+            <field name="default_value">none</field>
+            <field name="sequence">10</field>
+            <field name="help">Type of gutter system</field>
+        </record>
+
+        <record id="field_gutter_slope" model="greenhouse.field.template">
+            <field name="section_id" ref="section_gutter_system"/>
+            <field name="name">Gutter Slope</field>
+            <field name="code">gutter_slope</field>
+            <field name="label">Gutter Slope</field>
+            <field name="field_type">input</field>
+            <field name="data_type">selection</field>
+            <field name="selection_options">["1", "2"]</field>
+            <field name="default_value">1</field>
+            <field name="sequence">20</field>
+            <field name="help">1=Single slope, 2=Double slope</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- GUTTER SYSTEM SECTION - CALCULATED FIELDS -->
+        <!-- ============================================================ -->
+
+        <record id="calc_gutters_continuous" model="greenhouse.field.template">
+            <field name="section_id" ref="section_gutter_system"/>
+            <field name="name">Continuous Gutters</field>
+            <field name="code">GUTTERS_CONTINUOUS</field>
+            <field name="label">Continuous Gutters</field>
+            <field name="field_type">calculated</field>
+            <field name="data_type">integer</field>
+            <field name="formula">basic_dimensions.no_of_spans - 1 if gutter_system.gutter_type == 'continuous' else 0</field>
+            <field name="sequence">50</field>
+            <field name="length_per_unit">basic_dimensions.span_length</field>
+        </record>
+
+    </data>
+</odoo>

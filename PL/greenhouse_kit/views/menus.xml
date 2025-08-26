@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- MAIN MENU -->
+        <menuitem id="menu_greenhouse_main" 
+                  name="Greenhouse Kit" 
+                  sequence="200"/>
+
+        <!-- PROJECTS MENU SECTION -->
+        <menuitem id="menu_greenhouse_projects" 
+                  name="Projects" 
+                  parent="menu_greenhouse_main" 
+                  sequence="10"/>
+
+        <!-- CONFIGURATION MENU SECTION -->
+        <menuitem id="menu_greenhouse_configuration" 
+                  name="Configuration" 
+                  parent="menu_greenhouse_main" 
+                  sequence="20"/>
+
+    </data>
+</odoo>
