@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green2's form view to add Accessories functionality -->
+    <record id="view_green_master_form_accessories_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.accessories.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Accessories buttons to header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_calculate_accessories" 
+                        string="🔧 Calculate Accessories" 
+                        type="object" 
+                        class="btn-warning"
+                        help="Calculate all accessories based on current configuration"/>
+                <button name="action_accessories_summary" 
+                        string="📊 Accessories Summary" 
+                        type="object" 
+                        class="btn-info"
+                        help="Show current accessories calculation summary"/>
+            </xpath>
+            
+            <!-- Add Accessories Configuration page -->
+            <xpath expr="//notebook/page[last()]" position="after">
+
+                <page string="Accessories Configuration">
+                    <div class="alert alert-info" role="alert">
+                        <h4>🔧 Accessories Configuration</h4>
+                        <p>Configure which accessories to include in your greenhouse project.</p>
+                        <p><strong>Click "Calculate Accessories" to generate components after changing settings.</strong></p>
+                    </div>
+										<separator string="Profile Calculations"/>
+<div class="row">
+    <div class="col-6">
+        <table class="table table-sm">
+            <tr>
+                <td><strong>Profiles For Arch:</strong></td>
+                <td><field name="profiles_for_arch" readonly="1"/> m</td>
+            </tr>
+            <tr>
+                <td><strong>Profile For Purlin:</strong></td>
+                <td><field name="profile_for_purlin" readonly="1"/> m</td>
+            </tr>
+            <tr>
+                <td><strong>Profile for Bottom:</strong></td>
+                <td><field name="profile_for_bottom" readonly="1"/> m</td>
+            </tr>
+            <tr>
+                <td><strong>Side Profile:</strong></td>
+                <td><field name="side_profile" readonly="1"/> m</td>
+            </tr>
+            <tr>
+                <td><strong>Door Profile:</strong></td>
+                <td><field name="door_profile" readonly="1"/> m</td>
+            </tr>
+            <tr class="table-success">
+                <td><strong>Total Profile:</strong></td>
+                <td><strong><field name="total_profile" readonly="1"/> m</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+					<div class="text-center mt-3">
+						<button name="action_calculate_profiles" 
+								string="📊 Calculate Profiles" 
+								type="object" 
+								class="btn btn-success"/>
+					</div>
+                    <group>
+                        <group string="Bracket Settings">
+                            <field name="gutter_bracket_type" widget="radio"/>
+                            <field name="column_bracket_type" widget="radio"/>
+                        </group>
+                        <group string="Wire &amp; Connector Settings">
+                            <field name="enable_zigzag_wire"/>
+                            <field name="zigzag_wire_size" invisible="not enable_zigzag_wire" widget="radio"/>
+                            <field name="enable_rollup_connectors"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Accessories Cost Summary"/>
+                    <group col="4">
+                        <field name="total_brackets_cost" readonly="1" widget="monetary"/>
+                        <field name="total_wires_connectors_cost" readonly="1" widget="monetary"/>
+                        <field name="total_clamps_cost" readonly="1" widget="monetary"/>
+                        <field name="total_accessories_cost" readonly="1" widget="monetary"/>
+                    </group>
+                    
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <button name="action_calculate_accessories" 
+                                    string="🔧 Calculate Accessories" 
+                                    type="object" 
+                                    class="btn btn-warning btn-lg"/>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+            
+            <!-- Add Accessories Management page -->
+            <xpath expr="//notebook/page[position()=last()]" position="after">
+                <page string="Accessories Management">
+                    <div class="alert alert-info" role="alert">
+                        <strong>🔧 Excel-Style Accessories Management</strong><br/>
+                        Edit accessory components directly in tables below. All calculations update automatically.
+                        <br/><br/>
+                        <strong>🔄 Smart Recalculation:</strong> Use "Calculate Accessories" to update quantities while preserving your pricing selections.
+                        <br/><br/>
+                        <strong>🛠️ Size Override:</strong> For clamps, you can override auto-detected sizes with custom specifications.
+                    </div>
+                    
+                    <!-- Action Buttons Panel -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">🚀 Accessories Actions</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="btn-group" role="group">
+                                        <button name="action_calculate_accessories" 
+                                                string="🔧 Calculate Accessories" 
+                                                type="object" 
+                                                class="btn btn-warning btn-lg"
+                                                help="Calculate all accessories based on current configuration"/>
+                                        <button name="action_accessories_summary" 
+                                                string="📊 Show Summary" 
+                                                type="object" 
+                                                class="btn btn-info btn-lg"
+                                                help="Show accessories cost breakdown"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					
+					<!-- Profiles Components -->
+					<div class="card mb-4" invisible="not profiles_component_ids">
+						<div class="card-header bg-success text-white">
+							<h4 class="mb-0">📏 Profiles Components</h4>
+						</div>
+						<div class="card-body">
+							<field name="profiles_component_ids" readonly="0"/>
+							<div class="text-right mt-2">
+								<h5 class="text-success">Profiles Total: <field name="total_profiles_cost" readonly="1" widget="monetary"/></h5>
+							</div>
+						</div>
+					</div>
+                    
+                    <!-- Brackets Components -->
+                    <div class="card mb-4" invisible="not brackets_component_ids">
+                        <div class="card-header bg-warning text-white">
+                            <h4 class="mb-0">🔧 Brackets Components</h4>
+                        </div>
+                        <div class="card-body">
+                            <field name="brackets_component_ids" readonly="0"/>
+                            <div class="text-right mt-2">
+                                <h5 class="text-warning">Brackets Total: <field name="total_brackets_cost" readonly="1" widget="monetary"/></h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wires & Connectors Components -->
+                    <div class="card mb-4" invisible="not wires_connectors_component_ids">
+                        <div class="card-header bg-info text-white">
+                            <h4 class="mb-0">🔗 Wires &amp; Connectors</h4>
+                        </div>
+                        <div class="card-body">
+                            <field name="wires_connectors_component_ids" readonly="0"/>
+                            <div class="text-right mt-2">
+                                <h5 class="text-info">Wires &amp; Connectors Total: <field name="total_wires_connectors_cost" readonly="1" widget="monetary"/></h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Clamps Components -->
+                    <div class="card mb-4" invisible="not clamps_component_ids">
+                        <div class="card-header bg-secondary text-white">
+                            <h4 class="mb-0">🛠️ Clamps Components</h4>
+                        </div>
+                        <div class="card-body">
+                            <field name="clamps_component_ids" readonly="0"/>
+                            <div class="text-right mt-2">
+                                <h5 class="text-secondary">Clamps Total: <field name="total_clamps_cost" readonly="1" widget="monetary"/></h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Accessories Total Panel -->
+                    <div class="card border-warning mb-4">
+                        <div class="card-header bg-warning text-white text-center">
+                            <h3 class="mb-0">🔧 ACCESSORIES TOTAL: <field name="total_accessories_cost" readonly="1" widget="monetary"/></h3>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Brackets</h6>
+                                            <p class="card-text h5"><field name="total_brackets_cost" readonly="1" widget="monetary"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Wires &amp; Connectors</h6>
+                                            <p class="card-text h5"><field name="total_wires_connectors_cost" readonly="1" widget="monetary"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Clamps</h6>
+                                            <p class="card-text h5"><field name="total_clamps_cost" readonly="1" widget="monetary"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+            
+            <!-- Add accessories section to Component Management page -->
+            <xpath expr="//div[contains(@class, 'card') and .//h3[contains(text(), 'PROJECT TOTAL')]]" position="before">
+                <div class="card border-warning mb-4">
+                    <div class="card-header bg-warning text-white text-center">
+                        <h4 class="mb-0">🔧 ACCESSORIES SUMMARY</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-borderless">
+							<tr>
+								<td><strong>📏 Profiles:</strong></td>  <!-- ADD THIS -->
+								<td class="text-right"><field name="total_profiles_cost" readonly="1" widget="monetary"/></td>
+							</tr>
+	
+                            <tr>
+                                <td><strong>🔧 Brackets:</strong></td>
+                                <td class="text-right"><field name="total_brackets_cost" readonly="1" widget="monetary"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>🔗 Wires &amp; Connectors:</strong></td>
+                                <td class="text-right"><field name="total_wires_connectors_cost" readonly="1" widget="monetary"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>🛠️ Clamps:</strong></td>
+                                <td class="text-right"><field name="total_clamps_cost" readonly="1" widget="monetary"/></td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td><strong>🔧 TOTAL ACCESSORIES:</strong></td>
+                                <td class="text-right"><strong><field name="total_accessories_cost" readonly="1" widget="monetary"/></strong></td>
+                            </tr>
+                        </table>
+                        <div class="text-center mt-3">
+                            <button name="action_calculate_accessories" 
+                                    string="🔧 Recalculate Accessories" 
+                                    type="object" 
+                                    class="btn btn-warning btn-sm"/>
+                            <button name="action_accessories_summary" 
+                                    string="📊 Show Summary" 
+                                    type="object" 
+                                    class="btn btn-info btn-sm"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Update Cost Summary page to include accessories -->
+            <xpath expr="//tr[contains(@class, 'table-danger') and .//field[@name='grand_total_cost']]" position="before">
+                <tr class="table-warning">
+                    <tr class="table-info">
+						<td><strong>🔧 Brackets</strong></td>
+						<td class="text-right"><field name="total_brackets_cost" readonly="1" widget="monetary"/></td>
+					</tr>
+					<tr class="table-info">
+						<td><strong>🔗 Wires &amp; Connectors</strong></td>
+						<td class="text-right"><field name="total_wires_connectors_cost" readonly="1" widget="monetary"/></td>
+					</tr>
+					<tr class="table-info">
+						<td><strong>🛠️ Clamps</strong></td>
+						<td class="text-right"><field name="total_clamps_cost" readonly="1" widget="monetary"/></td>
+					</tr>
+					<tr class="table-info">
+						<td><strong>📏 Profiles</strong></td>
+						<td class="text-right"><field name="total_profiles_cost" readonly="1" widget="monetary"/></td>
+					</tr>
+					<tr class="table-warning">
+						<td><strong>🔧 TOTAL ACCESSORIES</strong></td>
+						<td class="text-right"><field name="total_accessories_cost" readonly="1" widget="monetary"/></td>
+					</tr>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Add accessories to tree view -->
+    <record id="view_green_master_tree_accessories_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.accessories.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            <field name="grand_total_cost" position="before">
+                <field name="total_accessories_cost" optional="hide" sum="Total Accessories"/>
+            </field>
+            
+            <!-- Add accessories button -->
+            <button name="print_report" position="after">
+                <button name="action_calculate_accessories" 
+                        string="🔧 Calc Acc" 
+                        type="object" 
+                        class="btn-warning" 
+                        help="Calculate accessories"/>
+            </button>
+        </field>
+    </record>
+    
+</odoo>
