@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Pipe Management Tree View -->
+    <record id="view_pipe_management_tree" model="ir.ui.view">
+        <field name="name">pipe.management.tree</field>
+        <field name="model">pipe.management</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Management" create="1" edit="1" delete="1">
+                <field name="pipe_type"/>
+                <field name="pipe_size"/>
+                <field name="wall_thickness"/>
+                <field name="weight_per_unit"/>
+                <field name="rate_per_kg"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pipe Management Form View -->
+    <record id="view_pipe_management_form" model="ir.ui.view">
+        <field name="name">pipe.management.form</field>
+        <field name="model">pipe.management</field>
+        <field name="arch" type="xml">
+            <form string="Pipe Management">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <group>
+                        <group string="Pipe Specifications">
+                            <field name="active" invisible="1"/>
+                            <field name="pipe_type"/>
+                            <field name="pipe_size"/>
+                            <field name="wall_thickness"/>
+                        </group>
+                        <group string="Pricing">
+                            <field name="weight_per_unit"/>
+                            <field name="rate_per_kg"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Description..."/>
+                    <field name="notes" placeholder="Additional notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Pipe Management Action -->
+    <record id="action_pipe_management" model="ir.actions.act_window">
+        <field name="name">Pipe Catalog</field>
+        <field name="res_model">pipe.management</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Pipe!
+            </p>
+            <p>
+                Define pipes with their types, sizes, thickness and pricing information.
+            </p>
+        </field>
+    </record>
+
+    <!-- Pipe Type Tree View -->
+    <record id="view_pipe_type_tree" model="ir.ui.view">
+        <field name="name">pipe.type.tree</field>
+        <field name="model">pipe.type</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Types" create="1" edit="1" delete="1" editable="bottom">
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pipe Type Action -->
+    <record id="action_pipe_type" model="ir.actions.act_window">
+        <field name="name">Pipe Types</field>
+        <field name="res_model">pipe.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Pipe Size Tree View -->
+    <record id="view_pipe_size_tree" model="ir.ui.view">
+        <field name="name">pipe.size.tree</field>
+        <field name="model">pipe.size</field>
+        <field name="arch" type="xml">
+            <tree string="Pipe Sizes" create="1" edit="1" delete="1" editable="bottom">
+                <field name="name"/>
+                <field name="size_in_mm"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pipe Size Action -->
+    <record id="action_pipe_size" model="ir.actions.act_window">
+        <field name="name">Pipe Sizes</field>
+        <field name="res_model">pipe.size</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Pipe Wall Thickness Tree View -->
+    <record id="view_pipe_wall_thickness_tree" model="ir.ui.view">
+        <field name="name">pipe.wall_thickness.tree</field>
+        <field name="model">pipe.wall_thickness</field>
+        <field name="arch" type="xml">
+            <tree string="Wall Thicknesses" create="1" edit="1" delete="1" editable="bottom">
+                <field name="name"/>
+                <field name="thickness_in_mm"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pipe Wall Thickness Action -->
+    <record id="action_pipe_wall_thickness" model="ir.actions.act_window">
+        <field name="name">Wall Thicknesses</field>
+        <field name="res_model">pipe.wall_thickness</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

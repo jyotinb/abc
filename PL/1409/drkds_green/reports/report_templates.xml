@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Template for Greenhouse Projects -->
+    <record id="action_report_greenhouse_project" model="ir.actions.report">
+        <field name="name">Greenhouse Project Report</field>
+        <field name="model">green.master</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">drkds_green.report_greenhouse_project_template</field>
+        <field name="report_file">drkds_green.report_greenhouse_project_template</field>
+        <field name="binding_model_id" ref="model_green_master"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Report Template -->
+    <template id="report_greenhouse_project_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 class="text-center">Greenhouse Project Report</h2>
+                                <h3 t-field="doc.name"/>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Customer Information:</strong>
+                                <table class="table table-sm">
+                                    <tr><td>Customer:</td><td t-field="doc.customer"/></tr>
+                                    <tr><td>Address:</td><td t-field="doc.address"/></tr>
+                                    <tr><td>City:</td><td t-field="doc.city"/></tr>
+                                    <tr><td>Mobile:</td><td t-field="doc.mobile"/></tr>
+                                    <tr><td>Email:</td><td t-field="doc.email"/></tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <strong>Project Information:</strong>
+                                <table class="table table-sm">
+                                    <tr><td>Structure Type:</td><td t-field="doc.structure_type"/></tr>
+                                    <tr><td>Structure Size:</td><td t-field="doc.structure_size"/> m²</tr>
+                                    <tr><td>No of Spans:</td><td t-field="doc.no_of_spans"/></tr>
+                                    <tr><td>No of Bays:</td><td t-field="doc.no_of_bays"/></tr>
+                                    <tr><td>Column Height:</td><td t-field="doc.column_height"/> m</tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <strong>Cost Summary:</strong>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Section</th>
+                                            <th class="text-right">Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>ASC Components</td>
+                                            <td class="text-right" t-field="doc.total_asc_cost"/>
+                                        </tr>
+                                        <tr>
+                                            <td>Frame Components</td>
+                                            <td class="text-right" t-field="doc.total_frame_cost"/>
+                                        </tr>
+                                        <tr>
+                                            <td>Truss Components</td>
+                                            <td class="text-right" t-field="doc.total_truss_cost"/>
+                                        </tr>
+                                        <tr>
+                                            <td>Side Screen Components</td>
+                                            <td class="text-right" t-field="doc.total_side_screen_cost"/>
+                                        </tr>
+                                        <tr>
+                                            <td>Lower Components</td>
+                                            <td class="text-right" t-field="doc.total_lower_cost"/>
+                                        </tr>
+                                        <tr>
+                                            <td>Accessories</td>
+                                            <td class="text-right" t-field="doc.total_accessories_cost"/>
+                                        </tr>
+                                        <tr class="table-active">
+                                            <td><strong>Grand Total</strong></td>
+                                            <td class="text-right"><strong t-field="doc.grand_total_cost"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <t t-if="doc.frame_component_ids">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <strong>Frame Components:</strong>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Component</th>
+                                                <th>Qty</th>
+                                                <th>Length</th>
+                                                <th>Pipe Type</th>
+                                                <th class="text-right">Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="doc.frame_component_ids" t-as="component">
+                                                <tr>
+                                                    <td t-field="component.name"/>
+                                                    <td t-field="component.nos"/>
+                                                    <td t-field="component.length"/>
+                                                    <td t-field="component.pipe_type"/>
+                                                    <td class="text-right" t-field="component.total_cost"/>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

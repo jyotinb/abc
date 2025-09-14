@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pipe_round_21mm_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_round"/>
+        <field name="pipe_size" ref="pipe_size_21mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">0.95</field>
+        <field name="rate_per_kg">80.0</field>
+        <field name="description">Standard round pipe 21mm</field>
+    </record>
+    
+    <record id="pipe_round_27mm_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_round"/>
+        <field name="pipe_size" ref="pipe_size_27mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">1.50</field>
+        <field name="rate_per_kg">80.0</field>
+        <field name="description">Standard round pipe 27mm</field>
+    </record>
+    
+    <record id="pipe_round_33mm_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_round"/>
+        <field name="pipe_size" ref="pipe_size_33mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">1.70</field>
+        <field name="rate_per_kg">80.0</field>
+        <field name="description">Standard round pipe 33mm</field>
+    </record>
+    
+    <record id="pipe_round_42mm_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_round"/>
+        <field name="pipe_size" ref="pipe_size_42mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">2.20</field>
+        <field name="rate_per_kg">80.0</field>
+        <field name="description">Standard round pipe 42mm</field>
+    </record>
+    
+    <record id="pipe_round_48mm_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_round"/>
+        <field name="pipe_size" ref="pipe_size_48mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">2.40</field>
+        <field name="rate_per_kg">80.0</field>
+        <field name="description">Standard round pipe 48mm</field>
+    </record>
+    
+    <record id="pipe_square_25x25_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_square"/>
+        <field name="pipe_size" ref="pipe_size_25x25mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">1.50</field>
+        <field name="rate_per_kg">85.0</field>
+        <field name="description">Square pipe 25x25mm</field>
+    </record>
+    
+    <record id="pipe_square_40x40_2mm" model="pipe.management">
+        <field name="pipe_type" ref="pipe_type_square"/>
+        <field name="pipe_size" ref="pipe_size_40x40mm"/>
+        <field name="wall_thickness" ref="wall_thickness_2_0mm"/>
+        <field name="weight_per_unit">2.80</field>
+        <field name="rate_per_kg">85.0</field>
+        <field name="description">Square pipe 40x40mm</field>
+    </record>
+</odoo>

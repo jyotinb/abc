@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="demo_project_1" model="green.master">
+        <field name="name">Demo Greenhouse Project</field>
+        <field name="customer">Demo Customer</field>
+        <field name="address">123 Demo Street</field>
+        <field name="city">Demo City</field>
+        <field name="mobile">+91 9876543210</field>
+        <field name="email">demo@example.com</field>
+        <field name="structure_type">NVPH</field>
+        <field name="total_span_length">30.0</field>
+        <field name="total_bay_length">60.0</field>
+        <field name="span_width">3.0</field>
+        <field name="bay_width">4.0</field>
+        <field name="top_ridge_height">4.5</field>
+        <field name="column_height">3.0</field>
+        <field name="big_arch_length">6.0</field>
+        <field name="small_arch_length">4.0</field>
+        <field name="foundation_length">0.5</field>
+        <field name="plot_size">2000.0</field>
+        <field name="state">draft</field>
+    </record>
+</odoo>

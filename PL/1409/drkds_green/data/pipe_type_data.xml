@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pipe_type_round" model="pipe.type">
+        <field name="name">Round</field>
+        <field name="description">Round Pipe</field>
+    </record>
+    
+    <record id="pipe_type_gi" model="pipe.type">
+        <field name="name">GI Pipe</field>
+        <field name="description">Galvanized Iron Pipe</field>
+    </record>
+    
+    <record id="pipe_type_ms" model="pipe.type">
+        <field name="name">MS Pipe</field>
+        <field name="description">Mild Steel Pipe</field>
+    </record>
+    
+    <record id="pipe_type_square" model="pipe.type">
+        <field name="name">Square Pipe</field>
+        <field name="description">Square Pipe</field>
+    </record>
+    
+    <record id="pipe_type_rectangular" model="pipe.type">
+        <field name="name">Rectangular Pipe</field>
+        <field name="description">Rectangular Pipe</field>
+    </record>
+</odoo>

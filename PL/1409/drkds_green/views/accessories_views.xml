@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Accessories Master Tree View -->
+    <record id="view_accessories_master_tree" model="ir.ui.view">
+        <field name="name">accessories.master.tree</field>
+        <field name="model">accessories.master</field>
+        <field name="arch" type="xml">
+            <tree string="Accessories Master" create="1" edit="1" delete="1" editable="bottom">
+                <field name="category"/>
+                <field name="name"/>
+                <field name="size_specification"/>
+                <field name="unit_price"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Accessories Master Form View -->
+    <record id="view_accessories_master_form" model="ir.ui.view">
+        <field name="name">accessories.master.form</field>
+        <field name="model">accessories.master</field>
+        <field name="arch" type="xml">
+            <form string="Accessory Master">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="name"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="size_specification"/>
+                            <field name="unit_price"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Description..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Accessories Master Action -->
+    <record id="action_accessories_master" model="ir.actions.act_window">
+        <field name="name">Accessories Master</field>
+        <field name="res_model">accessories.master</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Accessory Master!
+            </p>
+            <p>
+                Define accessories with their categories, sizes, and pricing that can be used across projects.
+            </p>
+        </field>
+    </record>
+
+    <!-- Accessories Component Line Tree View -->
+    <record id="view_accessories_component_line_tree" model="ir.ui.view">
+        <field name="name">accessories.component.line.tree</field>
+        <field name="model">accessories.component.line</field>
+        <field name="arch" type="xml">
+            <tree string="Accessories Components" create="1" edit="1" delete="1" editable="bottom">
+                <field name="green_master_id"/>
+                <field name="section"/>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="nos"/>
+                <field name="size_specification"/>
+                <field name="unit_price"/>
+                <field name="total_cost"/>
+                <field name="is_calculated" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Accessories Component Line Form View -->
+    <record id="view_accessories_component_line_form" model="ir.ui.view">
+        <field name="name">accessories.component.line.form</field>
+        <field name="model">accessories.component.line</field>
+        <field name="arch" type="xml">
+            <form string="Accessory Component">
+                <sheet>
+                    <group>
+                        <group string="Component Information">
+                            <field name="green_master_id"/>
+                            <field name="section"/>
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="is_calculated" readonly="1"/>
+                        </group>
+                        <group string="Quantity and Pricing">
+                            <field name="nos"/>
+                            <field name="unit_price"/>
+                            <field name="total_cost" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Size Management">
+                        <field name="auto_detected_size" readonly="1"/>
+                        <field name="size_override"/>
+                        <field name="manual_size" invisible="not size_override"/>
+                        <field name="size_specification" readonly="1"/>
+                    </group>
+                    
+                    <group string="Master Data">
+                        <field name="accessories_master_id"/>
+                    </group>
+                    
+                    <field name="notes" placeholder="Additional notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Accessories Component Line Search View -->
+    <record id="view_accessories_component_line_search" model="ir.ui.view">
+        <field name="name">accessories.component.line.search</field>
+        <field name="model">accessories.component.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Accessory Components">
+                <field name="name" string="Component" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="green_master_id"/>
+                <field name="section"/>
+                
+                <filter name="calculated" string="Calculated" domain="[('is_calculated', '=', True)]"/>
+                <filter name="manual" string="Manual" domain="[('is_calculated', '=', False)]"/>
+                <filter name="size_override" string="Size Override" domain="[('size_override', '=', True)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_by_section" string="Section" context="{'group_by': 'section'}"/>
+                    <filter name="group_by_project" string="Project" context="{'group_by': 'green_master_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Accessories Component Line Action -->
+    <record id="action_accessories_component_line" model="ir.actions.act_window">
+        <field name="name">All Accessories</field>
+        <field name="res_model">accessories.component.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No accessories found!
+            </p>
+            <p>
+                Accessories are automatically generated when you calculate accessories for a greenhouse project.
+                You can also create manual accessories here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

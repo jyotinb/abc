@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Green Master Tree View -->
+    <record id="view_green_master_tree" model="ir.ui.view">
+        <field name="name">green.master.tree</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <tree string="Greenhouse Projects" create="1" edit="1" delete="1">
+                <field name="name"/>
+                <field name="customer"/>
+                <field name="city"/>
+                <field name="structure_type"/>
+                <field name="structure_size"/>
+                <field name="grand_total_cost"/>
+                <field name="state"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Green Master Form View -->
+    <record id="view_green_master_form" model="ir.ui.view">
+        <field name="name">green.master.form</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <form string="Greenhouse Project">
+                <header>
+                    <button name="action_calculate_components" 
+                            string="Calculate Components" 
+                            type="object" 
+                            class="btn-primary"
+                            confirm="This will recalculate all components. Continue?"/>
+                    <button name="action_calculate_accessories" 
+                            string="Calculate Accessories" 
+                            type="object" 
+                            class="btn-secondary"/>
+                    <button name="action_export_excel" 
+                            string="Export Excel" 
+                            type="object" 
+                            class="btn-success"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_selection_summary" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-list-alt">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Pipe</span>
+                                <span class="o_stat_text">Selection</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Project Information Card -->
+                    <div class="alert alert-info" role="alert">
+                        <h4>Project Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <field name="name" placeholder="Project Name"/>
+                                <field name="customer" placeholder="Customer Name"/>
+                                <field name="structure_type"/>
+                            </div>
+                            <div class="col-md-6">
+                                <field name="address" placeholder="Address"/>
+                                <field name="city" placeholder="City"/>
+                                <field name="mobile" placeholder="Mobile"/>
+                                <field name="email" placeholder="Email"/>
+                                <field name="reference" placeholder="Reference"/>
+                                <field name="plot_size"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <notebook>
+                        <!-- Structure Configuration Tab -->
+                        <page string="Structure Configuration" name="structure">
+                            <group string="Basic Dimensions">
+                                <group>
+                                    <field name="total_span_length"/>
+                                    <field name="total_bay_length"/>
+                                    <field name="span_width"/>
+                                    <field name="bay_width"/>
+                                </group>
+                                <group>
+                                    <field name="top_ridge_height"/>
+                                    <field name="column_height"/>
+                                    <field name="big_arch_length"/>
+                                    <field name="small_arch_length"/>
+                                    <field name="foundation_length"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Computed Dimensions" name="computed_dims">
+                                <group>
+                                    <field name="span_length" readonly="1"/>
+                                    <field name="bay_length" readonly="1"/>
+                                    <field name="structure_size" readonly="1"/>
+                                    <field name="no_of_bays" readonly="1"/>
+                                    <field name="no_of_spans" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="bottom_height" readonly="1"/>
+                                    <field name="arch_height" readonly="1"/>
+                                    <field name="gutter_length" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- ASC Configuration Tab -->
+                        <page string="ASC Configuration" name="asc_config">
+                            <group>
+                                <field name="is_side_coridoors"/>
+                            </group>
+                            <group string="ASC Dimensions" invisible="not is_side_coridoors">
+                                <group>
+                                    <field name="width_front_span_coridoor"/>
+                                    <field name="width_back_span_coridoor"/>
+                                </group>
+                                <group>
+                                    <field name="width_front_bay_coridoor"/>
+                                    <field name="width_back_bay_coridoor"/>
+                                </group>
+                            </group>
+                            <group string="ASC Support Configuration" invisible="not is_side_coridoors">
+                                <field name="support_hockeys"/>
+                                <field name="length_support_hockeys"/>
+                            </group>
+                        </page>
+
+                        <!-- Frame Configuration Tab -->
+                        <page string="Frame Configuration" name="frame_config">
+                            <group string="Column Configuration">
+                                <group>
+                                    <field name="no_column_big_frame"/>
+                                    <field name="no_anchor_frame_lines" invisible="no_column_big_frame == '0'"/>
+                                    <field name="thick_column"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Truss Configuration Tab -->
+                        <page string="Truss Configuration" name="truss_config">
+                            <group string="Bottom Chord Configuration">
+                                <field name="is_bottom_chord"/>
+                                <field name="v_support_bottom_chord_frame" invisible="not is_bottom_chord"/>
+                                <field name="length_v_support_bottom_chord_frame" invisible="not is_bottom_chord or v_support_bottom_chord_frame == '0'"/>
+                            </group>
+                            
+                            <group string="Arch Support Configuration">
+                                <group>
+                                    <field name="is_arch_support_big"/>
+                                    <field name="length_arch_support_big" invisible="not is_arch_support_big"/>
+                                    <field name="is_arch_support_big_small"/>
+                                    <field name="length_arch_support_big_small" invisible="not is_arch_support_big_small"/>
+                                </group>
+                                <group>
+                                    <field name="is_arch_support_small_big_arch"/>
+                                    <field name="length_arch_support_small_big_arch" invisible="not is_arch_support_small_big_arch"/>
+                                    <field name="is_arch_support_small_small_arch"/>
+                                    <field name="length_arch_support_small_small_arch" invisible="not is_arch_support_small_small_arch"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Vent Support Configuration">
+                                <group>
+                                    <field name="no_vent_big_arch_support_frame"/>
+                                    <field name="length_vent_big_arch_support" invisible="no_vent_big_arch_support_frame == '0'"/>
+                                </group>
+                                <group>
+                                    <field name="no_vent_small_arch_support_frame"/>
+                                    <field name="length_vent_small_arch_support" invisible="no_vent_small_arch_support_frame == '0'"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Border Purlin Configuration">
+                                <group>
+                                    <field name="bay_side_border_purlin"/>
+                                </group>
+                                <group>
+                                    <field name="span_side_border_purlin"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Side Screen Configuration Tab -->
+                        <page string="Side Screen Configuration" name="side_screen_config">
+                            <group string="Side Screen Options">
+                                <group>
+                                    <field name="side_screen_guard"/>
+                                    <field name="length_side_screen_guard" invisible="not side_screen_guard"/>
+                                    <field name="side_screen_guard_box"/>
+                                    <field name="no_side_screen_guard_box" invisible="not side_screen_guard_box"/>
+                                </group>
+                                <group>
+                                    <field name="no_of_curtains"/>
+                                    <field name="length_side_screen_rollup_handles" invisible="no_of_curtains == 0"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Side Screen Length Masters">
+                                <group>
+                                    <field name="length_side_screen_roll_up_pipe_joiner"/>
+                                    <field name="length_side_screen_guard_spacer"/>
+                                </group>
+                                <group>
+                                    <field name="length_side_screen_guard_box_h_pipe"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Lower Section Configuration Tab -->
+                        <page string="Lower Section Configuration" name="lower_config">
+                            <group string="Cross Bracing Configuration">
+                                <group>
+                                    <field name="front_back_c_c_cross_bracing_x"/>
+                                    <field name="length_front_back_c_c_cross_bracing_x" invisible="front_back_c_c_cross_bracing_x == 0"/>
+                                    <field name="middle_c_c_cross_bracing_x"/>
+                                    <field name="length_middle_c_c_cross_bracing_x" invisible="middle_c_c_cross_bracing_x == 0"/>
+                                </group>
+                                <group>
+                                    <field name="cross_bracing_column_arch"/>
+                                    <field name="length_cross_bracing_column_arch" invisible="cross_bracing_column_arch == '0'"/>
+                                    <field name="cross_bracing_column_bottom"/>
+                                    <field name="length_cross_bracing_column_bottom" invisible="cross_bracing_column_bottom == '0'"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Arch Middle Purlin Configuration">
+                                <group>
+                                    <field name="arch_middle_purlin_big_arch"/>
+                                    <field name="arch_middle_purlin_big_arch_pcs" invisible="arch_middle_purlin_big_arch == '0'"/>
+                                </group>
+                                <group>
+                                    <field name="arch_middle_purlin_small_arch"/>
+                                    <field name="arch_middle_purlin_small_arch_pcs" invisible="arch_middle_purlin_small_arch == '0'"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Gutter Configuration Tab -->
+                        <page string="Gutter Configuration" name="gutter_config">
+                            <group string="Gutter Type">
+                                <field name="gutter_type"/>
+                                <field name="gutter_slope"/>
+                                <field name="last_span_gutter"/>
+                            </group>
+                            
+                            <group string="IPPF Gutter Options" invisible="gutter_type != 'ippf'">
+                                <group>
+                                    <field name="gutter_ippf_full"/>
+                                    <field name="gutter_ippf_drainage_extension"/>
+                                </group>
+                                <group>
+                                    <field name="gutter_funnel_ippf"/>
+                                    <field name="gutter_end_cap"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Continuous Gutter Options" invisible="gutter_type != 'continuous'">
+                                <field name="gutter_extension"/>
+                            </group>
+                        </page>
+
+                        <!-- Accessories Configuration Tab -->
+                        <page string="Accessories Configuration" name="accessories_config">
+                            <group string="Bracket Configuration">
+                                <group>
+                                    <field name="gutter_bracket_type"/>
+                                    <field name="column_bracket_type"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Wire Configuration">
+                                <group>
+                                    <field name="enable_zigzag_wire"/>
+                                    <field name="zigzag_wire_size" invisible="not enable_zigzag_wire"/>
+                                </group>
+                                <group>
+                                    <field name="enable_rollup_connectors"/>
+                                </group>
+                            </group>
+                            
+                            <group string="Foundation Configuration">
+                                <group>
+                                    <field name="enable_foundation_rods"/>
+                                </group>
+                                <group invisible="not enable_foundation_rods">
+                                    <field name="foundation_rods_per_foundation"/>
+                                    <field name="foundation_rods_per_asc"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Components Tab -->
+                        <page string="Components" name="components">
+                            <div class="alert alert-success" role="alert">
+                                <h4>Component Summary</h4>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <strong>ASC:</strong> <field name="total_asc_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Frame:</strong> <field name="total_frame_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Truss:</strong> <field name="total_truss_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Side Screen:</strong> <field name="total_side_screen_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Lower:</strong> <field name="total_lower_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Total:</strong> <field name="grand_total_cost" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <notebook>
+                                <page string="ASC Components" name="asc_components" invisible="not is_side_coridoors">
+                                    <field name="asc_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="length"/>
+                                            <field name="total_length"/>
+                                            <field name="pipe_id"/>
+                                            <field name="pipe_type"/>
+                                            <field name="pipe_size"/>
+                                            <field name="total_cost"/>
+                                            <field name="is_calculated" readonly="1"/>
+                                        </tree>
+                                        <form string="ASC Component">
+                                            <group>
+                                                <group>
+                                                    <field name="name"/>
+                                                    <field name="description"/>
+                                                    <field name="required"/>
+                                                    <field name="is_calculated" readonly="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="nos"/>
+                                                    <field name="use_length_master"/>
+                                                    <field name="length_master_id" invisible="not use_length_master" domain="[('active', '=', True)]" context="{'default_active': True}"/>
+                                                    <field name="custom_length" invisible="use_length_master"/>
+                                                    <field name="length" readonly="1"/>
+                                                    <field name="total_length" readonly="1"/>
+                                                </group>
+                                            </group>
+                                            <group string="Pipe Selection">
+                                                <field name="pipe_id"/>
+                                                <field name="pipe_type" readonly="1"/>
+                                                <field name="pipe_size" readonly="1"/>
+                                                <field name="wall_thickness" readonly="1"/>
+                                                <field name="weight_per_unit" readonly="1"/>
+                                                <field name="rate_per_kg" readonly="1"/>
+                                            </group>
+                                            <group string="Cost Calculation">
+                                                <field name="total_weight" readonly="1"/>
+                                                <field name="total_cost" readonly="1"/>
+                                            </group>
+                                            <field name="notes" placeholder="Additional notes..."/>
+                                        </form>
+                                    </field>
+                                </page>
+                                
+                                <page string="Frame Components" name="frame_components">
+                                    <field name="frame_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="length"/>
+                                            <field name="total_length"/>
+                                            <field name="pipe_id"/>
+                                            <field name="pipe_type"/>
+                                            <field name="pipe_size"/>
+                                            <field name="total_cost"/>
+                                            <field name="is_calculated" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Truss Components" name="truss_components">
+                                    <field name="truss_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="length"/>
+                                            <field name="total_length"/>
+                                            <field name="pipe_id"/>
+                                            <field name="pipe_type"/>
+                                            <field name="pipe_size"/>
+                                            <field name="total_cost"/>
+                                            <field name="is_calculated" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Side Screen Components" name="side_screen_components">
+                                    <field name="side_screen_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="length"/>
+                                            <field name="total_length"/>
+                                            <field name="pipe_id"/>
+                                            <field name="pipe_type"/>
+                                            <field name="pipe_size"/>
+                                            <field name="total_cost"/>
+                                            <field name="is_calculated" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Lower Components" name="lower_components">
+                                    <field name="lower_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="length"/>
+                                            <field name="total_length"/>
+                                            <field name="pipe_id"/>
+                                            <field name="pipe_type"/>
+                                            <field name="pipe_size"/>
+                                            <field name="total_cost"/>
+                                            <field name="is_calculated" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </page>
+
+                        <!-- Accessories Tab -->
+                        <page string="Accessories" name="accessories">
+                            <div class="alert alert-warning" role="alert">
+                                <h4>Accessories Summary</h4>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <strong>Profiles:</strong> <field name="total_profiles_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Brackets:</strong> <field name="total_brackets_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Wires:</strong> <field name="total_wires_connectors_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Clamps:</strong> <field name="total_clamps_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Foundation:</strong> <field name="total_foundation_cost" readonly="1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Total:</strong> <field name="total_accessories_cost" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <group string="Profile Summary" name="profile_summary">
+                                <group>
+                                    <field name="profiles_for_arch" readonly="1"/>
+                                    <field name="profile_for_purlin" readonly="1"/>
+                                    <field name="profile_for_bottom" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="side_profile" readonly="1"/>
+                                    <field name="door_profile" readonly="1"/>
+                                    <field name="total_profile" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <notebook>
+                                <page string="All Accessories" name="all_accessories">
+                                    <field name="accessories_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="section"/>
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="size_specification"/>
+                                            <field name="unit_price"/>
+                                            <field name="total_cost"/>
+                                            <field name="is_calculated" readonly="1"/>
+                                        </tree>
+                                        <form string="Accessory Component">
+                                            <group>
+                                                <group>
+                                                    <field name="section"/>
+                                                    <field name="name"/>
+                                                    <field name="description"/>
+                                                    <field name="is_calculated" readonly="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="nos"/>
+                                                    <field name="unit_price"/>
+                                                    <field name="total_cost" readonly="1"/>
+                                                </group>
+                                            </group>
+                                            <group string="Size Management">
+                                                <field name="auto_detected_size" readonly="1"/>
+                                                <field name="size_override"/>
+                                                <field name="manual_size" invisible="not size_override"/>
+                                                <field name="size_specification" readonly="1"/>
+                                            </group>
+                                            <group string="Master Data">
+                                                <field name="accessories_master_id"/>
+                                            </group>
+                                            <field name="notes" placeholder="Additional notes..."/>
+                                        </form>
+                                    </field>
+                                </page>
+                                
+                                <page string="Profiles" name="profiles">
+                                    <field name="profiles_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="size_specification"/>
+                                            <field name="unit_price"/>
+                                            <field name="total_cost"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Brackets" name="brackets">
+                                    <field name="brackets_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="size_specification"/>
+                                            <field name="unit_price"/>
+                                            <field name="total_cost"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Wires &amp; Connectors" name="wires_connectors">
+                                    <field name="wires_connectors_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="size_specification"/>
+                                            <field name="unit_price"/>
+                                            <field name="total_cost"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Clamps" name="clamps">
+                                    <field name="clamps_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="size_specification"/>
+                                            <field name="auto_detected_size" readonly="1"/>
+                                            <field name="size_override"/>
+                                            <field name="unit_price"/>
+                                            <field name="total_cost"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
+                                <page string="Foundation" name="foundation">
+                                    <field name="foundation_component_ids" mode="tree,form">
+                                        <tree editable="bottom" create="1" delete="1">
+                                            <field name="name"/>
+                                            <field name="nos"/>
+                                            <field name="size_specification"/>
+                                            <field name="unit_price"/>
+                                            <field name="total_cost"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Green Master Search View -->
+    <record id="view_green_master_search" model="ir.ui.view">
+        <field name="name">green.master.search</field>
+        <field name="model">green.master</field>
+        <field name="arch" type="xml">
+            <search string="Search Greenhouse Projects">
+                <field name="name" string="Project" filter_domain="['|', ('name', 'ilike', self), ('customer', 'ilike', self)]"/>
+                <field name="customer"/>
+                <field name="city"/>
+                <field name="structure_type"/>
+                <field name="state"/>
+                
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="calculated" string="Calculated" domain="[('state', '=', 'calculated')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                
+                <separator/>
+                <filter name="with_asc" string="With ASC" domain="[('is_side_coridoors', '=', True)]"/>
+                <filter name="with_bottom_chord" string="With Bottom Chord" domain="[('is_bottom_chord', '=', True)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_structure_type" string="Structure Type" context="{'group_by': 'structure_type'}"/>
+                    <filter name="group_by_city" string="City" context="{'group_by': 'city'}"/>
+                    <filter name="group_by_create_date" string="Creation Date" context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Green Master Action -->
+    <record id="action_green_master" model="ir.actions.act_window">
+        <field name="name">Greenhouse Projects</field>
+        <field name="res_model">green.master</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_draft': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Greenhouse Project!
+            </p>
+            <p>
+                Configure structure parameters, calculate components automatically, 
+                and manage your greenhouse projects with ease.
+            </p>
+        </field>
+    </record>
+
+</odoo>

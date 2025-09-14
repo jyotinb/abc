@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="wall_thickness_1_0mm" model="pipe.wall_thickness">
+        <field name="name">1.0mm</field>
+        <field name="thickness_in_mm">1.0</field>
+    </record>
+    
+    <record id="wall_thickness_1_2mm" model="pipe.wall_thickness">
+        <field name="name">1.2mm</field>
+        <field name="thickness_in_mm">1.2</field>
+    </record>
+    
+    <record id="wall_thickness_1_5mm" model="pipe.wall_thickness">
+        <field name="name">1.5mm</field>
+        <field name="thickness_in_mm">1.5</field>
+    </record>
+    
+    <record id="wall_thickness_1_6mm" model="pipe.wall_thickness">
+        <field name="name">1.6mm</field>
+        <field name="thickness_in_mm">1.6</field>
+    </record>
+    
+    <record id="wall_thickness_1_8mm" model="pipe.wall_thickness">
+        <field name="name">1.8mm</field>
+        <field name="thickness_in_mm">1.8</field>
+    </record>
+    
+    <record id="wall_thickness_2_0mm" model="pipe.wall_thickness">
+        <field name="name">2.0mm</field>
+        <field name="thickness_in_mm">2.0</field>
+    </record>
+    
+    <record id="wall_thickness_2_3mm" model="pipe.wall_thickness">
+        <field name="name">2.3mm</field>
+        <field name="thickness_in_mm">2.3</field>
+    </record>
+    
+    <record id="wall_thickness_2_5mm" model="pipe.wall_thickness">
+        <field name="name">2.5mm</field>
+        <field name="thickness_in_mm">2.5</field>
+    </record>
+    
+    <record id="wall_thickness_2_6mm" model="pipe.wall_thickness">
+        <field name="name">2.6mm</field>
+        <field name="thickness_in_mm">2.6</field>
+    </record>
+    
+    <record id="wall_thickness_2_9mm" model="pipe.wall_thickness">
+        <field name="name">2.9mm</field>
+        <field name="thickness_in_mm">2.9</field>
+    </record>
+    
+    <record id="wall_thickness_3_0mm" model="pipe.wall_thickness">
+        <field name="name">3.0mm</field>
+        <field name="thickness_in_mm">3.0</field>
+    </record>
+    
+    <record id="wall_thickness_3_2mm" model="pipe.wall_thickness">
+        <field name="name">3.2mm</field>
+        <field name="thickness_in_mm">3.2</field>
+    </record>
+    
+    <record id="wall_thickness_3_5mm" model="pipe.wall_thickness">
+        <field name="name">3.5mm</field>
+        <field name="thickness_in_mm">3.5</field>
+    </record>
+    
+    <record id="wall_thickness_4_0mm" model="pipe.wall_thickness">
+        <field name="name">4.0mm</field>
+        <field name="thickness_in_mm">4.0</field>
+    </record>
+</odoo>

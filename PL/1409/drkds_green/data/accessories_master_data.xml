@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Brackets -->
+    <record id="bracket_gutter_arch_5mm" model="accessories.master">
+        <field name="name">Gutter Arch Bracket HDGI 5.0 MM</field>
+        <field name="category">brackets</field>
+        <field name="size_specification">5.0 MM</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="bracket_gutter_arch_half_left" model="accessories.master">
+        <field name="name">Gutter Arch Bracket HDGI Half Left</field>
+        <field name="category">brackets</field>
+        <field name="size_specification">Half</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="bracket_gutter_arch_half_right" model="accessories.master">
+        <field name="name">Gutter Arch Bracket HDGI Half Right</field>
+        <field name="category">brackets</field>
+        <field name="size_specification">Half</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="bracket_f_big" model="accessories.master">
+        <field name="name">F Bracket Big</field>
+        <field name="category">brackets</field>
+        <field name="size_specification">Big</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="bracket_f_small" model="accessories.master">
+        <field name="name">F Bracket Small</field>
+        <field name="category">brackets</field>
+        <field name="size_specification">Small</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="bracket_l_standard" model="accessories.master">
+        <field name="name">L Bracket</field>
+        <field name="category">brackets</field>
+        <field name="size_specification">Standard</field>
+        <field name="unit_price">0.0</field>
+    </record>
+
+    <!-- Wires & Connectors -->
+    <record id="wire_zigzag_14" model="accessories.master">
+        <field name="name">Zigzag Wire 1.4</field>
+        <field name="category">wires_connectors</field>
+        <field name="size_specification">1.4</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="wire_zigzag_15" model="accessories.master">
+        <field name="name">Zigzag Wire 1.5</field>
+        <field name="category">wires_connectors</field>
+        <field name="size_specification">1.5</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="wire_zigzag_16" model="accessories.master">
+        <field name="name">Zigzag Wire 1.6</field>
+        <field name="category">wires_connectors</field>
+        <field name="size_specification">1.6</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="connector_rollup_smooth" model="accessories.master">
+        <field name="name">Roll Up Connector Smooth</field>
+        <field name="category">wires_connectors</field>
+        <field name="size_specification">Standard</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="connector_rollup_handle" model="accessories.master">
+        <field name="name">Roll Up Connector Handle</field>
+        <field name="category">wires_connectors</field>
+        <field name="size_specification">Standard</field>
+        <field name="unit_price">0.0</field>
+    </record>
+
+    <!-- Clamps -->
+    <record id="clamp_25mm" model="accessories.master">
+        <field name="name">Clamps</field>
+        <field name="category">clamps</field>
+        <field name="size_specification">25mm</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="clamp_40mm" model="accessories.master">
+        <field name="name">Clamps</field>
+        <field name="category">clamps</field>
+        <field name="size_specification">40mm</field>
+        <field name="unit_price">0.0</field>
+    </record>
+    
+    <record id="clamp_50mm" model="accessories.master">
+        <field name="name">Clamps</field>
+        <field name="category">clamps</field>
+        <field name="size_specification">50mm</field>
+        <field name="unit_price">0.0</field>
+    </record>
+
+    <!-- Profiles -->
+    <record id="profile_total" model="accessories.master">
+        <field name="name">Total Profile</field>
+        <field name="category">profiles</field>
+        <field name="size_specification">meters</field>
+        <field name="unit_price">0.0</field>
+    </record>
+
+    <!-- Foundation -->
+    <record id="foundation_rods" model="accessories.master">
+        <field name="name">Foundation Rods</field>
+        <field name="category">foundation</field>
+        <field name="size_specification">Standard</field>
+        <field name="unit_price">0.0</field>
+    </record>
+</odoo>

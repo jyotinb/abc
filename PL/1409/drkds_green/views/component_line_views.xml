@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Component Line Tree View -->
+    <record id="view_component_line_tree" model="ir.ui.view">
+        <field name="name">component.line.tree</field>
+        <field name="model">component.line</field>
+        <field name="arch" type="xml">
+            <tree string="Component Lines" create="1" edit="1" delete="1" editable="bottom">
+                <field name="green_master_id"/>
+                <field name="section"/>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="nos"/>
+                <field name="length"/>
+                <field name="total_length"/>
+                <field name="pipe_id"/>
+                <field name="pipe_type"/>
+                <field name="pipe_size"/>
+                <field name="total_cost"/>
+                <field name="is_calculated" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Component Line Form View -->
+    <record id="view_component_line_form" model="ir.ui.view">
+        <field name="name">component.line.form</field>
+        <field name="model">component.line</field>
+        <field name="arch" type="xml">
+            <form string="Component Line">
+                <sheet>
+                    <group>
+                        <group string="Component Information">
+                            <field name="green_master_id"/>
+                            <field name="section"/>
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="required"/>
+                            <field name="is_calculated" readonly="1"/>
+                        </group>
+                        <group string="Quantity and Length">
+                            <field name="nos"/>
+                            <field name="use_length_master"/>
+                            <field name="length_master_id" invisible="not use_length_master"/>
+                            <field name="custom_length" invisible="use_length_master"/>
+                            <field name="length" readonly="1"/>
+                            <field name="total_length" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Pipe Selection">
+                        <field name="pipe_id"/>
+                        <field name="pipe_type" readonly="1"/>
+                        <field name="pipe_size" readonly="1"/>
+                        <field name="wall_thickness" readonly="1"/>
+                        <field name="weight_per_unit" readonly="1"/>
+                        <field name="rate_per_kg" readonly="1"/>
+                    </group>
+                    
+                    <group string="Cost Calculation">
+                        <field name="total_weight" readonly="1"/>
+                        <field name="total_cost" readonly="1"/>
+                    </group>
+                    
+                    <field name="notes" placeholder="Additional notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Component Line Search View -->
+    <record id="view_component_line_search" model="ir.ui.view">
+        <field name="name">component.line.search</field>
+        <field name="model">component.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Components">
+                <field name="name" string="Component" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="green_master_id"/>
+                <field name="section"/>
+                <field name="pipe_id"/>
+                
+                <filter name="calculated" string="Calculated" domain="[('is_calculated', '=', True)]"/>
+                <filter name="manual" string="Manual" domain="[('is_calculated', '=', False)]"/>
+                <filter name="with_pipe" string="With Pipe" domain="[('pipe_id', '!=', False)]"/>
+                <filter name="without_pipe" string="Without Pipe" domain="[('pipe_id', '=', False)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_by_section" string="Section" context="{'group_by': 'section'}"/>
+                    <filter name="group_by_project" string="Project" context="{'group_by': 'green_master_id'}"/>
+                    <filter name="group_by_pipe_type" string="Pipe Type" context="{'group_by': 'pipe_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Component Line Action -->
+    <record id="action_component_line" model="ir.actions.act_window">
+        <field name="name">All Components</field>
+        <field name="res_model">component.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_without_pipe': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No components found!
+            </p>
+            <p>
+                Components are automatically generated when you calculate a greenhouse project.
+                You can also create manual components here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

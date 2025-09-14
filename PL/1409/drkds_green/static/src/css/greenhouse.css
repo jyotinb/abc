@@ -1,0 +1,46 @@
+/* DRKDS Greenhouse Management System Styles */
+
+.greenhouse-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+}
+
+.greenhouse-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.component-section {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.cost-summary {
+    background-color: #e7f3ff;
+    border: 1px solid #b8daff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.calculated-component {
+    background-color: #d1ecf1;
+}
+
+.manual-component {
+    background-color: #fff3cd;
+}
+
+.pipe-selected {
+    background-color: #d4edda;
+}
+
+.pipe-pending {
+    background-color: #f8d7da;
+}

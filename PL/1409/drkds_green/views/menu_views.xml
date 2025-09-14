@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_greenhouse_main" 
+              name="Greenhouse Management" 
+              sequence="10"/>
+
+    <!-- Greenhouse Projects Submenu -->
+    <menuitem id="menu_greenhouse_projects" 
+              name="Greenhouse Projects" 
+              parent="menu_greenhouse_main" 
+              sequence="10"/>
+
+    <menuitem id="menu_green_master" 
+              name="Projects" 
+              parent="menu_greenhouse_projects" 
+              action="action_green_master" 
+              sequence="10"/>
+
+    <menuitem id="menu_component_line" 
+              name="All Components" 
+              parent="menu_greenhouse_projects" 
+              action="action_component_line" 
+              sequence="20"/>
+
+    <menuitem id="menu_accessories_component_line" 
+              name="All Accessories" 
+              parent="menu_greenhouse_projects" 
+              action="action_accessories_component_line" 
+              sequence="30"/>
+
+    <!-- Master Data Submenu -->
+    <menuitem id="menu_greenhouse_master_data" 
+              name="Master Data" 
+              parent="menu_greenhouse_main" 
+              sequence="20"/>
+
+    <menuitem id="menu_pipe_management" 
+              name="Pipe Catalog" 
+              parent="menu_greenhouse_master_data" 
+              action="action_pipe_management" 
+              sequence="10"/>
+
+    <menuitem id="menu_accessories_master" 
+              name="Accessories Master" 
+              parent="menu_greenhouse_master_data" 
+              action="action_accessories_master" 
+              sequence="20"/>
+
+    <menuitem id="menu_length_master" 
+              name="Length Master" 
+              parent="menu_greenhouse_master_data" 
+              action="action_length_master" 
+              sequence="30"/>
+
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_greenhouse_config" 
+              name="Configuration" 
+              parent="menu_greenhouse_main" 
+              sequence="90"/>
+
+    <menuitem id="menu_pipe_type" 
+              name="Pipe Types" 
+              parent="menu_greenhouse_config" 
+              action="action_pipe_type" 
+              sequence="10"/>
+
+    <menuitem id="menu_pipe_size" 
+              name="Pipe Sizes" 
+              parent="menu_greenhouse_config" 
+              action="action_pipe_size" 
+              sequence="20"/>
+
+    <menuitem id="menu_pipe_wall_thickness" 
+              name="Wall Thicknesses" 
+              parent="menu_greenhouse_config" 
+              action="action_pipe_wall_thickness" 
+              sequence="30"/>
+
+</odoo>

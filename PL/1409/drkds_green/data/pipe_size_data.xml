@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pipe_size_20mm" model="pipe.size">
+        <field name="name">20mm</field>
+        <field name="size_in_mm">20.0</field>
+    </record>
+    
+    <record id="pipe_size_21mm" model="pipe.size">
+        <field name="name">21mm</field>
+        <field name="size_in_mm">21.0</field>
+    </record>
+    
+    <record id="pipe_size_25mm" model="pipe.size">
+        <field name="name">25mm</field>
+        <field name="size_in_mm">25.0</field>
+    </record>
+    
+    <record id="pipe_size_27mm" model="pipe.size">
+        <field name="name">27mm</field>
+        <field name="size_in_mm">27.0</field>
+    </record>
+    
+    <record id="pipe_size_32mm" model="pipe.size">
+        <field name="name">32mm</field>
+        <field name="size_in_mm">32.0</field>
+    </record>
+    
+    <record id="pipe_size_33mm" model="pipe.size">
+        <field name="name">33mm</field>
+        <field name="size_in_mm">33.0</field>
+    </record>
+    
+    <record id="pipe_size_40mm" model="pipe.size">
+        <field name="name">40mm</field>
+        <field name="size_in_mm">40.0</field>
+    </record>
+    
+    <record id="pipe_size_42mm" model="pipe.size">
+        <field name="name">42mm</field>
+        <field name="size_in_mm">42.0</field>
+    </record>
+    
+    <record id="pipe_size_48mm" model="pipe.size">
+        <field name="name">48mm</field>
+        <field name="size_in_mm">48.0</field>
+    </record>
+    
+    <record id="pipe_size_50mm" model="pipe.size">
+        <field name="name">50mm</field>
+        <field name="size_in_mm">50.0</field>
+    </record>
+    
+    <record id="pipe_size_60mm" model="pipe.size">
+        <field name="name">60mm</field>
+        <field name="size_in_mm">60.0</field>
+    </record>
+    
+    <record id="pipe_size_76mm" model="pipe.size">
+        <field name="name">76mm</field>
+        <field name="size_in_mm">76.0</field>
+    </record>
+    
+    <record id="pipe_size_90mm" model="pipe.size">
+        <field name="name">90mm</field>
+        <field name="size_in_mm">90.0</field>
+    </record>
+    
+    <record id="pipe_size_100mm" model="pipe.size">
+        <field name="name">100mm</field>
+        <field name="size_in_mm">100.0</field>
+    </record>
+    
+    <record id="pipe_size_25x25mm" model="pipe.size">
+        <field name="name">25x25mm</field>
+        <field name="size_in_mm">25.0</field>
+    </record>
+    
+    <record id="pipe_size_40x40mm" model="pipe.size">
+        <field name="name">40x40mm</field>
+        <field name="size_in_mm">40.0</field>
+    </record>
+    
+    <record id="pipe_size_50x50mm" model="pipe.size">
+        <field name="name">50x50mm</field>
+        <field name="size_in_mm">50.0</field>
+    </record>
+    
+    <record id="pipe_size_60x60mm" model="pipe.size">
+        <field name="name">60x60mm</field>
+        <field name="size_in_mm">60.0</field>
+    </record>
+</odoo>
