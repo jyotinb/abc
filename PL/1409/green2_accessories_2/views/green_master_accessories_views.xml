@@ -87,59 +87,45 @@
                             <field name="foundation_rods_per_asc" invisible="not enable_foundation_rods"/>
                         </group>
                         
-						
-						<group string="Advanced Clamp Settings">
-							<field name="clamp_type" widget="radio"/>
-							<group string="Advanced Clamp Settings">
-    <field name="clamp_type" widget="radio"/>
-    
-    <!-- Debug button -->
-    <button name="action_debug_clamps" 
-            string="🔍 Debug Clamps" 
-            type="object" 
-            class="btn-warning"
-            invisible="clamp_type == 'none'"
-            help="Show detailed clamp calculations"/>
-    <button name="action_debug_bottom_chord" 
-        string="Debug Bottom Chord" 
-        type="object" 
-        class="btn-info"
-        help="Show all bottom chord component details"/>
-    <!-- ... rest of fields ... -->
-</group>
-							<!-- W Type Options -->
-							<group invisible="clamp_type != 'w_type'" string="W Type Configuration">
-								<group string="Big Purlin Clamps">
-									<field name="big_purlin_clamp_type_first" 
-										   widget="radio" 
-										   string=""/>
-									<field name="big_purlin_clamp_type_second" 
-										   widget="radio"
-										   string=""/>
-								</group>
-								<group string="Small Purlin Clamps">
-									<field name="small_purlin_clamp_type_first" 
-										   widget="radio"
-										   string=""/>
-									<field name="small_purlin_clamp_type_second" 
-										   widget="radio"
-										   string=""/>
-								</group>
-							</group>
-							
-							<!-- M Type Options -->
-							<group invisible="clamp_type != 'm_type'" string="M Type Configuration">
-								<field name="bottom_chord_clamp_type" 
-									   widget="radio"
-									   string="Bottom Chord Clamp Type"/>
-								
-							</group>
-						</group>
-                    
-					
-					
-					
-					</group>
+                        <group string="Advanced Clamp Settings">
+                            <field name="clamp_type" widget="radio"/>
+                            
+                            <!-- Add Details button -->
+                            <button name="action_view_clamp_details" 
+                                    string="📊 View Clamp Details" 
+                                    type="object" 
+                                    class="btn-info"
+                                    invisible="clamp_type == 'none' and not (is_side_coridoors and support_hockeys > 0)"
+                                    help="Show detailed breakdown of clamp calculations"/>
+                            
+                            <!-- W Type Options -->
+                            <group invisible="clamp_type != 'w_type'" string="W Type Configuration">
+                                <group string="Big Purlin Clamps">
+                                    <field name="big_purlin_clamp_type_first" 
+                                           widget="radio" 
+                                           string="First Type (No of Spans × 2)"/>
+                                    <field name="big_purlin_clamp_type_second" 
+                                           widget="radio"
+                                           string="Second Type (Remaining)"/>
+                                </group>
+                                <group string="Small Purlin Clamps">
+                                    <field name="small_purlin_clamp_type_first" 
+                                           widget="radio"
+                                           string="First Type (No of Spans × 2)"/>
+                                    <field name="small_purlin_clamp_type_second" 
+                                           widget="radio"
+                                           string="Second Type (Remaining)"/>
+                                </group>
+                            </group>
+                            
+                            <!-- M Type Options -->
+                            <group invisible="clamp_type != 'm_type'" string="M Type Configuration">
+                                <field name="bottom_chord_clamp_type" 
+                                       widget="radio"
+                                       string="Bottom Chord Clamp Type"/>
+                            </group>
+                        </group>
+                    </group>
                     
                     <separator string="Accessories Cost Summary"/>
                     <group col="4">
@@ -185,6 +171,11 @@
                                                 string="📊 Show Summary" 
                                                 type="object" 
                                                 class="btn btn-info btn-lg"/>
+                                        <button name="action_view_clamp_details" 
+                                                string="📊 Clamp Details" 
+                                                type="object" 
+                                                class="btn btn-secondary btn-lg"
+                                                invisible="clamp_type == 'none' and not (is_side_coridoors and support_hockeys > 0)"/>
                                     </div>
                                 </div>
                             </div>
@@ -237,11 +228,11 @@
                                 🛠️ Clamps Components
                                 <span invisible="clamp_type != 'w_type'" class="badge badge-light ml-2">W Type</span>
                                 <span invisible="clamp_type != 'm_type'" class="badge badge-light ml-2">M Type</span>
+                                <span invisible="not (is_side_coridoors and support_hockeys > 0)" class="badge badge-warning ml-2">ASC Support</span>
                             </h4>
                         </div>
                         <div class="card-body">
                             <field name="clamps_component_ids" readonly="0"/>
-                            <!-- Optional: Add computed size summary field if implemented -->
                             <div invisible="not clamps_size_summary" class="alert alert-info mt-2">
                                 <strong>Size Summary:</strong> <field name="clamps_size_summary" readonly="1" nolabel="1"/>
                             </div>
