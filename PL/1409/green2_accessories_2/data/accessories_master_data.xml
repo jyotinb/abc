@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ============== BRACKETS CATEGORY ============== -->
+        
+        <!-- Gutter Arch Brackets -->
+        <record id="gutter_arch_bracket_hdgi_5mm" model="accessories.master">
+            <field name="name">Gutter Arch Bracket HDGI 5.0 MM</field>
+            <field name="category">brackets</field>
+            <field name="sequence">10</field>
+            <field name="size_specification">5.0 MM</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="gutter_arch_bracket_hdgi_half_left" model="accessories.master">
+            <field name="name">Gutter Arch Bracket HDGI Half Left</field>
+            <field name="category">brackets</field>
+            <field name="sequence">11</field>
+            <field name="size_specification">Half</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="gutter_arch_bracket_hdgi_half_right" model="accessories.master">
+            <field name="name">Gutter Arch Bracket HDGI Half Right</field>
+            <field name="category">brackets</field>
+            <field name="sequence">12</field>
+            <field name="size_specification">Half</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <!-- F Brackets -->
+        <record id="f_bracket_big" model="accessories.master">
+            <field name="name">F Bracket Big</field>
+            <field name="category">brackets</field>
+            <field name="sequence">20</field>
+            <field name="size_specification">Big</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="f_bracket_small" model="accessories.master">
+            <field name="name">F Bracket Small</field>
+            <field name="category">brackets</field>
+            <field name="sequence">21</field>
+            <field name="size_specification">Small</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <!-- L Brackets -->
+        <record id="l_bracket_standard" model="accessories.master">
+            <field name="name">L Bracket</field>
+            <field name="category">brackets</field>
+            <field name="sequence">30</field>
+            <field name="size_specification">Standard</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <!-- ============== WIRES & CONNECTORS CATEGORY ============== -->
+        
+        <!-- Zigzag Wires -->
+        <record id="zigzag_wire_14" model="accessories.master">
+            <field name="name">Zigzag Wire 1.4</field>
+            <field name="category">wires_connectors</field>
+            <field name="sequence">10</field>
+            <field name="size_specification">1.4</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="zigzag_wire_15" model="accessories.master">
+            <field name="name">Zigzag Wire 1.5</field>
+            <field name="category">wires_connectors</field>
+            <field name="sequence">11</field>
+            <field name="size_specification">1.5</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="zigzag_wire_16" model="accessories.master">
+            <field name="name">Zigzag Wire 1.6</field>
+            <field name="category">wires_connectors</field>
+            <field name="sequence">12</field>
+            <field name="size_specification">1.6</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <!-- Roll Up Connectors -->
+        <record id="rollup_connector_smooth" model="accessories.master">
+            <field name="name">Roll Up Connector Smooth</field>
+            <field name="category">wires_connectors</field>
+            <field name="sequence">20</field>
+            <field name="size_specification">Standard</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="rollup_connector_handle" model="accessories.master">
+            <field name="name">Roll Up Connector Handle</field>
+            <field name="category">wires_connectors</field>
+            <field name="sequence">21</field>
+            <field name="size_specification">Standard</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <!-- ============== CLAMPS CATEGORY ============== -->
+        
+        <!-- Common Clamp Sizes -->
+        <record id="clamps_20mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">10</field>
+            <field name="size_specification">20mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_25mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">11</field>
+            <field name="size_specification">25mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_32mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">12</field>
+            <field name="size_specification">32mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_40mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">13</field>
+            <field name="size_specification">40mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_50mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">14</field>
+            <field name="size_specification">50mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_65mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">15</field>
+            <field name="size_specification">65mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_80mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">16</field>
+            <field name="size_specification">80mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_100mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">17</field>
+            <field name="size_specification">100mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <!-- Square Clamp Sizes -->
+        <record id="clamps_25x25mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">20</field>
+            <field name="size_specification">25x25mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_40x40mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">21</field>
+            <field name="size_specification">40x40mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_50x50mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">22</field>
+            <field name="size_specification">50x50mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        
+        <record id="clamps_60x60mm" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">23</field>
+            <field name="size_specification">60x60mm</field>
+            <field name="unit_price">0.0</field>
+        </record>
+        <!-- Total Profile -->
+<record id="total_profile_master" model="accessories.master">
+    <field name="name">Total Profile</field>
+    <field name="category">profiles</field>
+    <field name="sequence">10</field>
+    <field name="size_specification">meters</field>
+    <field name="unit_price">0.0</field>
+</record>
+        <!-- Generic clamp for unknown sizes -->
+        <record id="clamps_unknown" model="accessories.master">
+            <field name="name">Clamps</field>
+            <field name="category">clamps</field>
+            <field name="sequence">99</field>
+            <field name="size_specification">Unknown</field>
+            <field name="unit_price">0.0</field>
+        </record>
+		<!-- ============== FOUNDATION CATEGORY ============== -->
+
+<!-- Foundation Rods -->
+<record id="foundation_rods_standard" model="accessories.master">
+    <field name="name">Foundation Rods</field>
+    <field name="category">foundation</field>
+    <field name="sequence">10</field>
+    <field name="size_specification">Standard</field>
+    <field name="unit_price">0.0</field>
+</record>
+
+<!-- ============== ADVANCED CLAMPS ============== -->
+
+<!-- Full Clamps by Size -->
+<record id="clamp_full_20mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">100</field>
+    <field name="size_specification">20mm</field>
+    <field name="unit_price">5.0</field>
+</record>
+
+<record id="clamp_full_25mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">101</field>
+    <field name="size_specification">25mm</field>
+    <field name="unit_price">6.0</field>
+</record>
+
+<record id="clamp_full_32mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">102</field>
+    <field name="size_specification">32mm</field>
+    <field name="unit_price">7.0</field>
+</record>
+
+<record id="clamp_full_40mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">103</field>
+    <field name="size_specification">40mm</field>
+    <field name="unit_price">8.0</field>
+</record>
+
+<record id="clamp_full_42mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">104</field>
+    <field name="size_specification">42mm</field>
+    <field name="unit_price">8.5</field>
+</record>
+
+<record id="clamp_full_48mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">105</field>
+    <field name="size_specification">48mm</field>
+    <field name="unit_price">9.0</field>
+</record>
+
+<record id="clamp_full_50mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">106</field>
+    <field name="size_specification">50mm</field>
+    <field name="unit_price">10.0</field>
+</record>
+
+<record id="clamp_full_60mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">107</field>
+    <field name="size_specification">60mm</field>
+    <field name="unit_price">12.0</field>
+</record>
+
+<record id="clamp_full_76mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">108</field>
+    <field name="size_specification">76mm</field>
+    <field name="unit_price">15.0</field>
+</record>
+
+<record id="clamp_full_90mm" model="accessories.master">
+    <field name="name">Full Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">109</field>
+    <field name="size_specification">90mm</field>
+    <field name="unit_price">18.0</field>
+</record>
+
+<!-- Half Clamps by Size -->
+<record id="clamp_half_20mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">200</field>
+    <field name="size_specification">20mm</field>
+    <field name="unit_price">3.0</field>
+</record>
+
+<record id="clamp_half_25mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">201</field>
+    <field name="size_specification">25mm</field>
+    <field name="unit_price">3.5</field>
+</record>
+
+<record id="clamp_half_32mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">202</field>
+    <field name="size_specification">32mm</field>
+    <field name="unit_price">4.0</field>
+</record>
+
+<record id="clamp_half_40mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">203</field>
+    <field name="size_specification">40mm</field>
+    <field name="unit_price">4.5</field>
+</record>
+
+<record id="clamp_half_42mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">204</field>
+    <field name="size_specification">42mm</field>
+    <field name="unit_price">5.0</field>
+</record>
+
+<record id="clamp_half_48mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">205</field>
+    <field name="size_specification">48mm</field>
+    <field name="unit_price">5.5</field>
+</record>
+
+<record id="clamp_half_50mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">206</field>
+    <field name="size_specification">50mm</field>
+    <field name="unit_price">6.0</field>
+</record>
+
+<record id="clamp_half_60mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">207</field>
+    <field name="size_specification">60mm</field>
+    <field name="unit_price">7.0</field>
+</record>
+
+<record id="clamp_half_76mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">208</field>
+    <field name="size_specification">76mm</field>
+    <field name="unit_price">8.0</field>
+</record>
+
+<record id="clamp_half_90mm" model="accessories.master">
+    <field name="name">Half Clamp</field>
+    <field name="category">clamps</field>
+    <field name="sequence">209</field>
+    <field name="size_specification">90mm</field>
+    <field name="unit_price">10.0</field>
+</record>
+
+<!-- L Joints by Size -->
+<record id="clamp_l_joint_32mm" model="accessories.master">
+    <field name="name">L Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">300</field>
+    <field name="size_specification">32mm</field>
+    <field name="unit_price">12.0</field>
+</record>
+
+<record id="clamp_l_joint_40mm" model="accessories.master">
+    <field name="name">L Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">301</field>
+    <field name="size_specification">40mm</field>
+    <field name="unit_price">14.0</field>
+</record>
+
+<record id="clamp_l_joint_42mm" model="accessories.master">
+    <field name="name">L Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">302</field>
+    <field name="size_specification">42mm</field>
+    <field name="unit_price">15.0</field>
+</record>
+
+<record id="clamp_l_joint_48mm" model="accessories.master">
+    <field name="name">L Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">303</field>
+    <field name="size_specification">48mm</field>
+    <field name="unit_price">16.0</field>
+</record>
+
+<record id="clamp_l_joint_50mm" model="accessories.master">
+    <field name="name">L Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">304</field>
+    <field name="size_specification">50mm</field>
+    <field name="unit_price">18.0</field>
+</record>
+
+<!-- T Joints by Size -->
+<record id="clamp_t_joint_32mm" model="accessories.master">
+    <field name="name">T Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">400</field>
+    <field name="size_specification">32mm</field>
+    <field name="unit_price">15.0</field>
+</record>
+
+<record id="clamp_t_joint_40mm" model="accessories.master">
+    <field name="name">T Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">401</field>
+    <field name="size_specification">40mm</field>
+    <field name="unit_price">17.0</field>
+</record>
+
+<record id="clamp_t_joint_42mm" model="accessories.master">
+    <field name="name">T Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">402</field>
+    <field name="size_specification">42mm</field>
+    <field name="unit_price">18.0</field>
+</record>
+
+<record id="clamp_t_joint_48mm" model="accessories.master">
+    <field name="name">T Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">403</field>
+    <field name="size_specification">48mm</field>
+    <field name="unit_price">20.0</field>
+</record>
+
+<record id="clamp_t_joint_50mm" model="accessories.master">
+    <field name="name">T Joint</field>
+    <field name="category">clamps</field>
+    <field name="sequence">404</field>
+    <field name="size_specification">50mm</field>
+    <field name="unit_price">22.0</field>
+</record>
+        
+    </data>
+</odoo>
