@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_accessories_master,accessories.master,model_accessories_master,base.group_user,1,1,1,1
+access_accessories_component_line,accessories.component.line,model_accessories_component_line,base.group_user,1,1,1,1
+access_clamp_calculation_detail,clamp.calculation.detail,model_clamp_calculation_detail,base.group_user,1,1,1,1
+access_clamp_calculation_detail_line,clamp.calculation.detail.line,model_clamp_calculation_detail_line,base.group_user,1,1,1,1
