@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Clamp Calculation Detail Form View -->
+    <record id="view_clamp_calculation_detail_form" model="ir.ui.view">
+        <field name="name">clamp.calculation.detail.form</field>
+        <field name="model">clamp.calculation.detail</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_export_excel" 
+                            string="📥 Export to Excel" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="not calculation_line_ids"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="green_master_display" readonly="1" nolabel="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group col="4">
+                        <field name="calculation_date" readonly="1" string="Calculation Date"/>
+                        <newline/>
+                        <field name="total_quantity" readonly="1" string="Total Quantity"/>
+                        <field name="total_cost" readonly="1" widget="monetary" string="Total Cost"/>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Calculation Details">
+                            <field name="calculation_line_ids" nolabel="1" readonly="1" mode="tree">
+                                <tree create="false" edit="false" delete="false"
+                                      decoration-info="clamp_type == 'Info'" 
+                                      decoration-warning="category and 'BORDER' in category"
+                                      decoration-success="category and 'ARCH MIDDLE' in category">
+                                    <field name="sequence" column_invisible="1"/>
+                                    <field name="category" string="Category"/>
+                                    <field name="component" string="Component"/>
+                                    <field name="clamp_type" string="Clamp Type"/>
+                                    <field name="size" string="Size"/>
+                                    <field name="quantity" string="Quantity" sum="Total"/>
+                                    <field name="formula" string="Formula"/>
+                                    <field name="unit_price" string="Unit Price" widget="monetary" optional="hide"/>
+                                    <field name="total_cost" string="Total Cost" widget="monetary" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Summary by Size">
+                            
+                                    <field name="summary_by_size" nolabel="1" widget="html" readonly="1"/>
+                                
+                        </page>
+                        
+                        <page string="Summary by Type">
+                            
+                                    <field name="summary_by_type" nolabel="1" widget="html" readonly="1"/>
+                                
+                        </page>
+                    </notebook>
+                    
+                    <div class="alert alert-warning" role="alert" style="margin-top: 20px;">
+                        <strong>Note:</strong> This is a temporary calculation view. Data is not stored permanently.
+                        Use "Export to Excel" to save the calculations.
+                    </div>
+                    
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_clamp_calculation_detail" model="ir.actions.act_window">
+        <field name="name">Clamp Calculation Details</field>
+        <field name="res_model">clamp.calculation.detail</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_clamp_calculation_detail_form"/>
+        <field name="target">new</field>
+        <field name="context">{'default_green_master_id': active_id, 'dialog_size': 'extra-large'}</field>
+    </record>
+
+</odoo>

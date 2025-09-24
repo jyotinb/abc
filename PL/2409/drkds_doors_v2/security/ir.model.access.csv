@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_green_master_doors,green.master.doors,green2.model_green_master,base.group_user,1,1,1,1
+access_component_line_doors,component.line.doors,green2.model_component_line,base.group_user,1,1,1,1
+access_length_master_doors,length.master.doors,green2.model_length_master,base.group_user,1,1,1,1
+access_length_field_option_doors,length.field.option.doors,green2.model_length_field_option,base.group_user,1,1,1,1

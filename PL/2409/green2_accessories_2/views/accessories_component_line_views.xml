@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Accessories Component Line Tree View (Excel-Style) -->
+    <record id="view_accessories_component_line_tree" model="ir.ui.view">
+        <field name="name">accessories.component.line.tree</field>
+        <field name="model">accessories.component.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" decoration-info="is_calculated==True" decoration-muted="nos==0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="nos" sum="Total"/>
+                
+                <!-- Size Configuration -->
+                <field name="auto_detected_size" readonly="1" optional="hide"/>
+                <field name="size_override" widget="boolean_toggle" optional="hide"/>
+                <field name="manual_size" invisible="not size_override" placeholder="Enter manual size"/>
+                <field name="size_specification" readonly="1"/>
+                
+                <!-- Pricing -->
+                <field name="accessories_master_id" options="{'no_create_edit': True}" placeholder="Select Accessory Type"/>
+                <field name="unit_price" widget="monetary"/>
+                
+                <!-- Calculations -->
+                <field name="total_cost" readonly="1" sum="Total" widget="monetary"/>
+                
+                <!-- Notes -->
+                <field name="notes" placeholder="Add notes"/>
+                
+                <!-- Hidden fields -->
+                <field name="section" column_invisible="1"/>
+                <field name="is_calculated" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Accessories Component Line Form View -->
+    <record id="view_accessories_component_line_form" model="ir.ui.view">
+        <field name="name">accessories.component.line.form</field>
+        <field name="model">accessories.component.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="is_calculated" invisible="1"/>
+                    <div class="alert alert-info" role="alert" invisible="not is_calculated">
+                        <strong>🤖 Auto-Generated Accessory</strong><br/>
+                        This accessory was automatically calculated. You can modify pricing and specifications.
+                    </div>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Component Details">
+                            <field name="name"/>
+                            <field name="section"/>
+                            <field name="sequence"/>
+                            <field name="nos"/>
+                            <field name="description"/>
+                        </group>
+                        
+                        <group string="Accessory Type">
+                            <field name="accessories_master_id" options="{'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Size Configuration">
+                        <group>
+                            <field name="auto_detected_size" readonly="1"/>
+                            <field name="size_override" widget="boolean_toggle"/>
+                            <field name="manual_size" invisible="not size_override"/>
+                            <field name="size_specification" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Pricing">
+                        <group>
+                            <field name="unit_price" widget="monetary"/>
+                            <field name="total_cost" readonly="1" widget="monetary"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Additional Information">
+                        <field name="notes" placeholder="Add any special notes or requirements"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Accessories Component Line Search View -->
+    <record id="view_accessories_component_line_search" model="ir.ui.view">
+        <field name="name">accessories.component.line.search</field>
+        <field name="model">accessories.component.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="section"/>
+                <field name="accessories_master_id"/>
+                <field name="size_specification"/>
+                
+                <filter string="Auto Calculated" name="calculated" domain="[('is_calculated', '=', True)]"/>
+                <filter string="Manual" name="manual" domain="[('is_calculated', '=', False)]"/>
+                <separator/>
+                <filter string="With Accessories Type" name="with_master" domain="[('accessories_master_id', '!=', False)]"/>
+                <filter string="Without Accessories Type" name="without_master" domain="[('accessories_master_id', '=', False)]"/>
+                <separator/>
+                <filter string="Brackets" name="brackets" domain="[('section', '=', 'brackets')]"/>
+                <filter string="Wires &amp; Connectors" name="wires_connectors" domain="[('section', '=', 'wires_connectors')]"/>
+                <filter string="Clamps" name="clamps" domain="[('section', '=', 'clamps')]"/>
+                <separator/>
+                <filter string="Size Override" name="size_override" domain="[('size_override', '=', True)]"/>
+                
+                <group string="Group By">
+                    <filter string="Section" name="group_by_section" context="{'group_by': 'section'}"/>
+                    <filter string="Accessory Type" name="group_by_master" context="{'group_by': 'accessories_master_id'}"/>
+                    <filter string="Calculated" name="group_by_calculated" context="{'group_by': 'is_calculated'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_accessories_component_line" model="ir.actions.act_window">
+        <field name="name">Accessories Components</field>
+        <field name="res_model">accessories.component.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_section': 1}</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_accessories_components" 
+              name="All Accessories" 
+              parent="green2.menu_greenhouse_management" 
+              action="action_accessories_component_line" 
+              sequence="16"/>
+
+</odoo>
