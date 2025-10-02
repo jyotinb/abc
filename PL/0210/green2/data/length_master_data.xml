@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Create Length Field Options with Exact Project Form Strings -->
+        <record id="field_option_support_hockeys" model="length.field.option">
+            <field name="name">length_support_hockeys</field>
+            <field name="display_name">Length for Support Hockey</field>
+        </record>
+        
+        <record id="field_option_v_support_bottom_chord" model="length.field.option">
+            <field name="name">length_v_support_bottom_chord_frame</field>
+            <field name="display_name">Length for V Support Bottom Chord</field>
+        </record>
+        
+        <record id="field_option_arch_support_big" model="length.field.option">
+            <field name="name">length_arch_support_big</field>
+            <field name="display_name">Length for Arch Support Big for Big Arch</field>
+        </record>
+        
+        <record id="field_option_arch_support_big_small" model="length.field.option">
+            <field name="name">length_arch_support_big_small</field>
+            <field name="display_name">Length for Arch Support Big for Small Arch</field>
+        </record>
+        
+        <record id="field_option_arch_support_small_big_arch" model="length.field.option">
+            <field name="name">length_arch_support_small_big_arch</field>
+            <field name="display_name">Length for Arch Support Small for Big Arch</field>
+        </record>
+        
+        <record id="field_option_arch_support_small_small_arch" model="length.field.option">
+            <field name="name">length_arch_support_small_small_arch</field>
+            <field name="display_name">Length for Arch Support Small for Small Arch</field>
+        </record>
+        
+        <record id="field_option_vent_big_arch" model="length.field.option">
+            <field name="name">length_vent_big_arch_support</field>
+            <field name="display_name">Length for Vent Support for Big Arch</field>
+        </record>
+        
+        <record id="field_option_vent_small_arch" model="length.field.option">
+            <field name="name">length_vent_small_arch_support</field>
+            <field name="display_name">Length for Vent Support for Small Arch</field>
+        </record>
+        
+        <record id="field_option_screen_joiner" model="length.field.option">
+            <field name="name">length_side_screen_roll_up_pipe_joiner</field>
+            <field name="display_name">Length for Side Screen Roll Up Pipe Joiner</field>
+        </record>
+        
+        <record id="field_option_screen_guard" model="length.field.option">
+            <field name="name">length_side_screen_guard</field>
+            <field name="display_name">Length for Side Screen Guard</field>
+        </record>
+        
+        <record id="field_option_front_back_bracing" model="length.field.option">
+            <field name="name">length_front_back_c_c_cross_bracing_x</field>
+            <field name="display_name">Length for Front Back Column to Column Cross Bracing X</field>
+        </record>
+        
+        <record id="field_option_middle_bracing" model="length.field.option">
+            <field name="name">length_middle_c_c_cross_bracing_x</field>
+            <field name="display_name">Length for Internal CC Cross Bracing X</field>
+        </record>
+        
+        <record id="field_option_column_arch_bracing" model="length.field.option">
+            <field name="name">length_cross_bracing_column_arch</field>
+            <field name="display_name">Length for Cross Bracing Column Arch</field>
+        </record>
+        
+        <record id="field_option_column_bottom_bracing" model="length.field.option">
+            <field name="name">length_cross_bracing_column_bottom</field>
+            <field name="display_name">Length for Cross Bracing Column Bottom</field>
+        </record>
+        
+        <record id="field_option_guard_spacer" model="length.field.option">
+            <field name="name">length_side_screen_guard_spacer</field>
+            <field name="display_name">Length for Side Screen Guard Spacer</field>
+        </record>
+        
+        <record id="field_option_guard_box_h_pipe" model="length.field.option">
+            <field name="name">length_side_screen_guard_box_h_pipe</field>
+            <field name="display_name">Length for Side Screen Guard Box H Pipe</field>
+        </record>
+
+        <!-- Additional field options from CSV data -->
+        <record id="field_option_arch_middle_purlin_big" model="length.field.option">
+            <field name="name">length_arch_middle_purlin_big_arch</field>
+            <field name="display_name">Length for Arch Middle Purlin Big Arch</field>
+        </record>
+
+        <record id="field_option_arch_middle_purlin_small" model="length.field.option">
+            <field name="name">length_arch_middle_purlin_small_arch</field>
+            <field name="display_name">Length for Arch Middle Purlin Small Arch</field>
+        </record>
+
+        <record id="field_option_gutter_ippf_full" model="length.field.option">
+            <field name="name">length_gutter_ippf_full</field>
+            <field name="display_name">Length for Gutter IPPF Full</field>
+        </record>
+
+        <record id="field_option_gutter_ippf_drainage_ext" model="length.field.option">
+            <field name="name">length_gutter_ippf_drainage_extension</field>
+            <field name="display_name">Length for Gutter IPPF Drainage Extension</field>
+        </record>
+
+        <record id="field_option_gutter_funnel_ippf" model="length.field.option">
+            <field name="name">length_gutter_funnel_ippf</field>
+            <field name="display_name">Length for Gutter Funnel IPPF</field>
+        </record>
+
+        <record id="field_option_gutter_end_cap" model="length.field.option">
+            <field name="name">length_gutter_end_cap</field>
+            <field name="display_name">Length for Gutter End Cap</field>
+        </record>
+
+        <record id="field_option_chamber_column" model="length.field.option">
+            <field name="name">length_chamber_column</field>
+            <field name="display_name">Chamber Column Length</field>
+        </record>
+
+        <record id="field_option_door_column_pipe" model="length.field.option">
+            <field name="name">length_door_column_pipe</field>
+            <field name="display_name">Length for Door Column Pipe</field>
+        </record>
+
+        <record id="field_option_door_purlin_pipe" model="length.field.option">
+            <field name="name">length_door_purlin_pipe</field>
+            <field name="display_name">Length for Door Purlin Pipe</field>
+        </record>
+
+        <record id="field_option_tractor_door_h_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_h_pipes</field>
+            <field name="display_name">Length for Tractor Door H Pipes</field>
+        </record>
+
+        <record id="field_option_tractor_door_v_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_v_pipes</field>
+            <field name="display_name">Length for Tractor Door V Pipes</field>
+        </record>
+
+        <record id="field_option_tractor_door_big_h_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_big_h_pipes</field>
+            <field name="display_name">Length for Tractor Door Big H Pipes</field>
+        </record>
+
+        <record id="field_option_tractor_door_purlin" model="length.field.option">
+            <field name="name">length_tractor_door_purlin</field>
+            <field name="display_name">Length for Tractor Door Purlin</field>
+        </record>
+        
+        <!-- Create Length Master Records from CSV Data - Merged to avoid duplicates -->
+        
+        <!-- 0.10m lengths -->
+        <record id="length_010" model="length.master">
+            <field name="length_value">0.10</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_guard_spacer'))]"/>
+        </record>
+        
+        <!-- 0.20m lengths -->
+        <record id="length_020" model="length.master">
+            <field name="length_value">0.20</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_guard_spacer'))]"/>
+        </record>
+        
+        <!-- 0.30m lengths -->
+        <record id="length_030" model="length.master">
+            <field name="length_value">0.30</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_joiner')), (4, ref('field_option_guard_spacer'))]"/>
+        </record>
+        
+        <!-- 0.40m lengths -->
+        <record id="length_040" model="length.master">
+            <field name="length_value">0.40</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_joiner'))]"/>
+        </record>
+        
+        <!-- 0.50m lengths -->
+        <record id="length_050" model="length.master">
+            <field name="length_value">0.50</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_joiner'))]"/>
+        </record>
+        
+        <!-- 0.60m lengths -->
+        <record id="length_060" model="length.master">
+            <field name="length_value">0.60</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_vent_big_arch'))]"/>
+        </record>
+        
+        <!-- 0.70m lengths -->
+        <record id="length_070" model="length.master">
+            <field name="length_value">0.70</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_vent_big_arch')), (4, ref('field_option_screen_joiner'))]"/>
+        </record>
+        
+        <!-- 0.80m lengths -->
+        <record id="length_080" model="length.master">
+            <field name="length_value">0.80</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_support_hockeys')), (4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_vent_big_arch'))]"/>
+        </record>
+        
+        <!-- 0.90m lengths -->
+        <record id="length_090" model="length.master">
+            <field name="length_value">0.90</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_small_small_arch')), (4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_vent_big_arch'))]"/>
+        </record>
+        
+        <!-- 1.00m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_100" model="length.master">
+            <field name="length_value">1.00</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big')), (4, ref('field_option_arch_support_small_big_arch')), (4, ref('field_option_arch_support_small_small_arch')), (4, ref('field_option_guard_box_h_pipe')), (4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_vent_big_arch')), (4, ref('field_option_screen_guard'))]"/>
+        </record>
+        
+        <!-- 1.10m lengths -->
+        <record id="length_110" model="length.master">
+            <field name="length_value">1.10</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_small_big_arch')), (4, ref('field_option_arch_support_small_small_arch'))]"/>
+        </record>
+        
+        <!-- 1.20m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_120" model="length.master">
+            <field name="length_value">1.20</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big')), (4, ref('field_option_arch_support_big_small')), (4, ref('field_option_arch_support_small_big_arch')), (4, ref('field_option_arch_support_small_small_arch')), (4, ref('field_option_guard_box_h_pipe')), (4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_vent_small_arch')), (4, ref('field_option_screen_guard'))]"/>
+        </record>
+        
+        <!-- 1.30m lengths -->
+        <record id="length_130" model="length.master">
+            <field name="length_value">1.30</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big'))]"/>
+        </record>
+        
+        <!-- 1.40m lengths -->
+        <record id="length_140" model="length.master">
+            <field name="length_value">1.40</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big')), (4, ref('field_option_arch_support_small_big_arch')), (4, ref('field_option_arch_support_small_small_arch')), (4, ref('field_option_guard_box_h_pipe')), (4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_vent_small_arch'))]"/>
+        </record>
+        
+        <!-- 1.50m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_150" model="length.master">
+            <field name="length_value">1.50</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_arch_support_big')), (4, ref('field_option_support_hockeys'))]"/>
+        </record>
+        
+        <!-- 1.60m lengths -->
+        <record id="length_160" model="length.master">
+            <field name="length_value">1.60</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big')), (4, ref('field_option_screen_guard')), (4, ref('field_option_vent_small_arch'))]"/>
+        </record>
+        
+        <!-- 1.70m lengths -->
+        <record id="length_170" model="length.master">
+            <field name="length_value">1.70</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_guard'))]"/>
+        </record>
+        
+        <!-- 1.80m lengths -->
+        <record id="length_180" model="length.master">
+            <field name="length_value">1.80</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_screen_guard'))]"/>
+        </record>
+        
+        <!-- 2.00m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_200" model="length.master">
+            <field name="length_value">2.00</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_v_support_bottom_chord')), (4, ref('field_option_column_arch_bracing')), (4, ref('field_option_column_bottom_bracing')), (4, ref('field_option_front_back_bracing')), (4, ref('field_option_middle_bracing')), (4, ref('field_option_support_hockeys')), (4, ref('field_option_tractor_door_h_pipes')), (4, ref('field_option_arch_support_big'))]"/>
+        </record>
+        
+        <!-- 2.20m lengths -->
+        <record id="length_220" model="length.master">
+            <field name="length_value">2.20</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_column_arch_bracing')), (4, ref('field_option_column_bottom_bracing')), (4, ref('field_option_front_back_bracing')), (4, ref('field_option_middle_bracing'))]"/>
+        </record>
+        
+        <!-- 2.50m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_250" model="length.master">
+            <field name="length_value">2.50</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_arch_support_big')), (4, ref('field_option_front_back_bracing')), (4, ref('field_option_middle_bracing')), (4, ref('field_option_column_arch_bracing')), (4, ref('field_option_chamber_column')), (4, ref('field_option_tractor_door_h_pipes')), (4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+        <!-- 2.80m lengths -->
+        <record id="length_280" model="length.master">
+            <field name="length_value">2.80</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_front_back_bracing')), (4, ref('field_option_middle_bracing'))]"/>
+        </record>
+        
+        <!-- 3.00m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_300" model="length.master">
+            <field name="length_value">3.00</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_v_pipes')), (4, ref('field_option_arch_support_big')), (4, ref('field_option_chamber_column')), (4, ref('field_option_door_column_pipe')), (4, ref('field_option_tractor_door_h_pipes'))]"/>
+        </record>
+        
+        <!-- 3.50m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_350" model="length.master">
+            <field name="length_value">3.50</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_door_column_pipe')), (4, ref('field_option_chamber_column')), (4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+        <!-- 4.00m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_400" model="length.master">
+            <field name="length_value">4.00</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_big_h_pipes')), (4, ref('field_option_door_column_pipe')), (4, ref('field_option_door_purlin_pipe')), (4, ref('field_option_chamber_column')), (4, ref('field_option_tractor_door_purlin')), (4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+        <!-- 4.50m lengths -->
+        <record id="length_450" model="length.master">
+            <field name="length_value">4.50</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_chamber_column'))]"/>
+        </record>
+        
+        <!-- 5.00m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_500" model="length.master">
+            <field name="length_value">5.00</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_big_h_pipes')), (4, ref('field_option_tractor_door_purlin')), (4, ref('field_option_door_purlin_pipe'))]"/>
+        </record>
+        
+        <!-- 6.00m lengths - MERGED ALL DUPLICATES -->
+        <record id="length_600" model="length.master">
+            <field name="length_value">6.00</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_big_h_pipes')), (4, ref('field_option_door_purlin_pipe')), (4, ref('field_option_tractor_door_purlin'))]"/>
+        </record>
+
+    </data>
+</odoo>
