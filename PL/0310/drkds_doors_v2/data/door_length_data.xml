@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Door Length Field Options - UPDATED specifications -->
+        <record id="field_option_column_pipe" model="length.field.option">
+            <field name="name">length_column_pipe</field>
+            <field name="display_name">Length for Door Column Pipe</field>
+        </record>
+        
+        <record id="field_option_purlin_pipe" model="length.field.option">
+            <field name="name">length_purlin_pipe</field>
+            <field name="display_name">Length for Door Purlin Pipe</field>
+        </record>
+        
+        <record id="field_option_chamber_column" model="length.field.option">
+            <field name="name">length_chamber_column</field>
+            <field name="display_name">Chamber Column Length</field>
+        </record>
+        
+        <!-- Tractor Door Length Field Options -->
+        <record id="field_option_tractor_door_purlin" model="length.field.option">
+            <field name="name">length_tractor_door_purlin</field>
+            <field name="display_name">Length for Tractor Door Purlin</field>
+        </record>
+        
+        <record id="field_option_tractor_door_h_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_h_pipes</field>
+            <field name="display_name">Length for Tractor Door H Pipes</field>
+        </record>
+        
+        <record id="field_option_tractor_door_big_h_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_big_h_pipes</field>
+            <field name="display_name">Length for Tractor Door Big H Pipes</field>
+        </record>
+        
+        <record id="field_option_tractor_door_v_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_v_pipes</field>
+            <field name="display_name">Length for Tractor Door V Pipes</field>
+        </record>
+        
+        <!-- Door Length Master Records - NEW values -->
+        
+        <!-- Column Pipe Length Options -->
+        <record id="length_column_pipe_standard" model="length.master">
+            <field name="length_value">3.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_column_pipe'))]"/>
+        </record>
+        
+        <record id="length_column_pipe_short" model="length.master">
+            <field name="length_value">3.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_column_pipe'))]"/>
+        </record>
+        
+        <record id="length_column_pipe_long" model="length.master">
+            <field name="length_value">4.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_column_pipe'))]"/>
+        </record>
+        
+        <!-- Purlin Pipe Length Options (typically matches bay width, but flexible) -->
+        <record id="length_purlin_pipe_4m" model="length.master">
+            <field name="length_value">4.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_purlin_pipe'))]"/>
+        </record>
+        
+        <record id="length_purlin_pipe_5m" model="length.master">
+            <field name="length_value">5.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_purlin_pipe'))]"/>
+        </record>
+        
+        <record id="length_purlin_pipe_6m" model="length.master">
+            <field name="length_value">6.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_purlin_pipe'))]"/>
+        </record>
+        
+        <!-- Chamber Column Length Options (user selectable) -->
+        <record id="length_chamber_column_2_5m" model="length.master">
+            <field name="length_value">2.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_chamber_column'))]"/>
+        </record>
+        
+        <record id="length_chamber_column_3m" model="length.master">
+            <field name="length_value">3.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_chamber_column'))]"/>
+        </record>
+        
+        <record id="length_chamber_column_3_5m" model="length.master">
+            <field name="length_value">3.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_chamber_column'))]"/>
+        </record>
+        
+        <record id="length_chamber_column_4m" model="length.master">
+            <field name="length_value">4.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_chamber_column'))]"/>
+        </record>
+        
+        <record id="length_chamber_column_4_5m" model="length.master">
+            <field name="length_value">4.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_chamber_column'))]"/>
+        </record>
+        
+        <!-- Tractor Door Length Master Records -->
+        
+        <!-- Tractor Door Purlin Length Options (typically Bay Width) -->
+        <record id="length_tractor_door_purlin_4m" model="length.master">
+            <field name="length_value">4.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_purlin'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_purlin_5m" model="length.master">
+            <field name="length_value">5.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_purlin'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_purlin_6m" model="length.master">
+            <field name="length_value">6.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_purlin'))]"/>
+        </record>
+        
+        <!-- Tractor Door H Pipes Length Options (typically Bay Width / 2) -->
+        <record id="length_tractor_door_h_pipes_2m" model="length.master">
+            <field name="length_value">2.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_h_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_h_pipes_2_5m" model="length.master">
+            <field name="length_value">2.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_h_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_h_pipes_3m" model="length.master">
+            <field name="length_value">3.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_h_pipes'))]"/>
+        </record>
+        
+        <!-- Tractor Door Big H Pipes Length Options (typically Bay Width) -->
+        <record id="length_tractor_door_big_h_pipes_4m" model="length.master">
+            <field name="length_value">4.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_big_h_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_big_h_pipes_5m" model="length.master">
+            <field name="length_value">5.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_big_h_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_big_h_pipes_6m" model="length.master">
+            <field name="length_value">6.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_big_h_pipes'))]"/>
+        </record>
+        
+        <!-- Tractor Door V Pipes Length Options (Tractor Door Height) -->
+        <record id="length_tractor_door_v_pipes_2_5m" model="length.master">
+            <field name="length_value">2.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_v_pipes_3m" model="length.master">
+            <field name="length_value">3.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_v_pipes_3_5m" model="length.master">
+            <field name="length_value">3.5</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+        <record id="length_tractor_door_v_pipes_4m" model="length.master">
+            <field name="length_value">4.0</field>
+            <field name="available_for_fields" eval="[(4, ref('field_option_tractor_door_v_pipes'))]"/>
+        </record>
+        
+    </data>
+</odoo>

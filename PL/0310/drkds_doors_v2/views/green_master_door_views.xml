@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Cross-checked with Green2's green_master_views.xml -->
+    <record id="view_green_master_form_doors_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.doors.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Door Configuration to Lower Section Configuration page -->
+            <!-- Based on Green2's exact page structure -->
+            <xpath expr="//page[position()=last()-1]" position="before">
+
+                <page name="doors_chambers" string="Doors &amp; Chambers">
+                    <group>
+                        <group string="Door Configuration">
+                            <field name="has_doors" widget="boolean_toggle"/>
+                            <field name="standalone_doors_count" invisible="not has_doors"/>
+                            <field name="entry_chambers_count" invisible="not has_doors"/>
+                        </group>
+                        <group string="Chamber Settings" invisible="not has_doors">
+                            <field name="chamber_depth"/>
+                            <field name="chamber_column_length"/>
+                        </group>
+                        <group string="Tractor Door Configuration" invisible="not has_doors">
+                            <field name="tractor_door_type" widget="radio"/>
+                            <field name="nos_tractor_doors" invisible="tractor_door_type == 'none'"/>
+                            <field name="tractor_door_height" invisible="tractor_door_type == 'none'"/>
+                        </group>
+                        <group string="Door Component Length Settings" invisible="not has_doors">
+                            <field name="length_column_pipe"/>
+                            <field name="length_purlin_pipe"/>
+                        </group>
+                        <group string="Tractor Door Length Settings" invisible="tractor_door_type == 'none'">
+                            <field name="length_tractor_door_purlin"/>
+                            <field name="length_tractor_door_h_pipes"/>
+                            <field name="length_tractor_door_big_h_pipes"/>
+                            <field name="length_tractor_door_v_pipes"/>
+                        </group>
+                        <group string="Calculated Totals" invisible="not has_doors">
+                            <field name="total_door_components" readonly="1"/>
+                            <field name="total_chamber_components" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <div invisible="not has_doors">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Door Component Specifications:</strong><br/>
+                            <strong>Standalone Doors (X):</strong><br/>
+                            • Door Column Pipe: 1 piece × 3.5m (or selected length)<br/>
+                            • Door Purlin Pipe: 1 piece × Bay Width<br/><br/>
+                            <strong>Entry Chambers (Y):</strong><br/>
+                            • Door Front Column: 3 pieces × Selected Length<br/>
+                            • Door Front Purlin: 1 piece × Bay Width<br/>
+                            • Door Side Purlin: 2 pieces × Chamber Depth<br/>
+                            • Door Bottom Purlin: 2 pieces × (Chamber Depth + 0.25)<br/><br/>
+                            <strong>Tractor Doors (Vertical):</strong><br/>
+                            • Tractor Door Purlin: 1 piece × Bay Width<br/>
+                            • Tractor Door H Pipes: 2 pieces × (Bay Width / 2)<br/>
+                            • Tractor Door Big H Pipes: 2 pieces × Bay Width<br/>
+                            • Tractor Door V Pipes: 3 pieces × Tractor Door Height<br/><br/>
+                            <strong>Tractor Doors (Openable):</strong><br/>
+                            • Tractor Door Purlin: 1 piece × Bay Width<br/>
+                            • Tractor Door H Pipes: 6 pieces × (Bay Width / 2)<br/>
+                            • Tractor Door V Pipes: 4 pieces × Tractor Door Height<br/><br/>
+                            <strong>Formula:</strong> Door Components = X + Y | Chamber Components = Y
+                        </div>
+                    </div>
+                    
+                    <separator string="Door Component Details" invisible="not has_doors"/>
+                    <field name="door_component_ids" invisible="not has_doors" 
+                           context="{'default_section': 'doors'}"/>
+                    
+                    <group invisible="not has_doors">
+                        <field name="total_door_cost" readonly="1" widget="monetary"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add door components to Component Management - Based on Green2's structure -->
+            <xpath expr="//div[contains(@class, 'card') and .//h4[contains(text(), 'Lower Section')]]" position="after">
+                <div class="card mb-4" invisible="not has_doors">
+                    <div class="card-header bg-secondary text-white">
+                        <h4 class="mb-0">🚪 Door &amp; Chamber Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="door_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-dark">Door Total: <field name="total_door_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Update PROJECT TOTAL to include doors - Based on Green2's structure -->
+            <xpath expr="//field[@name='grand_total_cost']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Add door cost to Green2's tree view -->
+    <record id="view_green_master_tree_doors_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.doors.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            
+            <field name="grand_total_cost" position="after">
+                <field name="total_door_cost" optional="hide" sum="Total Door Cost"/>
+            </field>
+            
+        </field>
+    </record>
+    
+</odoo>
