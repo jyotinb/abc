@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add bracket configuration -->
+    <record id="view_green_master_form_brackets_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.brackets.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add bracket configuration to Accessories Management page -->
+            <!-- Using position based xpath instead of string attribute -->
+            <xpath expr="//page[last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Bracket Configuration Section -->
+                <group string="Bracket Configuration" col="4">
+                    <group string="Gutter Brackets">
+                        <field name="gutter_bracket_type" widget="radio"/>
+                        <div invisible="gutter_bracket_type != 'f_bracket'" class="text-muted">
+                            <span>Big Arch Count: </span><field name="f_bracket_big_count" readonly="1" class="oe_inline"/>
+                            <br/>
+                            <span>Small Arch Count: </span><field name="f_bracket_small_count" readonly="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                    <group string="Column Brackets">
+                        <field name="column_bracket_type" widget="radio"/>
+                        <div invisible="column_bracket_type != 'l_bracket'" class="text-muted">
+                            L Brackets will be calculated as 2 per middle column
+                        </div>
+                        <div invisible="column_bracket_type != 'clamps'" class="text-muted">
+                            Column clamps will be auto-sized based on pipe configuration
+                        </div>
+                    </group>
+                </group>
+                
+                <group>
+                    <button name="action_calculate_brackets" 
+                            string="🔧 Calculate Brackets Only" 
+                            type="object" 
+                            class="btn-info"
+                            help="Calculate only bracket components"/>
+                </group>
+                
+                <separator string="Bracket Calculation Logic" invisible="gutter_bracket_type == 'none' and column_bracket_type == 'none'"/>
+                <div invisible="gutter_bracket_type == 'none' and column_bracket_type == 'none'" class="alert alert-warning">
+                    <h5>ℹ️ Bracket Calculation Information</h5>
+                    <ul>
+                        <li invisible="gutter_bracket_type != 'arch'">
+                            <strong>Gutter Arch Brackets:</strong><br/>
+                            <span invisible="last_span_gutter">
+                                • Full brackets: (No. of Spans - 1) × (No. of Bays + 1)<br/>
+                                • Half brackets (Left/Right): No. of Bays + 1 each
+                            </span>
+                            <span invisible="not last_span_gutter">
+                                • Full brackets: (No. of Spans + 1) × (No. of Bays + 1)
+                            </span>
+                        </li>
+                        <li invisible="gutter_bracket_type != 'f_bracket'">
+                            <strong>F Brackets:</strong><br/>
+                            • F Bracket Big: Based on Big Arch count<br/>
+                            • F Bracket Small: Based on Small Arch count
+                        </li>
+                        <li invisible="column_bracket_type != 'l_bracket'">
+                            <strong>L Brackets:</strong><br/>
+                            • Quantity: 2 × Number of Middle Columns
+                        </li>
+                        <li invisible="column_bracket_type != 'clamps'">
+                            <strong>Column Clamps:</strong><br/>
+                            • Quantity: 1 × Number of Middle Columns<br/>
+                            • Size: Auto-detected from column pipe configuration
+                        </li>
+                    </ul>
+                </div>
+                
+            </xpath>
+            
+            <!-- Add bracket-specific button to header -->
+            <xpath expr="//button[@name='action_calculate_accessories']" position="after">
+                <button name="action_calculate_brackets" 
+                        string="🔧 Calc Brackets" 
+                        type="object" 
+                        class="btn-info"
+                        invisible="gutter_bracket_type == 'none' and column_bracket_type == 'none'"
+                        help="Calculate only bracket components"/>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Tree view customization for bracket visibility -->
+    <record id="view_green_master_tree_brackets_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.brackets.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            <field name="grand_total_cost" position="before">
+                <field name="total_brackets_cost" optional="hide" string="Brackets Cost"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

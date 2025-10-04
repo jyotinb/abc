@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add clamp configuration -->
+    <record id="view_green_master_form_clamps_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.clamps.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add clamp configuration section -->
+            <xpath expr="//page[@string='Accessories Management']/div[@class='alert alert-info']" position="after">
+                
+                <!-- Advanced Clamp Configuration -->
+                <group string="Advanced Clamp Configuration" col="4">
+                    <group string="Clamp Type">
+                        <field name="clamp_type" widget="radio"/>
+                        
+                        <!-- W Type Configuration -->
+                        <group invisible="clamp_type != 'w_type'" col="4">
+                            <separator string="W Type Purlin Clamps" colspan="4"/>
+                            <field name="big_purlin_clamp_type_first" string="Big Purlin First"/>
+                            <field name="big_purlin_clamp_type_second" string="Big Purlin Second"/>
+                            <field name="small_purlin_clamp_type_first" string="Small Purlin First"/>
+                            <field name="small_purlin_clamp_type_second" string="Small Purlin Second"/>
+                        </group>
+                        
+                        <!-- M Type Configuration -->
+                        <group invisible="clamp_type != 'm_type'">
+                            <field name="bottom_chord_clamp_type" widget="radio"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Clamp Information">
+                        <button name="action_view_clamp_details" 
+                                string="📊 View Clamp Details" 
+                                type="object" 
+                                class="btn-info"
+                                help="Show detailed breakdown of clamp calculations"/>
+                        
+                        <div class="text-muted">
+                            <field name="clamps_size_summary" readonly="1" nolabel="1" invisible="not clamps_size_summary"/>
+                        </div>
+                        
+                        <div class="text-warning" invisible="not border_purlin_clamps_summary">
+                            <strong>Border Purlin Config:</strong>
+                            <field name="border_purlin_clamps_summary" readonly="1" nolabel="1"/>
+                        </div>
+                    </group>
+                </group>
+                
+            </xpath>
+            
+            <!-- Update clamps component section to show size information -->
+            <xpath expr="//field[@name='clamps_component_ids']/.." position="attributes">
+                <attribute name="class">card-body</attribute>
+            </xpath>
+            
+        </field>
+    </record>
+    
+</odoo>
