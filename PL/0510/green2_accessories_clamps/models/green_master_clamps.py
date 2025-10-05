@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# green2_accessories_clamps/models/green_master_clamps.py
+
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from math import ceil
@@ -9,7 +10,9 @@ _logger = logging.getLogger(__name__)
 class GreenMasterClamps(models.Model):
     _inherit = 'green.master'
     
-    
+    # =============================================
+    # ALL ORIGINAL FIELD DECLARATIONS
+    # =============================================
     
     bay_side_border_purlin = fields.Integer(
         'Bay Side Border Purlin', 
@@ -78,6 +81,10 @@ class GreenMasterClamps(models.Model):
         string='Clamps Components'
     )
     
+    # =============================================
+    # ORIGINAL COMPUTED METHODS
+    # =============================================
+    
     @api.depends('clamps_component_ids', 'clamps_component_ids.size_specification', 'clamps_component_ids.nos')
     def _compute_clamps_size_summary(self):
         """Compute summary of clamp sizes"""
@@ -133,7 +140,7 @@ class GreenMasterClamps(models.Model):
         self._calculate_advanced_clamps()
     
     def _calculate_advanced_clamps(self):
-        """Main method for advanced clamp calculations"""
+        """Main method for advanced clamp calculations - KEEP ORIGINAL STRUCTURE"""
         # Check if any clamps are needed
         if (self.clamp_type == 'none' and 
             not (hasattr(self, 'is_side_coridoors') and self.is_side_coridoors and self.support_hockeys > 0) and
@@ -168,10 +175,9 @@ class GreenMasterClamps(models.Model):
         
         # Create clamp components from accumulator
         self._create_clamp_components_from_accumulator(clamp_accumulator)
-
     
     def _accumulate_w_type_clamps(self, accumulator):
-        """Accumulate W Type clamps"""
+        """Accumulate W Type clamps - COMPLETE IMPLEMENTATION"""
         # Get component data
         bottom_chord_data = self._get_bottom_chord_data()
         v_support_count = self._get_v_support_count()
@@ -243,9 +249,14 @@ class GreenMasterClamps(models.Model):
             self._add_to_clamp_accumulator(accumulator, 'Full Clamp', small_arch_data['size'], small_arch_data['count'])
     
     def _accumulate_v_support_main_column_clamps(self, accumulator):
-        """Accumulate V Support to Main Column clamps"""
-        # This would need actual implementation based on v_support configuration
-        pass
+        """Accumulate V Support to Main Column clamps - IMPLEMENT MISSING"""
+        v_support_count = self._get_v_support_count()
+        if v_support_count > 0:
+            # Get V support pipe size
+            v_support_component = self.truss_component_ids.filtered(lambda c: c.name == 'V Support Bottom Chord')
+            if v_support_component and v_support_component.pipe_id:
+                size = f"{v_support_component.pipe_id.pipe_size.size_in_mm:.0f}mm"
+                self._add_to_clamp_accumulator(accumulator, 'Full Clamp', size, v_support_count)
     
     def _accumulate_asc_support_clamps(self, accumulator):
         """Accumulate ASC Support clamps"""
@@ -258,14 +269,37 @@ class GreenMasterClamps(models.Model):
                 self._add_to_clamp_accumulator(accumulator, 'Full Clamp', asc_pipe_size, asc_support_count)
     
     def _accumulate_border_purlin_clamps(self, accumulator):
-        """Accumulate border purlin clamps"""
-        # Implementation would go here based on border purlin configuration
-        pass
+        """Accumulate border purlin clamps - IMPLEMENT MISSING"""
+        # Bay Side Border Purlin
+        if int(self.bay_side_border_purlin or 0) > 0:
+            bay_border = self.truss_component_ids.filtered(lambda c: c.name == 'Bay Side Border Purlin')
+            if bay_border and bay_border.pipe_id:
+                size = f"{bay_border.pipe_id.pipe_size.size_in_mm:.0f}mm"
+                qty = int(self.bay_side_border_purlin) * self.no_of_bays * 2
+                self._add_to_clamp_accumulator(accumulator, 'Full Clamp', size, qty)
+        
+        # Span Side Border Purlin
+        if int(self.span_side_border_purlin or 0) > 0:
+            span_border = self.truss_component_ids.filtered(lambda c: c.name == 'Span Side Border Purlin')
+            if span_border and span_border.pipe_id:
+                size = f"{span_border.pipe_id.pipe_size.size_in_mm:.0f}mm"
+                qty = int(self.span_side_border_purlin) * self.no_of_spans * (int(self.no_column_big_frame) + 1) * 2
+                self._add_to_clamp_accumulator(accumulator, 'Full Clamp', size, qty)
     
     def _accumulate_arch_middle_purlin_clamps(self, accumulator):
-        """Accumulate arch middle purlin clamps"""
-        # Implementation would go here based on arch middle purlin configuration
-        pass
+        """Accumulate arch middle purlin clamps - IMPLEMENT MISSING"""
+        # Get arch middle purlin components from lower section
+        arch_middle_big = self.lower_component_ids.filtered(lambda c: c.name == 'Arch Middle Purlin Big Arch')
+        if arch_middle_big and arch_middle_big.nos > 0:
+            if arch_middle_big.pipe_id:
+                size = f"{arch_middle_big.pipe_id.pipe_size.size_in_mm:.0f}mm"
+                self._add_to_clamp_accumulator(accumulator, 'Full Clamp', size, arch_middle_big.nos * 2)
+        
+        arch_middle_small = self.lower_component_ids.filtered(lambda c: c.name == 'Arch Middle Purlin Small Arch')
+        if arch_middle_small and arch_middle_small.nos > 0:
+            if arch_middle_small.pipe_id:
+                size = f"{arch_middle_small.pipe_id.pipe_size.size_in_mm:.0f}mm"
+                self._add_to_clamp_accumulator(accumulator, 'Full Clamp', size, arch_middle_small.nos * 2)
     
     def _add_to_clamp_accumulator(self, accumulator, clamp_type, size, quantity):
         """Add clamps to accumulator"""
@@ -309,7 +343,6 @@ class GreenMasterClamps(models.Model):
             
             self.env['accessories.component.line'].create(vals)
             _logger.info(f"Created clamp component: {component_name} - Qty: {quantity}")
-
     
     # Helper methods to get component data
     def _get_bottom_chord_data(self):
@@ -369,48 +402,70 @@ class GreenMasterClamps(models.Model):
         return 0
     
     def get_clamp_calculation_details(self):
-        """Get detailed clamp calculations for display"""
+        """Get detailed clamp calculations for display - MATCHES ACCUMULATOR LOGIC"""
         details = []
         sequence = 10
         
+        # Create temporary accumulator to get exact same calculations
+        temp_accumulator = {}
+        
         # M Type or W Type clamps
         if self.clamp_type == 'm_type':
-            details.extend(self._get_m_type_clamp_details(sequence))
+            self._accumulate_m_type_clamps(temp_accumulator)
+            details.extend(self._convert_accumulator_to_details(temp_accumulator, 'M TYPE CLAMPS', sequence))
+            temp_accumulator.clear()
             sequence += 100
         elif self.clamp_type == 'w_type':
-            details.extend(self._get_w_type_clamp_details(sequence))
+            self._accumulate_w_type_clamps(temp_accumulator)
+            details.extend(self._convert_accumulator_to_details(temp_accumulator, 'W TYPE CLAMPS', sequence))
+            temp_accumulator.clear()
             sequence += 100
         
-        # Add other clamp categories details...
+        # V Support
+        if hasattr(self, 'is_bottom_chord') and self.is_bottom_chord and int(self.v_support_bottom_chord_frame or 0) > 0:
+            self._accumulate_v_support_main_column_clamps(temp_accumulator)
+            details.extend(self._convert_accumulator_to_details(temp_accumulator, 'V SUPPORT CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+        
+        # ASC Support
+        if hasattr(self, 'is_side_coridoors') and self.is_side_coridoors and self.support_hockeys > 0:
+            self._accumulate_asc_support_clamps(temp_accumulator)
+            details.extend(self._convert_accumulator_to_details(temp_accumulator, 'ASC SUPPORT CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+        
+        # Border Purlin
+        self._accumulate_border_purlin_clamps(temp_accumulator)
+        if temp_accumulator:
+            details.extend(self._convert_accumulator_to_details(temp_accumulator, 'BORDER PURLIN CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+        
+        # Arch Middle Purlin
+        self._accumulate_arch_middle_purlin_clamps(temp_accumulator)
+        if temp_accumulator:
+            details.extend(self._convert_accumulator_to_details(temp_accumulator, 'ARCH MIDDLE PURLIN CLAMPS', sequence))
+            temp_accumulator.clear()
         
         return details
     
-    def _get_m_type_clamp_details(self, sequence):
-        """Get M Type clamp calculation details"""
+    def _convert_accumulator_to_details(self, accumulator, category, start_sequence):
+        """Convert accumulator data to detail format for wizard"""
         details = []
-        bottom_chord_data = self._get_bottom_chord_data()
-        v_support = self._get_v_support_count()
-        
-        if bottom_chord_data['count'] > 0 and bottom_chord_data['size']:
-            multiplier = 3 if self.bottom_chord_clamp_type == 'single' else 5
-            qty = (bottom_chord_data['count'] * multiplier) + v_support
+        seq = start_sequence
+        for (clamp_type, size), quantity in accumulator.items():
             details.append({
-                'sequence': sequence,
-                'category': 'M TYPE CLAMPS',
-                'component': f"Bottom Chord ({self.bottom_chord_clamp_type.title()})",
-                'clamp_type': 'Full Clamp',
-                'size': bottom_chord_data['size'],
-                'quantity': int(qty),
-                'formula': f"({bottom_chord_data['count']} × {multiplier}) + {v_support}",
-                'unit_price': self._get_clamp_price('Full Clamp', bottom_chord_data['size']),
+                'sequence': seq,
+                'category': category,
+                'component': f"{clamp_type} - {size}",
+                'clamp_type': clamp_type,
+                'size': size,
+                'quantity': quantity,
+                'formula': f"Calculated from {category.lower()}",
+                'unit_price': self._get_clamp_price(clamp_type, size),
             })
-        
-        return details
-    
-    def _get_w_type_clamp_details(self, sequence):
-        """Get W Type clamp calculation details"""
-        details = []
-        # Similar implementation for W Type details
+            seq += 10
         return details
     
     def _get_clamp_price(self, clamp_type, size):
