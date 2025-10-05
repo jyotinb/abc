@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add foundation configuration -->
+    <record id="view_green_master_form_foundation_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.foundation.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add foundation configuration section -->
+            <xpath expr="//page[last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Foundation Configuration -->
+                <group string="Foundation Configuration">
+                    <separator string="Foundation Rods"/>
+                    <field name="enable_foundation_rods"/>
+                    
+                    <group invisible="not enable_foundation_rods">
+                        <field name="foundation_rods_per_foundation"/>
+                        <field name="foundation_rods_per_asc"/>
+                    </group>
+                    
+                    <div invisible="not enable_foundation_rods" class="text-muted">
+                        Foundation rods will be calculated based on:
+                        <ul>
+                            <li>Number of foundation/column positions</li>
+                            <li>Number of ASC pipe positions</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- <button name="action_calculate_foundation" 
+                            string="⚓ Calculate Foundation Only" 
+                            type="object" 
+                            class="btn-info"
+                            invisible="not enable_foundation_rods"
+                            help="Calculate only foundation components"/> -->
+                </group>
+                
+                <separator string="Foundation Calculation Logic" invisible="not enable_foundation_rods"/>
+                <div invisible="not enable_foundation_rods" class="alert alert-warning">
+                    <h5>ℹ️ Foundation Calculation Information</h5>
+                    <ul>
+                        <li>
+                            <strong>Foundation Rods:</strong><br/>
+                            • Formula: (Foundations × <field name="foundation_rods_per_foundation" readonly="1" class="oe_inline"/>) + (ASC Pipes × <field name="foundation_rods_per_asc" readonly="1" class="oe_inline"/>)<br/>
+                            • Foundations detected from: Main Columns, Thick Columns, Middle Columns<br/>
+                            • ASC Pipes detected from: All ASC Pipe components
+                        </li>
+                    </ul>
+                    <p class="mt-2">
+                        <strong>Configuration:</strong><br/>
+                        • Rods per Foundation: <field name="foundation_rods_per_foundation" readonly="1" class="oe_inline"/><br/>
+                        • Rods per ASC Pipe: <field name="foundation_rods_per_asc" readonly="1" class="oe_inline"/>
+                    </p>
+                </div>
+                
+            </xpath>
+            
+            <!-- Add foundation info button to header -->
+            <xpath expr="//button[@name='action_calculate_accessories']" position="after">
+               <!--  <button name="action_calculate_foundation" 
+                        string="⚓ Calc Foundation" 
+                        type="object" 
+                        class="btn-danger"
+                        invisible="not enable_foundation_rods"
+                        help="Calculate foundation components"/> -->
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Tree view customization for foundation visibility -->
+    <record id="view_green_master_tree_foundation_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.foundation.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            <field name="grand_total_cost" position="before">
+                <field name="total_foundation_cost" optional="hide" string="Foundation Cost"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>
