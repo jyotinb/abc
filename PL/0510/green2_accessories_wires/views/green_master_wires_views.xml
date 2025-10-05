@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add wire configuration -->
+    <record id="view_green_master_form_wires_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.wires.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add wire configuration section -->
+            <xpath expr="//page[last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Wire & Connector Configuration -->
+                <group string="Wire &amp; Connector Configuration">
+                    <separator string="Zigzag Wire"/>
+                    <field name="enable_zigzag_wire"/>
+                    <field name="zigzag_wire_size" invisible="not enable_zigzag_wire" widget="radio"/>
+                    <div invisible="not enable_zigzag_wire" class="text-muted">
+                        Wire length will be calculated based on total profile length
+                    </div>
+                    
+                    <separator string="Roll Up Connectors"/>
+                    <field name="enable_rollup_connectors"/>
+                    <div invisible="not enable_rollup_connectors" class="text-muted">
+                        Connectors will be calculated based on number of curtains: <field name="no_of_curtains" readonly="1" class="oe_inline"/>
+                    </div>
+                    
+            <!--         <button name="action_calculate_wires" 
+                            string="🔗 Calculate Wires Only" 
+                            type="object" 
+                            class="btn-info"
+                            invisible="not enable_zigzag_wire and not enable_rollup_connectors"
+                            help="Calculate only wire and connector components"/> -->
+                </group>
+                
+                <separator string="Wire Calculation Logic" invisible="not enable_zigzag_wire and not enable_rollup_connectors"/>
+                <div invisible="not enable_zigzag_wire and not enable_rollup_connectors" class="alert alert-warning">
+                    <h5>ℹ️ Wire Calculation Information</h5>
+                    <ul>
+                        <li invisible="not enable_zigzag_wire">
+                            <strong>Zigzag Wire:</strong><br/>
+                            • Length: Based on total profile calculation<br/>
+                            • Size: <field name="zigzag_wire_size" readonly="1" class="oe_inline"/>
+                        </li>
+                        <li invisible="not enable_rollup_connectors">
+                            <strong>Roll Up Connectors:</strong><br/>
+                            • Smooth Connectors: 1 × Number of Curtains<br/>
+                            • Handle Connectors: 1 × Number of Curtains
+                        </li>
+                    </ul>
+                </div>
+                
+            </xpath>
+            
+        </field>
+    </record>
+    
+</odoo>

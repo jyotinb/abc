@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add profile calculations -->
+    <record id="view_green_master_form_profiles_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.profiles.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add profile calculation section -->
+            <xpath expr="//page[last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Profile Calculations Section -->
+                <group string="Profile Calculations">
+                    <separator string="Profile Breakdown"/>
+                    
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Profiles For Arch:</strong></td>
+                                    <td><field name="profiles_for_arch" readonly="1"/> m</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Profile For Purlin:</strong></td>
+                                    <td><field name="profile_for_purlin" readonly="1"/> m</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Profile for Bottom:</strong></td>
+                                    <td><field name="profile_for_bottom" readonly="1"/> m</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Side Profile:</strong></td>
+                                    <td><field name="side_profile" readonly="1"/> m</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Door Profile:</strong></td>
+                                    <td><field name="door_profile" readonly="1"/> m</td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>Total Profile:</strong></td>
+                                    <td><strong><field name="total_profile" readonly="1"/> m</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <!-- <button name="action_calculate_profiles" 
+                                string="📊 Calculate Profiles" 
+                                type="object" 
+                                class="btn btn-success"/> -->
+                    </div>
+                </group>
+                
+                <separator string="Profile Calculation Logic"/>
+                <div class="alert alert-info">
+                    <h5>ℹ️ Profile Calculation Information</h5>
+                    <ul>
+                        <li><strong>Profiles For Arch:</strong> Calculated based on arch lengths, spans, and vent supports</li>
+                        <li><strong>Profile For Purlin:</strong> Sum of all purlin components (Big, Small, Gutter, Gable)</li>
+                        <li><strong>Profile for Bottom:</strong> Span Length × 2</li>
+                        <li><strong>Side Profile:</strong> Border purlins + 8 corner profiles</li>
+                        <li><strong>Door Profile:</strong> Sum of door and tractor door components</li>
+                    </ul>
+                    <p class="mt-2"><strong>Note:</strong> Total Profile is used for Zigzag Wire calculation when enabled.</p>
+                </div>
+                
+            </xpath>
+            
+        </field>
+    </record>
+    
+</odoo>
