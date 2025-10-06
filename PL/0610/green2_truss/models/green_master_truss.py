@@ -1,3 +1,4 @@
+# green2_truss/models/green_master_truss.py
 from odoo import models, fields, api
 import logging
 
@@ -6,17 +7,37 @@ _logger = logging.getLogger(__name__)
 class GreenMasterTruss(models.Model):
     _inherit = 'green.master'
     
+    # =============================================
+    # NEW ARCH SUPPORT TYPE FIELD
+    # =============================================
+    arch_support_type = fields.Selection([
+        ('none', 'None'),
+        ('w', 'W'),
+        ('m', 'M'),
+        ('arch_2_bottom', 'Arch to Bottom Support'),
+        ('arch_2_straight', 'Arch to Straight Middle')
+    ], string='Arch Support Type', default='none', tracking=True,
+       help="""Select arch support configuration:
+       - W: All 4 arch supports compulsory
+       - M: All 4 arch supports compulsory
+       - Arch to Bottom Support: Both Small arch supports only
+       - Arch to Straight Middle: Both Big arch supports only""")
+    
     # Bottom Chord Configuration
     is_bottom_chord = fields.Boolean('Is Bottom Chord Required ?', default=False, tracking=True)
     v_support_bottom_chord_frame = fields.Selection([
         ('0', '0'),('2', '2')
     ], 'V Support Bottom Chord per Frame', default='0', tracking=True)
     
-    # Arch Support Configuration
-    is_arch_support_big = fields.Boolean('Is Arch Support Big (Big Arch) Required ?', default=False, tracking=True)
-    is_arch_support_big_small = fields.Boolean('Is Arch Support Big (Small Arch) Required ?', default=False, tracking=True)
-    is_arch_support_small_big_arch = fields.Boolean('Is Arch Support Small for Bigger Arch Required?', default=False, tracking=True)
-    is_arch_support_small_small_arch = fields.Boolean('Is Arch Support Small for Smaller Arch Required?', default=False, tracking=True)
+    # DEPRECATED - Will be auto-set based on arch_support_type
+    is_arch_support_big = fields.Boolean('Is Arch Support Big (Big Arch) Required ?', 
+                                        compute='_compute_arch_support_flags', store=True, tracking=True)
+    is_arch_support_big_small = fields.Boolean('Is Arch Support Big (Small Arch) Required ?', 
+                                              compute='_compute_arch_support_flags', store=True, tracking=True)
+    is_arch_support_small_big_arch = fields.Boolean('Is Arch Support Small for Bigger Arch Required?', 
+                                                    compute='_compute_arch_support_flags', store=True, tracking=True)
+    is_arch_support_small_small_arch = fields.Boolean('Is Arch Support Small for Smaller Arch Required?', 
+                                                      compute='_compute_arch_support_flags', store=True, tracking=True)
     
     # Vent Support Configuration
     no_vent_big_arch_support_frame = fields.Selection([
@@ -85,12 +106,54 @@ class GreenMasterTruss(models.Model):
         domain="[('available_for_fields.name', '=', 'length_vent_small_arch_support'), ('active', '=', True)]",
         tracking=True
     )
+    
     gutter_type = fields.Selection([
         ('none', 'None'),
         ('ippf', 'IPPF'),
         ('continuous', 'Continuous'),
     ], string='Gutter', default='none', required=True, tracking=True)
     
+    # =============================================
+    # COMPUTED METHODS FOR ARCH SUPPORT FLAGS
+    # =============================================
+    @api.depends('arch_support_type')
+    def _compute_arch_support_flags(self):
+        """Auto-set arch support flags based on arch_support_type"""
+        for record in self:
+            if record.arch_support_type == 'w' or record.arch_support_type == 'm':
+                # W or M: All 4 compulsory
+                record.is_arch_support_big = True
+                record.is_arch_support_big_small = True
+                record.is_arch_support_small_big_arch = True
+                record.is_arch_support_small_small_arch = True
+            elif record.arch_support_type == 'arch_2_bottom':
+                # Arch to Bottom: Both Small only
+                record.is_arch_support_big = False
+                record.is_arch_support_big_small = False
+                record.is_arch_support_small_big_arch = True
+                record.is_arch_support_small_small_arch = True
+            elif record.arch_support_type == 'arch_2_straight':
+                # Arch to Straight Middle: Both Big only
+                record.is_arch_support_big = True
+                record.is_arch_support_big_small = True
+                record.is_arch_support_small_big_arch = False
+                record.is_arch_support_small_small_arch = False
+            else:  # 'none'
+                record.is_arch_support_big = False
+                record.is_arch_support_big_small = False
+                record.is_arch_support_small_big_arch = False
+                record.is_arch_support_small_small_arch = False
+    
+    @api.onchange('arch_support_type')
+    def _onchange_arch_support_type(self):
+        """Synchronize clamp_type when arch_support_type changes"""
+        if self.arch_support_type == 'w':
+            self.clamp_type = 'w_type'
+        elif self.arch_support_type == 'm':
+            self.clamp_type = 'm_type'
+        else:
+            # For 'none', 'arch_2_bottom', 'arch_2_straight'
+            self.clamp_type = 'none'
     
     @api.onchange('is_bottom_chord')
     def _onchange_is_bottom_chord(self):
@@ -146,11 +209,12 @@ class GreenMasterTruss(models.Model):
         no_v_support_bottom_chord = int(self.v_support_bottom_chord_frame) * total_normal_frames
         no_v_support_bottom_chord_af = int(self.v_support_bottom_chord_frame) * total_anchor_frames
         
-        # Arch Support calculations
+        # Arch Support calculations - Keep existing Arch Support Straight Middle calculation
         arch_support_staraight_middle = 0
         if self.is_bottom_chord:
             arch_support_staraight_middle = arch_big - total_anchor_frames
         
+        # Arch Support calculations based on computed flags
         arch_support_big = arch_big if self.is_arch_support_big else 0
         arch_support_big_small = arch_small if self.is_arch_support_big_small else 0
         arch_support_small_big_arch = arch_big if self.is_arch_support_small_big_arch else 0
@@ -248,6 +312,7 @@ class GreenMasterTruss(models.Model):
                     self.length_v_support_bottom_chord_frame
                 ))
             
+            # Keep existing Arch Support Straight Middle
             if arch_support_staraight_middle > 0:
                 component_vals.append(self._create_component_val(
                     'truss', 'Arch Support Straight Middle', 
@@ -255,7 +320,7 @@ class GreenMasterTruss(models.Model):
                     self.top_ridge_height - self.column_height
                 ))
         
-        # Arch Support components
+        # Arch Support components based on selection
         if arch_support_big > 0:
             arch_support_big_length = self._get_length_master_value(self.length_arch_support_big, 2.0)
             component_vals.append(self._create_component_val(
