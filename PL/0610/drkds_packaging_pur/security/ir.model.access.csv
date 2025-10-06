@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_order_line_custom,access_purchase_order_line_custom,model_purchase_order_line,,1,1,1,1
+access_stock_move_custom,access_stock_move_custom,model_stock_move,,1,1,1,1
+access_stock_picking_custom,access_stock_picking_custom,model_stock_picking,,1,1,1,1
