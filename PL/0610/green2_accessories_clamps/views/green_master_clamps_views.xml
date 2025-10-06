@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add clamp configuration -->
+    <record id="view_green_master_form_clamps_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.clamps.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add clamp configuration section -->
+            <xpath expr="//page[position()=last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Advanced Clamp Configuration -->
+<!-- Advanced Clamp Configuration -->
+<group string="Advanced Clamp Configuration">
+    <group col="2">
+        <!-- <separator string="Clamp Type" colspan="2"/> -->
+        <field name="clamp_type" string="Truss Design" widget="radio" colspan="2"/>
+    </group>
+    
+    <!-- M Type Specific Configuration -->
+    <group invisible="clamp_type != 'm_type'" col="2">
+        <separator string="M Type Settings" colspan="2"/>
+        <field name="bottom_chord_clamp_type" widget="radio" colspan="2"/>
+    </group>
+    
+    <!-- Purlin Clamps Configuration (for both W and M types) -->
+    <group invisible="clamp_type == 'none'" string="Purlin Clamps Configuration (Arch Middle Purlin)">
+        <div class="alert alert-info" colspan="2">
+            <strong>Important:</strong>
+            <ul>
+                <li>Big Purlin clamps apply to <b>Arch Middle Purlin Big Arch</b> components</li>
+                <li>Small Purlin clamps apply to <b>Arch Middle Purlin Small Arch</b> components</li>
+                <li>If First Type is selected, Second Type is <b>mandatory</b></li>
+                <li>First Type quantity: No. of Spans × 2</li>
+                <li>Second Type quantity: Remaining (Total - First Type quantity)</li>
+            </ul>
+        </div>
+        
+        <!-- <group col="2"> -->
+            <field name="big_purlin_clamp_type_first" string="Big Purlin First Type" colspan="2"/>
+            <field name="small_purlin_clamp_type_first" string="Small Purlin First Type" colspan="2"/>
+            <field name="big_purlin_clamp_type_second" 
+                   string="Big Purlin Second Type" 
+                   colspan="2"
+                   required="big_purlin_clamp_type_first != False" 
+                   invisible="big_purlin_clamp_type_first == False"/>
+            <field name="small_purlin_clamp_type_second" 
+                   string="Small Purlin Second Type" 
+                   colspan="2"
+                   required="small_purlin_clamp_type_first != False"
+                   invisible="small_purlin_clamp_type_first == False"/>
+        <!-- </group> -->
+    </group>
+    
+    <group string="Clamp Information">
+        <button name="action_view_clamp_details" 
+                string="📊 View Clamp Details" 
+                type="object" 
+                class="btn-info"
+                colspan="2"
+                help="Show detailed breakdown of clamp calculations"/>
+        
+        <div class="text-muted" colspan="2">
+            <field name="clamps_size_summary" readonly="1" nolabel="1" invisible="not clamps_size_summary"/>
+        </div>
+        
+        <div class="text-warning" invisible="not border_purlin_clamps_summary" colspan="2">
+            <strong>Border Purlin Config:</strong>
+            <field name="border_purlin_clamps_summary" readonly="1" nolabel="1" class="oe_inline"/>
+        </div>
+    </group>
+</group>
+                
+            </xpath>
+            
+            <!-- Update clamps component section to show size information -->
+            <xpath expr="//field[@name='clamps_component_ids']/.." position="attributes">
+                <attribute name="class">card-body</attribute>
+            </xpath>
+            
+        </field>
+    </record>
+    
+</odoo>
