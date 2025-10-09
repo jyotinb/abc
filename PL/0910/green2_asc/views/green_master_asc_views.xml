@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_greenhouse_project_form_asc" model="ir.ui.view">
+        <field name="name">greenhouse.project.form.asc</field>
+        <field name="model">greenhouse.project</field>
+        <field name="inherit_id" ref="drkds_gh_base.view_greenhouse_project_form"/>
+        <field name="arch" type="xml">
+            <!-- Add ASC Configuration page to notebook -->
+            <xpath expr="//notebook/page[@string='Advanced Configuration']" position="after">
+                <page string="ASC (Additional Side Corridors)" attrs="{'invisible': [('is_side_coridoors', '=', False)]}">
+                    <group>
+                        <group string="ASC Configuration">
+                            <field name="is_side_coridoors"/>
+                            <label string="ASC Status" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                            <div class="alert alert-success" attrs="{'invisible': [('is_side_coridoors', '=', False)]}">
+                                ASC is enabled - Additional side corridors will be calculated
+                            </div>
+                        </group>
+                        <group string="ASC Information">
+                            <label string="About ASC"/>
+                            <div class="text-muted">
+                                Additional Side Corridors provide extra workspace and 
+                                improved access along the greenhouse sides.
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="ASC Pipe Components" attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                    <group attrs="{'invisible': [('is_side_coridoors', '=', False)]}">
+                        <div class="alert alert-info" role="alert">
+                            ASC pipes include support pipes, front/back span pipes, and bay pipes
+                        </div>
+                    </group>
+                    <separator string="ASC Components Summary"/>
+                    <group>
+                        <field name="total_asc_cost" readonly="1" 
+                               attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add total cost to main view (only show if ASC enabled) -->
+            <field name="grand_total_cost" position="after">
+                <field name="total_asc_cost" readonly="1" 
+                       attrs="{'invisible': [('is_side_coridoors', '=', False)]}"/>
+            </field>
+            
+            <!-- Also add ASC checkbox to main Advanced Config page -->
+            <xpath expr="//page[@string='Advanced Configuration']//group[@string='Other Settings']" position="inside">
+                <field name="is_side_coridoors"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

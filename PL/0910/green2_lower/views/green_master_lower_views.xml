@@ -1,0 +1,79 @@
+<odoo>
+    <!-- Inherit base form to add lower section configuration -->
+    <record id="view_green_master_form_lower" model="ir.ui.view">
+        <field name="name">green.master.form.lower</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_form_base"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Lower Section Configuration Page -->
+             <xpath expr="//page[position()=last()-1]" position="before">
+                <page string="Lower Section Configuration">
+                    <group>
+                        <group string="Cross Bracing Settings">
+                            <field name="front_back_c_c_cross_bracing_x"/>
+                            <field name="length_front_back_c_c_cross_bracing_x" invisible="not front_back_c_c_cross_bracing_x"/>
+                            <field name="middle_c_c_cross_bracing_x"/>
+                            <field name="length_middle_c_c_cross_bracing_x" invisible="middle_c_c_cross_bracing_x == 0"/>
+                            <field name="cross_bracing_column_arch"/>
+                            <field name="length_cross_bracing_column_arch" invisible="not cross_bracing_column_arch"/>
+                            <field name="cross_bracing_column_bottom"/>
+                            <field name="length_cross_bracing_column_bottom" invisible="not cross_bracing_column_bottom"/>
+                        </group>
+                        <group string="Purlin Settings">
+                            <field name="arch_middle_purlin_big_arch"/>
+                            <field name="arch_middle_purlin_big_arch_pcs" invisible="arch_middle_purlin_big_arch == '0'"/>
+                            <field name="arch_middle_purlin_small_arch"/>
+                            <field name="arch_middle_purlin_small_arch_pcs" invisible="arch_middle_purlin_small_arch == '0'"/>
+                        </group>
+                        <group string="Gutter Settings">
+                            <field name="gutter_type" widget="radio"/>
+                            
+                            <!-- IPPF Gutter Fields -->
+                            <field name="gutter_ippf_full" invisible="gutter_type != 'ippf'"/>
+                            <field name="gutter_ippf_drainage_extension" invisible="gutter_type != 'ippf'"/>
+                            <field name="gutter_funnel_ippf" invisible="gutter_type != 'ippf'"/>
+                            <field name="gutter_end_cap" invisible="gutter_type != 'ippf'"/>
+                            
+                            <!-- Continuous Gutter Fields -->
+                            <field name="gutter_extension" invisible="gutter_type != 'continuous'"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Lower Section Components"/>
+                    <field name="lower_component_ids" context="{'default_section': 'lower'}"/>
+                    
+                    <group>
+                        <field name="total_lower_cost" readonly="1" widget="monetary"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add Lower Components to Component Management -->
+            <!-- <xpath expr="//group[@name='component_sections']" position="inside"> -->
+			<xpath expr="//div[@class='card border-danger mb-4'][div[@class='card-header bg-danger text-white text-center']/h3[contains(text(), '💰 PROJECT TOTAL:')]]" position="before">
+  
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-white">
+                        <h4 class="mb-0">🔧 Lower Section Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="lower_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-warning">Lower Total: <field name="total_lower_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to Cost Summary -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="before">
+                <tr class="table-warning">
+                    <td><strong>🔧 Lower Section</strong></td>
+                    <td class="text-right"><field name="total_lower_cost" readonly="1" widget="monetary"/></td>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>
