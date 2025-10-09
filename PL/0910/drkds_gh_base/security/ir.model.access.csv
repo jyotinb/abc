@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_greenhouse_project,greenhouse.project,model_greenhouse_project,base.group_user,1,1,1,1
+access_greenhouse_component_line,greenhouse.component.line,model_greenhouse_component_line,base.group_user,1,1,1,1
+access_greenhouse_length_master,greenhouse.length.master,model_greenhouse_length_master,base.group_user,1,1,1,1
+access_greenhouse_pipe_type,greenhouse.pipe.type,model_greenhouse_pipe_type,base.group_user,1,1,1,1
+access_greenhouse_pipe_size,greenhouse.pipe.size,model_greenhouse_pipe_size,base.group_user,1,1,1,1
+access_greenhouse_pipe_wall_thickness,greenhouse.pipe.wall.thickness,model_greenhouse_pipe_wall_thickness,base.group_user,1,1,1,1
+access_greenhouse_pipe_management,greenhouse.pipe.management,model_greenhouse_pipe_management,base.group_user,1,1,1,1
+access_greenhouse_bulk_pipe_wizard,greenhouse.bulk.pipe.wizard,model_greenhouse_bulk_pipe_wizard,base.group_user,1,1,1,1

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_greenhouse_project_form_frame" model="ir.ui.view">
+        <field name="name">greenhouse.project.form.frame</field>
+        <field name="model">greenhouse.project</field>
+        <field name="inherit_id" ref="drkds_gh_base.view_greenhouse_project_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Frame Configuration page to notebook -->
+            <xpath expr="//page[.//field[@name='no_of_curtains']]" position="after">
+                <page string="Frame Configuration" name="frame_config">
+                    <group>
+                        <group string="Column Configuration">
+                            <field name="no_column_big_frame"/>
+<field name="no_anchor_frame_lines" invisible="no_column_big_frame == '0'"/>
+                            <field name="thick_column"/>
+                        </group>
+                        <group string="Frame Information">
+                            <div class="text-muted">
+                                <strong>Anchor Frames:</strong><br/>
+                                Configure big columns per anchor frame and number of anchor frame lines
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Frame Components Summary"/>
+                    <group>
+                        <field name="total_frame_cost" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add total cost to main view -->
+            <field name="grand_total_cost" position="after">
+                <field name="total_frame_cost" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

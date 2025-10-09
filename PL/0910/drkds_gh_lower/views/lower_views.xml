@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_greenhouse_project_form_lower" model="ir.ui.view">
+        <field name="name">greenhouse.project.form.lower</field>
+        <field name="model">greenhouse.project</field>
+        <field name="inherit_id" ref="drkds_gh_base.view_greenhouse_project_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Lower Section Configuration page to notebook -->
+            <xpath expr="//page[.//field[@name='no_of_curtains']]" position="after">
+                <page string="Lower Section" name="lower_section">
+                    <group>
+                        <group string="Gutter Configuration">
+                            <field name="gutter_type"/>
+                            <field name="gutter_slope"/>
+                            <field name="last_span_gutter"/>
+                            <field name="last_span_gutter_length" invisible="not last_span_gutter"/>
+                        </group>
+                        <group string="Gutter Information">
+                            <div class="text-muted">
+                                <strong>Gutter System:</strong><br/>
+                                Choose between continuous gutter or IPPF system.
+                                IPPF system includes funnels and drainage extensions.
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Cross Bracing Configuration"/>
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            Cross bracing components are automatically calculated based on structure dimensions
+                        </div>
+                    </group>
+                    <separator string="Lower Components Summary"/>
+                    <group>
+                        <field name="total_lower_cost" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add total cost to main view -->
+            <field name="grand_total_cost" position="after">
+                <field name="total_lower_cost" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

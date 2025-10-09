@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_component_line_tree" model="ir.ui.view">
+        <field name="name">greenhouse.component.line.tree</field>
+        <field name="model">greenhouse.component.line</field>
+        <field name="arch" type="xml">
+            <tree string="Components" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="section"/>
+                <field name="name"/>
+                <field name="nos"/>
+                <field name="use_length_master"/>
+                <field name="length_master_id" invisible="use_length_master == False"/>
+<field name="custom_length" invisible="use_length_master == True"/>
+                <field name="length"/>
+                <field name="pipe_id"/>
+                <field name="total_cost"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

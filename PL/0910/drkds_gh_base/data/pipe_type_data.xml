@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="pipe_type_round" model="greenhouse.pipe.type">
+            <field name="name">Round</field>
+        </record>
+        <record id="pipe_type_square" model="greenhouse.pipe.type">
+            <field name="name">Square</field>
+        </record>
+        <record id="pipe_type_gi" model="greenhouse.pipe.type">
+            <field name="name">GI Pipe</field>
+        </record>
+        <record id="pipe_type_ms" model="greenhouse.pipe.type">
+            <field name="name">MS Pipe</field>
+        </record>
+    </data>
+</odoo>

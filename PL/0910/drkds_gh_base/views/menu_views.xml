@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_greenhouse_root" name="Greenhouse" sequence="10"/>
+    
+    <menuitem id="menu_greenhouse_projects" 
+              name="Projects" 
+              parent="menu_greenhouse_root" 
+              action="action_greenhouse_project" 
+              sequence="10"/>
+    
+    <menuitem id="menu_greenhouse_config" 
+              name="Configuration" 
+              parent="menu_greenhouse_root" 
+              sequence="100"/>
+    
+    <menuitem id="menu_pipe_management" 
+              name="Pipes" 
+              parent="menu_greenhouse_config" 
+              action="action_pipe_management" 
+              sequence="10"/>
+    
+    <menuitem id="menu_pipe_types" 
+              name="Pipe Types" 
+              parent="menu_greenhouse_config" 
+              action="action_pipe_type" 
+              sequence="20"/>
+    
+    <menuitem id="menu_pipe_sizes" 
+              name="Pipe Sizes" 
+              parent="menu_greenhouse_config" 
+              action="action_pipe_size" 
+              sequence="30"/>
+    
+    <menuitem id="menu_wall_thickness" 
+              name="Wall Thickness" 
+              parent="menu_greenhouse_config" 
+              action="action_wall_thickness" 
+              sequence="40"/>
+    
+    <menuitem id="menu_length_master" 
+              name="Length Masters" 
+              parent="menu_greenhouse_config" 
+              action="action_length_master" 
+              sequence="50"/>
+</odoo>

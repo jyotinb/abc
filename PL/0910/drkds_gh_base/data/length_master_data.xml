@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="length_05" model="greenhouse.length.master">
+            <field name="length_value">0.5</field>
+        </record>
+        <record id="length_10" model="greenhouse.length.master">
+            <field name="length_value">1.0</field>
+        </record>
+        <record id="length_15" model="greenhouse.length.master">
+            <field name="length_value">1.5</field>
+        </record>
+        <record id="length_20" model="greenhouse.length.master">
+            <field name="length_value">2.0</field>
+        </record>
+        <record id="length_25" model="greenhouse.length.master">
+            <field name="length_value">2.5</field>
+        </record>
+        <record id="length_30" model="greenhouse.length.master">
+            <field name="length_value">3.0</field>
+        </record>
+        <record id="length_40" model="greenhouse.length.master">
+            <field name="length_value">4.0</field>
+        </record>
+        <record id="length_50" model="greenhouse.length.master">
+            <field name="length_value">5.0</field>
+        </record>
+        <record id="length_60" model="greenhouse.length.master">
+            <field name="length_value">6.0</field>
+        </record>
+    </data>
+</odoo>

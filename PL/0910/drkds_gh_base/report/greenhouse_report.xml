@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="report_greenhouse_project"
+        model="greenhouse.project"
+        string="Greenhouse Report"
+        report_type="qweb-pdf"
+        name="drkds_gh_base.report_greenhouse_template"
+        file="drkds_gh_base.report_greenhouse_template"
+    />
+
+    <template id="report_greenhouse_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Greenhouse Project Report</h2>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Customer:</strong> <span t-field="o.customer"/><br/>
+                                <strong>City:</strong> <span t-field="o.city"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Structure Type:</strong> <span t-field="o.structure_type"/><br/>
+                                <strong>Total Cost:</strong> <span t-field="o.grand_total_cost"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

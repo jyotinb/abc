@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_greenhouse_project_form" model="ir.ui.view">
+        <field name="name">greenhouse.project.form</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <form string="Greenhouse Project">
+                <header>
+                    <button name="action_calculate_components" string="Calculate Components" type="object" class="btn-primary"/>
+                    <button name="%(greenhouse_bulk_pipe_wizard_action)d" string="Bulk Assign Pipes" type="action" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Customer Information">
+                            <field name="customer"/>
+                            <field name="city"/>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                        </group>
+                        <group string="Project Info">
+                            <field name="structure_type"/>
+                            <field name="plot_size"/>
+                            <field name="structure_size" readonly="1"/>
+                            <field name="grand_total_cost" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Structure Configuration">
+                            <group>
+                                <group string="Dimensions">
+                                    <field name="total_span_length"/>
+                                    <field name="total_bay_length"/>
+                                    <field name="span_width"/>
+                                    <field name="bay_width"/>
+                                </group>
+                                <group string="Heights">
+                                    <field name="top_ridge_height"/>
+                                    <field name="column_height"/>
+                                    <field name="big_arch_length"/>
+                                    <field name="small_arch_length"/>
+                                    <field name="foundation_length"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Calculated Values">
+                                    <field name="span_length" readonly="1"/>
+                                    <field name="bay_length" readonly="1"/>
+                                    <field name="no_of_bays" readonly="1"/>
+                                    <field name="no_of_spans" readonly="1"/>
+                                </group>
+                                <group string="Calculated Heights">
+                                    <field name="bottom_height" readonly="1"/>
+                                    <field name="arch_height" readonly="1"/>
+                                    <field name="gutter_length" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                       <page string="Advanced Configuration">
+    <group>
+        <group string="Frame Configuration">
+            <field name="no_column_big_frame"/>
+            <field name="no_anchor_frame_lines" invisible="no_column_big_frame == '0'"/>
+            <field name="thick_column"/>
+        </group>
+        <group string="Truss Configuration">
+            <field name="is_bottom_chord"/>
+            <field name="bottom_chord_type" invisible="not is_bottom_chord"/>
+        </group>
+    </group>
+    <group>
+        <group string="Gutter Configuration">
+            <field name="gutter_type"/>
+            <field name="gutter_slope"/>
+            <field name="last_span_gutter"/>
+            <field name="last_span_gutter_length" invisible="not last_span_gutter"/>
+        </group>
+        <group string="Other Settings">
+            <field name="side_screen_guard"/>
+            <field name="side_screen_guard_box"/>
+            <field name="no_of_curtains"/>
+            <!-- Extension modules will add their checkboxes here -->
+        </group>
+    </group>
+</page>
+                        <page string="Components">
+                            <field name="component_line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="section"/>
+                                    <field name="name"/>
+                                    <field name="nos"/>
+                                    <field name="length"/>
+                                    <field name="pipe_id"/>
+                                    <field name="total_length"/>
+                                    <field name="total_cost"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Other">
+                            <group>
+                                <field name="address"/>
+                                <field name="reference"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_greenhouse_project_tree" model="ir.ui.view">
+        <field name="name">greenhouse.project.tree</field>
+        <field name="model">greenhouse.project</field>
+        <field name="arch" type="xml">
+            <tree string="Greenhouse Projects">
+                <field name="name"/>
+                <field name="customer"/>
+                <field name="city"/>
+                <field name="structure_type"/>
+                <field name="structure_size"/>
+                <field name="grand_total_cost"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_greenhouse_project" model="ir.actions.act_window">
+        <field name="name">Greenhouse Projects</field>
+        <field name="res_model">greenhouse.project</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

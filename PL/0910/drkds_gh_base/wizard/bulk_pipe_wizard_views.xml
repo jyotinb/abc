@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bulk_pipe_wizard_form" model="ir.ui.view">
+        <field name="name">greenhouse.bulk.pipe.wizard.form</field>
+        <field name="model">greenhouse.bulk.pipe.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Pipe Assignment">
+                <group>
+                    <field name="project_id" invisible="1"/>
+                    <field name="pipe_id"/>
+                </group>
+                <separator string="Select Components"/>
+                <field name="component_ids">
+                    <tree>
+                        <field name="section"/>
+                        <field name="name"/>
+                        <field name="nos"/>
+                        <field name="length"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_assign" string="Assign Pipe" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="greenhouse_bulk_pipe_wizard_action" model="ir.actions.act_window">
+        <field name="name">Bulk Pipe Assignment</field>
+        <field name="res_model">greenhouse.bulk.pipe.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'active_id': active_id}</field>
+    </record>
+</odoo>

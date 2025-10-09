@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_greenhouse_project_form_asc" model="ir.ui.view">
+        <field name="name">greenhouse.project.form.asc</field>
+        <field name="model">greenhouse.project</field>
+        <field name="inherit_id" ref="drkds_gh_base.view_greenhouse_project_form"/>
+        <field name="arch" type="xml">
+            <!-- Add checkbox to Other Settings group -->
+            <field name="no_of_curtains" position="after">
+                <field name="is_side_coridoors"/>
+            </field>
+            
+            <!-- Add ASC Configuration page after Advanced Configuration page -->
+            <xpath expr="//page[.//field[@name='no_of_curtains']]" position="after">
+                <page string="ASC (Side Corridors)" name="asc_config" invisible="not is_side_coridoors">
+                    <group>
+                        <group string="ASC Configuration">
+                            <field name="is_side_coridoors" invisible="1"/>
+                            <div class="alert alert-success">
+                                <strong>ASC Status:</strong> Additional Side Corridors Enabled
+                            </div>
+                        </group>
+                        <group string="ASC Information">
+                            <div class="text-muted">
+                                <strong>About ASC:</strong><br/>
+                                Additional Side Corridors provide extra workspace and 
+                                improved access along the greenhouse sides.
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="ASC Components"/>
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            ASC includes support pipes, front/back span pipes, and bay pipes for both sides.
+                        </div>
+                    </group>
+                    <group>
+                        <field name="total_asc_cost" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add total cost to main view -->
+            <field name="grand_total_cost" position="after">
+                <field name="total_asc_cost" readonly="1" invisible="not is_side_coridoors"/>
+            </field>
+        </field>
+    </record>
+</odoo>

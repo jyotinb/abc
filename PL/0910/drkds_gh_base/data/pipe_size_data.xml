@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="pipe_size_20" model="greenhouse.pipe.size">
+            <field name="name">20mm</field>
+            <field name="size_mm">20.0</field>
+        </record>
+        <record id="pipe_size_25" model="greenhouse.pipe.size">
+            <field name="name">25mm</field>
+            <field name="size_mm">25.0</field>
+        </record>
+        <record id="pipe_size_32" model="greenhouse.pipe.size">
+            <field name="name">32mm</field>
+            <field name="size_mm">32.0</field>
+        </record>
+        <record id="pipe_size_40" model="greenhouse.pipe.size">
+            <field name="name">40mm</field>
+            <field name="size_mm">40.0</field>
+        </record>
+        <record id="pipe_size_50" model="greenhouse.pipe.size">
+            <field name="name">50mm</field>
+            <field name="size_mm">50.0</field>
+        </record>
+        <record id="pipe_size_60" model="greenhouse.pipe.size">
+            <field name="name">60mm</field>
+            <field name="size_mm">60.0</field>
+        </record>
+        <record id="pipe_size_76" model="greenhouse.pipe.size">
+            <field name="name">76mm</field>
+            <field name="size_mm">76.0</field>
+        </record>
+        <record id="pipe_size_90" model="greenhouse.pipe.size">
+            <field name="name">90mm</field>
+            <field name="size_mm">90.0</field>
+        </record>
+        <record id="pipe_size_100" model="greenhouse.pipe.size">
+            <field name="name">100mm</field>
+            <field name="size_mm">100.0</field>
+        </record>
+        <record id="pipe_size_114" model="greenhouse.pipe.size">
+            <field name="name">114mm</field>
+            <field name="size_mm">114.0</field>
+        </record>
+    </data>
+</odoo>
