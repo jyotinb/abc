@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       
+        <record id="view_accessories_master_form" model="ir.ui.view">
+            <field name="name">accessories.master.form</field>
+            <field name="model">accessories.master</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Accessory Name"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Basic Information">
+                                <field name="category"/>
+                                <field name="sequence"/>
+                                <field name="size_specification"/>
+                            </group>
+                            <group string="Pricing">
+                                <field name="unit_price" widget="monetary"/>
+                            </group>
+                        </group>
+                        <group string="Additional Information">
+                            <field name="notes" placeholder="Add any special notes or specifications"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+		   <!-- Accessories Master Tree View -->
+        <record id="view_accessories_master_tree" model="ir.ui.view">
+            <field name="name">accessories.master.tree</field>
+            <field name="model">accessories.master</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="not active">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="size_specification"/>
+                    <field name="unit_price" widget="monetary"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_accessories_master" model="ir.actions.act_window">
+            <field name="name">Accessories Catalog</field>
+            <field name="res_model">accessories.master</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active': 1, 'search_default_group_by_category': 1}</field>
+        </record>
+
+       
+
+
+          <menuitem id="menu_accessories_master_main" 
+                  name="Accessories Master" 
+				  parent="green2_base.menu_greenhouse_management" 
+                  sequence="25"/>
+                  
+        <!-- Submenu for Accessories Catalog -->
+        <menuitem id="menu_accessories_catalog" 
+                  name="Accessories Catalog" 
+                  parent="menu_accessories_master_main" 
+                  action="action_accessories_master" 
+                  sequence="10"/>
+
+     <!-- Separate actions for each category -->
+<record id="action_accessories_brackets" model="ir.actions.act_window">
+    <field name="name">Brackets</field>
+    <field name="res_model">accessories.master</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('category', '=', 'brackets')]</field>
+    <field name="context">{'default_category': 'brackets'}</field>
+</record>
+
+<record id="action_accessories_clamps" model="ir.actions.act_window">
+    <field name="name">Clamps</field>
+    <field name="res_model">accessories.master</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('category', '=', 'clamps')]</field>
+    <field name="context">{'default_category': 'clamps'}</field>
+</record>
+
+<record id="action_accessories_wires" model="ir.actions.act_window">
+    <field name="name">Wires and Connectors</field>
+    <field name="res_model">accessories.master</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('category', 'in', ['wires', 'connectors'])]</field>
+    <field name="context">{'default_category': 'wires'}</field>
+</record>
+
+<!-- Menu items pointing to specific actions -->
+<menuitem id="menu_brackets_catalog" 
+          name="Brackets" 
+          parent="menu_accessories_master_main" 
+          action="action_accessories_brackets" 
+          sequence="20"/>
+          
+<menuitem id="menu_clamps_catalog" 
+          name="Clamps" 
+          parent="menu_accessories_master_main" 
+          action="action_accessories_clamps" 
+          sequence="30"/>
+          
+<menuitem id="menu_wires_catalog" 
+          name="Wires and Connectors" 
+          parent="menu_accessories_master_main" 
+          action="action_accessories_wires" 
+          sequence="40"/>
+       
+
+</data>
+</odoo>
