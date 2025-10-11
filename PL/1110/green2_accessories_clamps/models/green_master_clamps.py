@@ -417,38 +417,45 @@ class GreenMasterClamps(models.Model):
                                           middle_column_data['count'])
     
     def _accumulate_purlin_clamps(self, accumulator):
-        """NEW METHOD: Accumulate purlin clamps for both W and M types"""
-        # Get Arch Middle Purlin data (NOT Big/Small Arch data)
+        """
+        NEW METHOD: Accumulate purlin clamps for both W and M types
+        FIXED: Uses ARCH pipe size (not purlin size) because clamps fit on the arch
+        """
+        # Get Arch Middle Purlin data (for QUANTITY only)
         arch_middle_big_data = self._get_arch_middle_purlin_big_data()
         arch_middle_small_data = self._get_arch_middle_purlin_small_data()
         
-        # Big Purlin clamps (= Arch Middle Purlin Big Arch)
-        if arch_middle_big_data['count'] > 0 and arch_middle_big_data['size'] and self.big_purlin_clamp_type_first:
+        # Get Arch data (for CLAMP SIZE)
+        big_arch_data = self._get_big_arch_data()
+        small_arch_data = self._get_small_arch_data()
+        
+        # Big Purlin clamps (= Arch Middle Purlin Big Arch quantity, Big Arch size)
+        if arch_middle_big_data['count'] > 0 and big_arch_data['size'] and self.big_purlin_clamp_type_first:
             # First Type
             qty_first = self.no_of_spans * 2
             clamp_name = 'Full Clamp' if self.big_purlin_clamp_type_first == 'full_clamp' else 'L Joint'
-            self._add_to_clamp_accumulator(accumulator, clamp_name, arch_middle_big_data['size'], qty_first)
+            self._add_to_clamp_accumulator(accumulator, clamp_name, big_arch_data['size'], qty_first)
             
             # Second Type (must exist if first type exists due to validation)
             if self.big_purlin_clamp_type_second:
                 qty_second = arch_middle_big_data['count'] - qty_first
                 if qty_second > 0:
                     clamp_name = 'Half Clamp' if self.big_purlin_clamp_type_second == 'half_clamp' else 'T Joint'
-                    self._add_to_clamp_accumulator(accumulator, clamp_name, arch_middle_big_data['size'], qty_second)
+                    self._add_to_clamp_accumulator(accumulator, clamp_name, big_arch_data['size'], qty_second)
         
-        # Small Purlin clamps (= Arch Middle Purlin Small Arch)
-        if arch_middle_small_data['count'] > 0 and arch_middle_small_data['size'] and self.small_purlin_clamp_type_first:
+        # Small Purlin clamps (= Arch Middle Purlin Small Arch quantity, Small Arch size)
+        if arch_middle_small_data['count'] > 0 and small_arch_data['size'] and self.small_purlin_clamp_type_first:
             # First Type
             qty_first = self.no_of_spans * 2
             clamp_name = 'Full Clamp' if self.small_purlin_clamp_type_first == 'full_clamp' else 'L Joint'
-            self._add_to_clamp_accumulator(accumulator, clamp_name, arch_middle_small_data['size'], qty_first)
+            self._add_to_clamp_accumulator(accumulator, clamp_name, small_arch_data['size'], qty_first)
             
             # Second Type (must exist if first type exists due to validation)
             if self.small_purlin_clamp_type_second:
                 qty_second = arch_middle_small_data['count'] - qty_first
                 if qty_second > 0:
                     clamp_name = 'Half Clamp' if self.small_purlin_clamp_type_second == 'half_clamp' else 'T Joint'
-                    self._add_to_clamp_accumulator(accumulator, clamp_name, arch_middle_small_data['size'], qty_second)
+                    self._add_to_clamp_accumulator(accumulator, clamp_name, small_arch_data['size'], qty_second)
     
     def _accumulate_v_support_main_column_clamps(self, accumulator):
         """Accumulate V Support to Main Column clamps - MODIFIED for Column Size"""
