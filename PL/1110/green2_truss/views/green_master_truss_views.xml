@@ -1,0 +1,144 @@
+<odoo>
+    <!-- Inherit base form to add truss configuration -->
+    <record id="view_green_master_form_truss" model="ir.ui.view">
+        <field name="name">green.master.form.truss</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_form_base"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Truss Configuration Page -->
+            <xpath expr="//page[position()=last()-1]" position="before">
+                <page string="Truss Configuration">
+                    <group>
+                        <group string="Arch Support Configuration">
+                            <field name="arch_support_type" widget="radio"/>
+                            
+                            <!-- Show relevant length fields based on selection -->
+                            <field name="length_arch_support_big" 
+                                   invisible="arch_support_type not in ['w', 'm', 'arch_2_straight']"/>
+                            <field name="length_arch_support_big_small" 
+                                   invisible="arch_support_type not in ['w', 'm', 'arch_2_straight']"/>
+                            <field name="length_arch_support_small_big_arch" 
+                                   invisible="arch_support_type not in ['w', 'm', 'arch_2_bottom']"/>
+                            <field name="length_arch_support_small_small_arch" 
+                                   invisible="arch_support_type not in ['w', 'm', 'arch_2_bottom']"/>
+                        </group>
+                        
+                        <group string="Bottom Chord Settings">
+                            <field name="is_bottom_chord"/>
+                            <field name="v_support_bottom_chord_frame" invisible="not is_bottom_chord"/>
+                            <field name="length_v_support_bottom_chord_frame" invisible="not is_bottom_chord"/>
+                        </group>
+                        
+                        <group string="Vent Support Settings">
+                            <field name="no_vent_big_arch_support_frame"/>
+                            <field name="length_vent_big_arch_support" invisible="no_vent_big_arch_support_frame == '0'"/>
+                            <field name="no_vent_small_arch_support_frame"/>
+                            <field name="length_vent_small_arch_support" invisible="no_vent_small_arch_support_frame == '0'"/>
+                        </group>
+                        <group string="Border Purlin ASC Configuration" 
+       invisible="bay_side_border_purlin == '0' and span_side_border_purlin == '0'">
+    
+    <!-- Info about auto-detection -->
+    <div class="alert alert-info" colspan="4">
+        <strong>ℹ Auto-Detection:</strong> ASC sides are automatically detected from ASC width settings:
+        <ul class="mb-0">
+            <li>Front Bay ASC: <code>width_front_bay_coridoor > 0</code></li>
+            <li>Back Bay ASC: <code>width_back_bay_coridoor > 0</code></li>
+            <li>Front Span ASC: <code>width_front_span_coridoor > 0</code></li>
+            <li>Back Span ASC: <code>width_back_span_coridoor > 0</code></li>
+        </ul>
+    </div>
+    
+    <separator string="Bay Side ASC (Auto-Detected)" colspan="2" 
+               invisible="bay_side_border_purlin == '0'"/>
+    <field name="front_bay_asc" 
+           widget="boolean_toggle"
+           invisible="bay_side_border_purlin == '0'"/>
+    <field name="back_bay_asc" 
+           widget="boolean_toggle"
+           invisible="bay_side_border_purlin == '0'"/>
+    
+    <separator string="Span Side ASC (Auto-Detected)" colspan="2" 
+               invisible="span_side_border_purlin == '0'"/>
+    <field name="front_span_asc" 
+           widget="boolean_toggle"
+           invisible="span_side_border_purlin == '0'"/>
+    <field name="back_span_asc" 
+           widget="boolean_toggle"
+           invisible="span_side_border_purlin == '0'"/>
+</group>
+                        <group string="Purlin Settings">
+                            <field name="bay_side_border_purlin"/>
+                            <field name="span_side_border_purlin"/>
+                        </group>
+                        
+                        <group string="Border Purlin ASC Configuration" invisible="bay_side_border_purlin == '0' and span_side_border_purlin == '0'">
+                            <separator string="Bay Side ASC" colspan="2" invisible="bay_side_border_purlin == '0'"/>
+                            <field name="front_bay_asc" invisible="bay_side_border_purlin == '0'"/>
+                            <field name="back_bay_asc" invisible="bay_side_border_purlin == '0'"/>
+                            
+                            <separator string="Span Side ASC" colspan="2" invisible="span_side_border_purlin == '0'"/>
+                            <field name="front_span_asc" invisible="span_side_border_purlin == '0'"/>
+                            <field name="back_span_asc" invisible="span_side_border_purlin == '0'"/>
+                        </group>
+                        
+                        <group string="Thick Column Configuration">
+                            <field name="thick_column_position"/>
+                        </group>
+                        
+                        <group string="Anchor Frame Configuration">
+                            <field name="no_anchor_frame_lines"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Truss Components"/>
+                    <field name="truss_component_ids" context="{'default_section': 'truss'}"/>
+                    
+                    <group>
+                        <field name="total_truss_cost" readonly="1" widget="monetary"/>
+                    </group>
+                    
+                    <!-- Hidden computed fields for backward compatibility -->
+                    <group invisible="1">
+                        <field name="is_arch_support_big"/>
+                        <field name="is_arch_support_big_small"/>
+                        <field name="is_arch_support_small_big_arch"/>
+                        <field name="is_arch_support_small_small_arch"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Grand Total Panel -->
+            <div>
+                <div class="">
+                    <h3 class="mb-0">💰 PROJECT TOTAL: <field name="grand_total_cost" readonly="1" widget="monetary" field_id="grand_total_cost_1"/></h3>
+                </div>
+            </div>
+            
+            <!-- Add Truss Components to Component Management -->
+            <xpath expr="//div[@class='card border-danger mb-4'][div[@class='card-header bg-danger text-white text-center']/h3[contains(text(), '💰 PROJECT TOTAL:')]]" position="before">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">🌉 Truss Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="truss_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-info">Truss Total: <field name="total_truss_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to Cost Summary -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="before">
+                <tr class="table-info">
+                    <td><strong>🌉 Truss Components</strong></td>
+                    <td class="text-right"><field name="total_truss_cost" readonly="1" widget="monetary"/></td>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>
