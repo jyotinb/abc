@@ -125,9 +125,52 @@ class GreenMasterClamps(models.Model):
         string='Clamps Components'
     )
     
+    # AFX Fields for Cross Bracing calculations
+    afx2_internal_cc_lines = fields.Integer(
+        'AFX2 - Internal CC Cross Bracing Lines', 
+        default=0,
+        help="Number of AF lines that fall in Internal Column to Column Cross Bracing (only when AF Lines > 2)"
+    )
+    
+    afx3_column_arch_lines = fields.Integer(
+        'AFX3 - Column to Arch Lines', 
+        default=0,
+        help="Number of AF lines that fall in Cross Bracing Column to Arch (Max 2, only when AF Lines > 2)"
+    )
+    
+    afx4_column_bottom_lines = fields.Integer(
+        'AFX4 - Column to Bottom Chord Lines', 
+        default=0,
+        help="Number of AF lines that fall in Cross Bracing Column to Bottom Chord (Max 2, only when AF Lines > 2)"
+    )
+    
+    # Computed field to show/hide AFX fields
+    show_afx_fields = fields.Boolean(
+        'Show AFX Fields',
+        compute='_compute_show_afx_fields',
+        store=False
+    )
+    
     # =============================================
     # COMPUTED METHODS
     # =============================================
+    
+    @api.depends('no_anchor_frame_lines')
+    def _compute_show_afx_fields(self):
+        """Show AFX fields only when AF Lines > 2"""
+        for record in self:
+            record.show_afx_fields = int(getattr(record, 'no_anchor_frame_lines', 0)) > 2
+    
+    @api.constrains('afx3_column_arch_lines', 'afx4_column_bottom_lines')
+    def _check_afx_limits(self):
+        """Validate AFX3 and AFX4 are max 2"""
+        for record in self:
+            if record.afx3_column_arch_lines > 2:
+                raise ValidationError("AFX3 (Column to Arch Lines) cannot be more than 2")
+            if record.afx4_column_bottom_lines > 2:
+                raise ValidationError("AFX4 (Column to Bottom Chord Lines) cannot be more than 2")
+    
+    
     
     @api.depends('arch_support_type')
     def _compute_clamp_type(self):
@@ -283,13 +326,26 @@ class GreenMasterClamps(models.Model):
         
         std_calc.accumulate_purlin_clamps(self, clamp_accumulator)
         
+        std_calc.accumulate_arch_middle_purlin_clamps(self, clamp_accumulator)
+        
+        spec_calc.accumulate_gable_purlin_clamps(self, clamp_accumulator)
+        
         if hasattr(self, 'is_bottom_chord') and self.is_bottom_chord:
             std_calc.accumulate_v_support_main_column_clamps(self, clamp_accumulator)
         
         # Special clamp calculations (delegated to module)
         spec_calc.accumulate_vent_support_small_arch_clamps(self, clamp_accumulator)
-        spec_calc.accumulate_cross_bracing_clamps(self, clamp_accumulator)
+        
+         # Cross Bracing Clamps - All Types
+        spec_calc.accumulate_front_back_cross_bracing_clamps(self, clamp_accumulator)  # Renamed
+        spec_calc.accumulate_internal_cc_cross_bracing_clamps(self, clamp_accumulator)  # NEW
+        spec_calc.accumulate_cross_bracing_column_arch_clamps(self, clamp_accumulator)  # NEW
+        spec_calc.accumulate_cross_bracing_column_bottom_clamps(self, clamp_accumulator)  # NEW
+        
+        
         spec_calc.accumulate_border_purlin_clamps(self, clamp_accumulator)
+        
+        
         
         # ASC Clamps
         if hasattr(self, 'is_side_coridoors') and self.is_side_coridoors:
@@ -397,6 +453,23 @@ class GreenMasterClamps(models.Model):
                 self, temp_accumulator, 'PURLIN CLAMPS', sequence))
             temp_accumulator.clear()
             sequence += 100
+            
+        # NEW: Arch Middle Purlin Clamps
+        std_calc.accumulate_arch_middle_purlin_clamps(self, temp_accumulator)
+        if temp_accumulator:
+            details.extend(helpers.convert_accumulator_to_details(
+                self, temp_accumulator, 'ARCH MIDDLE PURLIN CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+            
+        # Gable Purlin Clamps
+        spec_calc.accumulate_gable_purlin_clamps(self, temp_accumulator)
+        if temp_accumulator:
+            details.extend(helpers.convert_accumulator_to_details(
+                self, temp_accumulator, 'GABLE PURLIN CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+            
         
         # V Support Clamps
         if hasattr(self, 'is_bottom_chord') and self.is_bottom_chord:
@@ -415,11 +488,35 @@ class GreenMasterClamps(models.Model):
             temp_accumulator.clear()
             sequence += 100
         
-        # Cross Bracing Clamps
-        spec_calc.accumulate_cross_bracing_clamps(self, temp_accumulator)
+        # F&B Cross Bracing Clamps (RENAMED)
+        spec_calc.accumulate_front_back_cross_bracing_clamps(self, temp_accumulator)
         if temp_accumulator:
             details.extend(helpers.convert_accumulator_to_details(
-                self, temp_accumulator, 'CROSS BRACING CLAMPS', sequence))
+                self, temp_accumulator, 'F&B CROSS BRACING CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+        
+        # Internal CC Cross Bracing Clamps (NEW)
+        spec_calc.accumulate_internal_cc_cross_bracing_clamps(self, temp_accumulator)
+        if temp_accumulator:
+            details.extend(helpers.convert_accumulator_to_details(
+                self, temp_accumulator, 'INTERNAL CC CROSS BRACING CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+        
+        # Cross Bracing Column to Arch Clamps (NEW)
+        spec_calc.accumulate_cross_bracing_column_arch_clamps(self, temp_accumulator)
+        if temp_accumulator:
+            details.extend(helpers.convert_accumulator_to_details(
+                self, temp_accumulator, 'COLUMN TO ARCH BRACING CLAMPS', sequence))
+            temp_accumulator.clear()
+            sequence += 100
+        
+        # Cross Bracing Column to Bottom Chord Clamps (NEW)
+        spec_calc.accumulate_cross_bracing_column_bottom_clamps(self, temp_accumulator)
+        if temp_accumulator:
+            details.extend(helpers.convert_accumulator_to_details(
+                self, temp_accumulator, 'COLUMN TO BOTTOM CHORD BRACING CLAMPS', sequence))
             temp_accumulator.clear()
             sequence += 100
         

@@ -1033,7 +1033,7 @@ def accumulate_vent_support_small_arch_clamps(record, accumulator):
 # CROSS BRACING CLAMPS
 # =============================================
 
-def accumulate_cross_bracing_clamps(record, accumulator):
+def accumulate_front_back_cross_bracing_clamps(record, accumulator):
     """
     Accumulate Front & Back Column to Column Cross Bracing X Clamps
     Handles AFX lines logic
@@ -1123,3 +1123,286 @@ def accumulate_cross_bracing_clamps(record, accumulator):
                         accumulator, 'Full Clamp', main_size, qty_main
                     )
                     _logger.info(f"  {qty_main} × Full Clamp - {main_size} (Main)")
+                    
+                    
+# =============================================
+# INTERNAL CC CROSS BRACING X CLAMPS
+# =============================================
+
+def accumulate_internal_cc_cross_bracing_clamps(record, accumulator):
+    """
+    Accumulate Internal Column to Column Cross Bracing X Clamps
+    Different from Front & Back CC Cross Bracing
+    """
+    # Get the Internal CC Cross Bracing component
+    internal_cc_bracing = record.lower_component_ids.filtered(
+        lambda c: c.name == 'Internal CC Cross Bracing X'
+    )
+    
+    if not internal_cc_bracing or internal_cc_bracing.nos == 0:
+        return
+    
+    internal_cc_count = internal_cc_bracing.nos
+    thick_column = getattr(record, 'thick_column', '0')
+    af_lines = int(getattr(record, 'no_anchor_frame_lines', 0))
+    afx2 = int(getattr(record, 'afx2_internal_cc_lines', 0))
+    
+    _logger.info(f"=== INTERNAL CC CROSS BRACING CLAMPS ===")
+    _logger.info(f"Internal CC count: {internal_cc_count}")
+    _logger.info(f"Thick Column: {thick_column}, AF Lines: {af_lines}, AFX2: {afx2}")
+    
+    thick_size = helpers.get_thick_column_pipe_size(record)
+    af_size = helpers.get_af_column_pipe_size(record)
+    main_size = helpers.get_main_column_pipe_size(record)
+    
+    thick_clamp_count = 0
+    af_clamp_count = 0
+    main_clamp_count = 0
+    
+    if thick_column in ['2', '4']:  # 2 Bay Side or All 4 Side
+        # Thick Column clamps
+        if thick_size:
+            thick_clamp_count = 8 * internal_cc_count
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', thick_size, thick_clamp_count
+            )
+            _logger.info(f"  {thick_clamp_count} × Full Clamp - {thick_size} (Thick)")
+    
+    # AF and Main Column clamps when AF Lines > 2
+    if af_lines > 2 and afx2 > 0:
+        # AF Column clamps
+        if af_size:
+            af_clamp_count = (afx2 * (record.no_of_spans + 1)) * 2
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', af_size, af_clamp_count
+            )
+            _logger.info(f"  {af_clamp_count} × Full Clamp - {af_size} (AF)")
+        
+        # Main Column clamps (remaining)
+        if main_size:
+            # Total clamps needed = internal_cc_count * 2
+            total_needed = internal_cc_count * 2
+            main_clamp_count = total_needed - thick_clamp_count - af_clamp_count
+            if main_clamp_count > 0:
+                helpers.add_to_clamp_accumulator(
+                    accumulator, 'Full Clamp', main_size, main_clamp_count
+                )
+                _logger.info(f"  {main_clamp_count} × Full Clamp - {main_size} (Main)")
+    elif thick_column not in ['2', '4']:
+        # If no thick columns and no AFX2, all clamps are main column
+        if main_size:
+            main_clamp_count = internal_cc_count * 2
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', main_size, main_clamp_count
+            )
+            _logger.info(f"  {main_clamp_count} × Full Clamp - {main_size} (Main)")
+
+# =============================================
+# CROSS BRACING COLUMN TO ARCH CLAMPS
+# =============================================
+
+def accumulate_cross_bracing_column_arch_clamps(record, accumulator):
+    """
+    Accumulate Cross Bracing Column to Arch Clamps
+    """
+    cross_bracing_arch = record.lower_component_ids.filtered(
+        lambda c: c.name == 'Cross Bracing Column to Arch'
+    )
+    
+    if not cross_bracing_arch or cross_bracing_arch.nos == 0:
+        return
+    
+    cross_bracing_count = cross_bracing_arch.nos
+    thick_column = getattr(record, 'thick_column', '0')
+    af_lines = int(getattr(record, 'no_anchor_frame_lines', 0))
+    afx3 = int(getattr(record, 'afx3_column_arch_lines', 0)) if af_lines > 2 else 0
+    
+    _logger.info(f"=== CROSS BRACING COLUMN TO ARCH CLAMPS ===")
+    _logger.info(f"Cross Bracing count: {cross_bracing_count}")
+    _logger.info(f"Thick Column: {thick_column}, AF Lines: {af_lines}, AFX3: {afx3}")
+    
+    # Arch clamps
+    big_arch_data = helpers.get_big_arch_data(record)
+    small_arch_data = helpers.get_small_arch_data(record)
+    
+    if big_arch_data['size']:
+        big_arch_qty = cross_bracing_count // 2
+        if big_arch_qty > 0:
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', big_arch_data['size'], big_arch_qty
+            )
+            _logger.info(f"  {big_arch_qty} × Full Clamp - {big_arch_data['size']} (Big Arch)")
+    
+    if small_arch_data['size']:
+        small_arch_qty = cross_bracing_count // 2
+        if small_arch_qty > 0:
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', small_arch_data['size'], small_arch_qty
+            )
+            _logger.info(f"  {small_arch_qty} × Full Clamp - {small_arch_data['size']} (Small Arch)")
+    
+    # Column clamps
+    thick_size = helpers.get_thick_column_pipe_size(record)
+    af_size = helpers.get_af_column_pipe_size(record)
+    main_size = helpers.get_main_column_pipe_size(record)
+    
+    thick_clamp_count = 0
+    af_clamp_count = 0
+    
+    if thick_column in ['2', '4']:  # 2 Bay Side or All 4 Side
+        # Thick Column clamps
+        if thick_size:
+            thick_clamp_count = 4
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', thick_size, thick_clamp_count
+            )
+            _logger.info(f"  {thick_clamp_count} × Full Clamp - {thick_size} (Thick)")
+        
+        # AF Column clamps (if AFX3 > 0)
+        if afx3 > 0 and af_size:
+            af_clamp_count = afx3 * ((record.no_of_spans * 2) - 2)
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', af_size, af_clamp_count
+            )
+            _logger.info(f"  {af_clamp_count} × Full Clamp - {af_size} (AF)")
+    else:  # 0 Thick / 4 Corner / 2 Span Side
+        # AF Column clamps (if AFX3 > 0)
+        if afx3 > 0 and af_size:
+            af_clamp_count = afx3 * (record.no_of_spans * 2)
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', af_size, af_clamp_count
+            )
+            _logger.info(f"  {af_clamp_count} × Full Clamp - {af_size} (AF)")
+    
+    # Main Column clamps (remaining)
+    if main_size:
+        main_clamp_count = cross_bracing_count - af_clamp_count - thick_clamp_count
+        if main_clamp_count > 0:
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', main_size, main_clamp_count
+            )
+            _logger.info(f"  {main_clamp_count} × Full Clamp - {main_size} (Main)")
+
+# =============================================
+# CROSS BRACING COLUMN TO BOTTOM CHORD CLAMPS
+# =============================================
+
+def accumulate_cross_bracing_column_bottom_clamps(record, accumulator):
+    """
+    Accumulate Cross Bracing Column to Bottom Chord Clamps
+    """
+    cross_bracing_bottom = record.lower_component_ids.filtered(
+        lambda c: c.name == 'Cross Bracing Column to Bottom Chord'
+    )
+    
+    if not cross_bracing_bottom or cross_bracing_bottom.nos == 0:
+        return
+    
+    cross_bracing_count = cross_bracing_bottom.nos
+    thick_column = getattr(record, 'thick_column', '0')
+    af_lines = int(getattr(record, 'no_anchor_frame_lines', 0))
+    afx4 = int(getattr(record, 'afx4_column_bottom_lines', 0)) if af_lines > 2 else 0
+    
+    _logger.info(f"=== CROSS BRACING COLUMN TO BOTTOM CHORD CLAMPS ===")
+    _logger.info(f"Cross Bracing count: {cross_bracing_count}")
+    _logger.info(f"Thick Column: {thick_column}, AF Lines: {af_lines}, AFX4: {afx4}")
+    
+    # Bottom Chord clamps
+    bottom_chord_data = helpers.get_bottom_chord_data(record)
+    if bottom_chord_data['size']:
+        helpers.add_to_clamp_accumulator(
+            accumulator, 'Full Clamp', 
+            bottom_chord_data['size'], cross_bracing_count
+        )
+        _logger.info(f"  {cross_bracing_count} × Full Clamp - {bottom_chord_data['size']} (Bottom Chord)")
+    
+    # Column clamps
+    thick_size = helpers.get_thick_column_pipe_size(record)
+    af_size = helpers.get_af_column_pipe_size(record)
+    main_size = helpers.get_main_column_pipe_size(record)
+    
+    thick_clamp_count = 0
+    af_clamp_count = 0
+    
+    if thick_column in ['2', '4']:  # 2 Bay Side or All 4 Side
+        # Thick Column clamps
+        if thick_size:
+            thick_clamp_count = 4
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', thick_size, thick_clamp_count
+            )
+            _logger.info(f"  {thick_clamp_count} × Full Clamp - {thick_size} (Thick)")
+        
+        # AF Column clamps (if AFX4 > 0)
+        if afx4 > 0 and af_size:
+            af_clamp_count = afx4 * ((record.no_of_spans * 2) - 2)
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', af_size, af_clamp_count
+            )
+            _logger.info(f"  {af_clamp_count} × Full Clamp - {af_size} (AF)")
+    else:  # 0 Thick / 4 Corner / 2 Span Side
+        # AF Column clamps (if AFX4 > 0)
+        if afx4 > 0 and af_size:
+            af_clamp_count = afx4 * (record.no_of_spans * 2)
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', af_size, af_clamp_count
+            )
+            _logger.info(f"  {af_clamp_count} × Full Clamp - {af_size} (AF)")
+    
+    # Main Column clamps (remaining)
+    if main_size:
+        main_clamp_count = cross_bracing_count - af_clamp_count - thick_clamp_count
+        if main_clamp_count > 0:
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Full Clamp', main_size, main_clamp_count
+            )
+            _logger.info(f"  {main_clamp_count} × Full Clamp - {main_size} (Main)")
+
+# =============================================
+# GABLE PURLIN CLAMPS
+# =============================================
+
+def accumulate_gable_purlin_clamps(record, accumulator):
+    """
+    Accumulate Gable Purlin Clamps (only for F Bracket configuration)
+    """
+    # Check if Gable Purlin exists
+    gable_purlin = record.truss_component_ids.filtered(
+        lambda c: c.name == 'Gable Purlin'
+    )
+    
+    if not gable_purlin or gable_purlin.nos == 0:
+        return
+    
+    # Check if F Bracket is configured
+    gutter_bracket_type = getattr(record, 'gutter_bracket_type', 'none')
+    
+    if gutter_bracket_type != 'f_bracket':
+        _logger.info("Gable Purlin exists but not F Bracket configuration - skipping Gable Purlin clamps")
+        return
+    
+    _logger.info(f"=== GABLE PURLIN CLAMPS (F Bracket) ===")
+    _logger.info(f"Gable Purlin count: {gable_purlin.nos}")
+    
+    # Get Big Arch pipe size
+    big_arch_data = helpers.get_big_arch_data(record)
+    
+    if big_arch_data['size']:
+        # Full Clamps = 4
+        helpers.add_to_clamp_accumulator(
+            accumulator, 'Full Clamp', big_arch_data['size'], 4
+        )
+        _logger.info(f"  4 × Full Clamp - {big_arch_data['size']} (Big Arch)")
+        
+        # Half Clamps = (No of Bays - 1) * 2
+        half_qty = (record.no_of_bays - 1) * 2
+        if half_qty > 0:
+            helpers.add_to_clamp_accumulator(
+                accumulator, 'Half Clamp', big_arch_data['size'], half_qty
+            )
+            _logger.info(f"  {half_qty} × Half Clamp - {big_arch_data['size']} (Big Arch)")
+            
+
+def accumulate_cross_bracing_clamps(record, accumulator):
+    """Backward compatibility wrapper - calls the renamed function"""
+    return accumulate_front_back_cross_bracing_clamps(record, accumulator)

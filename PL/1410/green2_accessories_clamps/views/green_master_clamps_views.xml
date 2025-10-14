@@ -150,6 +150,42 @@
             ⛔ <strong>Bay Side Clamps DISABLED:</strong> Only span side clamps will be calculated
         </div>
     </group>
+	
+<!-- ADD to green2_accessories_clamps/views/green_master_clamps_views.xml -->
+<!-- After the Border Purlin Configuration section and before the ASC configuration -->
+
+<!-- AFX Configuration for Cross Bracing (Only shown when AF Lines > 2) -->
+<group string="🔩 AFX Configuration (Cross Bracing AF Lines)" invisible="not show_afx_fields" col="2">
+    <div class="alert alert-warning" colspan="2">
+        <h6><strong>⚠️ Advanced AF Line Configuration</strong></h6>
+        <p>Since you have more than 2 Anchor Frame Lines, please specify how many AF lines fall in each cross bracing type:</p>
+    </div>
+    
+    <separator string="AFX Line Distribution" colspan="2"/>
+    
+    <field name="afx2_internal_cc_lines" 
+           string="AFX2 - Internal CC Cross Bracing Lines"
+           help="Number of AF lines for Internal Column to Column Cross Bracing"/>
+    
+    <field name="afx3_column_arch_lines" 
+           string="AFX3 - Column to Arch Lines (Max 2)"
+           help="Number of AF lines for Cross Bracing Column to Arch (Maximum 2)"/>
+    
+    <field name="afx4_column_bottom_lines" 
+           string="AFX4 - Column to Bottom Chord Lines (Max 2)"
+           help="Number of AF lines for Cross Bracing Column to Bottom Chord (Maximum 2)"/>
+    
+    <div class="text-info" colspan="2">
+        <p><b>Note:</b> AFX values determine how clamps are distributed between AF columns and Main columns in cross bracing calculations.</p>
+    </div>
+</group>
+
+<!-- Also add the hidden computed field -->
+<field name="show_afx_fields" invisible="1"/>	
+	
+	
+	
+	
     
     <!-- ASC Sides Status (Computed Fields) -->
     <separator string="🎯 ASC Sides Status (Auto-detected)" colspan="2"/>
