@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Door Length Field Options -->
+        <record id="field_option_column_pipe" model="length.field.option">
+            <field name="name">length_column_pipe</field>
+            <field name="display_name">Length for Door Column Pipe</field>
+        </record>
+        
+        <record id="field_option_purlin_pipe" model="length.field.option">
+            <field name="name">length_purlin_pipe</field>
+            <field name="display_name">Length for Door Purlin Pipe</field>
+        </record>
+        
+        <record id="field_option_chamber_column" model="length.field.option">
+            <field name="name">length_chamber_column</field>
+            <field name="display_name">Chamber Column Length</field>
+        </record>
+        
+        <record id="field_option_tractor_door_purlin" model="length.field.option">
+            <field name="name">length_tractor_door_purlin</field>
+            <field name="display_name">Length for Tractor Door Purlin</field>
+        </record>
+        
+        <record id="field_option_tractor_door_h_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_h_pipes</field>
+            <field name="display_name">Length for Tractor Door H Pipes</field>
+        </record>
+        
+        <record id="field_option_tractor_door_big_h_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_big_h_pipes</field>
+            <field name="display_name">Length for Tractor Door Big H Pipes</field>
+        </record>
+        
+        <record id="field_option_tractor_door_v_pipes" model="length.field.option">
+            <field name="name">length_tractor_door_v_pipes</field>
+            <field name="display_name">Length for Tractor Door V Pipes</field>
+        </record>
+        
+    </data>
+</odoo>
