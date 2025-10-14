@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Extend Green2's existing report to include accessories -->
+    <template id="green_master_report_accessories_extend" inherit_id="green2.green_master_report_template">
+        
+        <!-- Add accessories section before final cost summary -->
+        <xpath expr="//div[contains(@class, 'section-header') and text()='Cost Summary']" position="before">
+            
+            <div class="section-header" style="background-color: #f39c12; color: white;">Accessories Profile Breakdown</div>
+            <table class="component-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60%;">Profile Type</th>
+                        <th style="width: 40%; text-align: right;">Length (m)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🏗️ Profiles For Arch</td>
+                        <td style="text-align: right;"><span t-esc="round(o.profiles_for_arch, 2)"/></td>
+                    </tr>
+                    <tr>
+                        <td>📏 Profile For Purlin</td>
+                        <td style="text-align: right;"><span t-esc="round(o.profile_for_purlin, 2)"/></td>
+                    </tr>
+                    <tr>
+                        <td>⬇️ Profile for Bottom</td>
+                        <td style="text-align: right;"><span t-esc="round(o.profile_for_bottom, 2)"/></td>
+                    </tr>
+                    <tr>
+                        <td>📐 Side Profile</td>
+                        <td style="text-align: right;"><span t-esc="round(o.side_profile, 2)"/></td>
+                    </tr>
+                    <tr>
+                        <td>🚪 Door Profile</td>
+                        <td style="text-align: right;"><span t-esc="round(o.door_profile, 2)"/></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td style="font-size: 16px;">📊 TOTAL PROFILE</td>
+                        <td style="text-align: right; font-size: 16px;"><span t-esc="round(o.total_profile, 2)"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- Detailed calculation breakdowns -->
+            <div style="margin-top: 20px;">
+                <div class="section-header">Calculation Details</div>
+                
+                <div style="margin-bottom: 15px;" t-if="o.arch_calculation_details">
+                    <h4 style="color: #2c3e50; margin-bottom: 8px;">Profiles For Arch Calculation:</h4>
+                    <div style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #3498db; white-space: pre-line;">
+                        <span t-esc="o.arch_calculation_details"/>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;" t-if="o.purlin_calculation_details">
+                    <h4 style="color: #2c3e50; margin-bottom: 8px;">Profile For Purlin Calculation:</h4>
+                    <div style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #2ecc71; white-space: pre-line;">
+                        <span t-esc="o.purlin_calculation_details"/>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 8px;">Profile for Bottom Calculation:</h4>
+                    <div style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #e74c3c;">
+                        <strong>Formula:</strong> Span Length × 2<br/>
+                        <strong>Calculation:</strong> <span t-esc="o.span_length"/> × 2 = <span t-esc="round(o.profile_for_bottom, 2)"/>m
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;" t-if="o.side_calculation_details">
+                    <h4 style="color: #2c3e50; margin-bottom: 8px;">Side Profile Calculation:</h4>
+                    <div style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #f39c12; white-space: pre-line;">
+                        <span t-esc="o.side_calculation_details"/>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;" t-if="o.door_calculation_details">
+                    <h4 style="color: #2c3e50; margin-bottom: 8px;">Door Profile Calculation:</h4>
+                    <div style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #9b59b6; white-space: pre-line;">
+                        <span t-esc="o.door_calculation_details"/>
+                    </div>
+                </div>
+            </div>
+            
+        </xpath>
+        
+        <!-- Update final statistics to include accessories -->
+        <xpath expr="//td[contains(text(), 'Cost per m²:')]" position="after">
+            <tr>
+                <td style="font-weight: bold;">Total Profile Length:</td>
+                <td><span t-esc="round(o.total_profile, 2)"/> m</td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Profile per m²:</td>
+                <td><span t-esc="round(o.total_profile / o.structure_size, 2) if o.structure_size > 0 else 0"/> m/m²</td>
+            </tr>
+        </xpath>
+        
+    </template>
+    
+</odoo>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green2's form view to add Accessories functionality -->
+    <record id="view_green_master_form_accessories_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.accessories.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Accessories button to header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_calculate_accessories" 
+                        string="🔧 Calculate Accessories" 
+                        type="object" 
+                        class="btn-warning"
+                        help="Calculate all accessories profiles (Arch, Purlin, Bottom, Side, Door)"/>
+                <button name="action_accessories_summary" 
+                        string="📊 Accessories Summary" 
+                        type="object" 
+                        class="btn-info"
+                        help="Show current accessories calculation summary"/>
+            </xpath>
+            
+            <!-- Add new Accessories page -->
+            <xpath expr="//page[position()=last()]" position="after">
+                <page string="Accessories Profiles">
+                    <div class="alert alert-info" role="alert">
+                        <h4>🔧 Accessories Profile Calculations</h4>
+                        <p>This page shows detailed calculations for all profile types used in accessories planning.</p>
+                        <p><strong>Click "Calculate Accessories" button to update all calculations.</strong></p>
+                    </div>
+                    
+                    <group>
+                        <group string="Profile Calculations">
+                            <field name="profiles_for_arch" readonly="1"/>
+                            <field name="profile_for_purlin" readonly="1"/>
+                            <field name="profile_for_bottom" readonly="1"/>
+                            <field name="side_profile" readonly="1"/>
+                            <field name="door_profile" readonly="1"/>
+                        </group>
+                        <group string="Total">
+                            <field name="total_profile" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Arch Calculation Details">
+                            <div class="alert alert-secondary">
+                                <strong>Formula:</strong> No of Spans × (Roundup((Span Length / 20) + 1) × (Small Arch + Big Arch + Vent Supports))
+                            </div>
+                            <field name="arch_calculation_details" readonly="1" widget="text"/>
+                        </page>
+                        
+                        <page string="Purlin Calculation Details">
+                            <div class="alert alert-secondary">
+                                <strong>Formula:</strong> (Big Arch Purlin + Small Arch Purlin) + Gutter Calculations
+                            </div>
+                            <field name="purlin_calculation_details" readonly="1" widget="text"/>
+                        </page>
+                        
+                        <page string="Bottom Calculation">
+                            <div class="alert alert-secondary">
+                                <strong>Formula:</strong> Span Length × 2
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Span Length:</strong> <field name="span_length" readonly="1"/> m
+                                </div>
+                                <div class="col-6">
+                                    <strong>Result:</strong> <field name="profile_for_bottom" readonly="1"/> m
+                                </div>
+                            </div>
+                        </page>
+                        
+                        <page string="Side Profile Details">
+                            <div class="alert alert-secondary">
+                                <strong>Formula:</strong> Border Purlins + 8 × (Max ASC Length OR Main Column Length)
+                            </div>
+                            <field name="side_calculation_details" readonly="1" widget="text"/>
+                        </page>
+                        
+                        <page string="Door Profile Details">
+                            <div class="alert alert-secondary">
+                                <strong>Formula:</strong> Sum of all door component total lengths
+                            </div>
+                            <field name="door_calculation_details" readonly="1" widget="text"/>
+                        </page>
+                    </notebook>
+                </page>
+            </xpath>
+            
+            <!-- Add accessories section to Component Management page -->
+            <xpath expr="//div[contains(@class, 'card') and .//h3[contains(text(), 'PROJECT TOTAL')]]" position="before">
+                <div class="card border-warning mb-4">
+                    <div class="card-header bg-warning text-white text-center">
+                        <h4 class="mb-0">🔧 ACCESSORIES PROFILES</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td><strong>🏗️ Profiles For Arch:</strong></td>
+                                <td class="text-right"><field name="profiles_for_arch" readonly="1"/> m</td>
+                            </tr>
+                            <tr>
+                                <td><strong>📏 Profile For Purlin:</strong></td>
+                                <td class="text-right"><field name="profile_for_purlin" readonly="1"/> m</td>
+                            </tr>
+                            <tr>
+                                <td><strong>⬇️ Profile for Bottom:</strong></td>
+                                <td class="text-right"><field name="profile_for_bottom" readonly="1"/> m</td>
+                            </tr>
+                            <tr>
+                                <td><strong>📐 Side Profile:</strong></td>
+                                <td class="text-right"><field name="side_profile" readonly="1"/> m</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🚪 Door Profile:</strong></td>
+                                <td class="text-right"><field name="door_profile" readonly="1"/> m</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td><strong>📊 TOTAL PROFILE:</strong></td>
+                                <td class="text-right"><strong><field name="total_profile" readonly="1"/> m</strong></td>
+                            </tr>
+                        </table>
+                        <div class="text-center mt-3">
+                            <button name="action_calculate_accessories" 
+                                    string="🔧 Recalculate Accessories" 
+                                    type="object" 
+                                    class="btn btn-warning btn-sm"/>
+                            <button name="action_accessories_summary" 
+                                    string="📊 Show Summary" 
+                                    type="object" 
+                                    class="btn btn-info btn-sm"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Add accessories to tree view -->
+    <record id="view_green_master_tree_accessories_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.accessories.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            <field name="grand_total_cost" position="after">
+                <field name="total_profile" optional="hide" sum="Total Profile"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>
