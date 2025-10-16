@@ -17,6 +17,7 @@ def accumulate_v_support_main_column_clamps(record, accumulator):
     no_anchor_frame_lines = getattr(record, 'no_anchor_frame_lines', 0)
     v_support_per_frame = int(getattr(record, 'v_support_bottom_chord_frame', 0))
     v_support_frames = v_support_count // v_support_per_frame if v_support_per_frame > 0 else 0
+    v_support_for_af = getattr(record, 'v_support_for_af', True)  # Get from record
     
     if v_support_frames == 0:
         _logger.warning("V Support count exists but v_support_bottom_chord_frame is 0")
@@ -25,11 +26,13 @@ def accumulate_v_support_main_column_clamps(record, accumulator):
     _logger.info(f"=== V SUPPORT MAIN COLUMN CLAMPS ===")
     _logger.info(f"V Support count: {v_support_count}, Frames: {v_support_frames}")
     _logger.info(f"Thick Column: {thick_column}, AF Lines: {no_anchor_frame_lines}")
+    _logger.info(f"V Support for AF Lines: {v_support_for_af}")
     
     column_counts = helpers.get_actual_column_counts(record)
     
     v_support_distribution = calculate_v_support_column_distribution(
-        record, v_support_count, v_support_frames, thick_column, no_anchor_frame_lines, column_counts
+        record, v_support_count, v_support_frames, thick_column, no_anchor_frame_lines, 
+        column_counts
     )
     
     for column_type, data in v_support_distribution.items():
@@ -68,6 +71,7 @@ def calculate_v_support_column_distribution(record, v_support_count, v_support_f
     
     no_of_spans = getattr(record, 'no_of_spans', 0)
     no_of_bays = getattr(record, 'no_of_bays', 0)
+    v_support_for_af = getattr(record, 'v_support_for_af', True)  # Get from record
     
     # Get column sizes using helper functions
     main_size = helpers.get_main_column_pipe_size(record)
@@ -158,13 +162,85 @@ def calculate_v_support_column_distribution(record, v_support_count, v_support_f
             distribution['thick']['full'] = full_thick
         else:  # AF Lines > 2
             # CASE 6B: AF Lines > 2
-            half_af = no_anchor_frame_lines * (no_of_spans - 1)
-            half_main = ((no_of_spans - 1) * (no_of_bays + 1)) - half_af
+            half_af = (no_anchor_frame_lines - 2) * (no_of_spans - 1)
+            half_thick = (no_of_spans - 1) * 2
+            half_main = ((no_of_spans - 1) * (no_of_bays + 1)) - half_af - half_thick
             full_thick = 2 * (no_of_bays + 1)
             
             distribution['af']['half'] = half_af
+            distribution['thick']['half'] = half_thick
             distribution['main']['half'] = half_main
             distribution['thick']['full'] = full_thick
+    
+    # THICK COLUMN = 3 (2 Span Side)
+    elif thick_column == '3':
+        if no_anchor_frame_lines == 0:
+            # CASE 7A: AF Lines = 0
+            half_thick = (no_of_spans - 1) * 2
+            half_main = ((no_of_spans - 1) * (no_of_bays + 1)) - half_thick
+            full_main = (2 * (no_of_bays + 1)) - 4
+            full_thick = 4
+            
+            distribution['thick']['half'] = half_thick
+            distribution['main']['half'] = half_main
+            distribution['main']['full'] = full_main
+            distribution['thick']['full'] = full_thick
+        elif no_anchor_frame_lines > 2:
+            # CASE 7B: AF Lines > 2
+            half_thick = (no_of_spans - 1) * 2
+            half_af = (no_anchor_frame_lines - 2) * (no_of_spans - 1)
+            half_main = ((no_of_spans - 1) * (no_of_bays + 1)) - half_af - half_thick
+            full_af = (2 * no_anchor_frame_lines) - 4
+            full_thick = 4
+            full_main = (2 * (no_of_bays + 1)) - full_af - full_thick
+            
+            distribution['thick']['half'] = half_thick
+            distribution['af']['half'] = half_af
+            distribution['main']['half'] = half_main
+            distribution['af']['full'] = full_af
+            distribution['main']['full'] = full_main
+            distribution['thick']['full'] = full_thick
+        else:  # AF Lines < 3
+            # CASE 7C: AF Lines < 3
+            half_thick = (no_of_spans - 1) * no_anchor_frame_lines
+            half_main = ((no_of_spans - 1) * (no_of_bays + 1)) - half_thick
+            full_main = (2 * (no_of_bays + 1)) - (2 * no_anchor_frame_lines)
+            full_thick = 2 * no_anchor_frame_lines
+            
+            distribution['thick']['half'] = half_thick
+            distribution['main']['half'] = half_main
+            distribution['main']['full'] = full_main
+            distribution['thick']['full'] = full_thick
+    
+    # Apply V support for AF Lines = False logic
+    if not v_support_for_af:
+        # Zero out all AF clamps
+        distribution['af']['half'] = 0
+        distribution['af']['full'] = 0
+        
+        # Subtract from THICK clamps based on configuration
+        if thick_column == '1':  # 4 Corner
+            if no_anchor_frame_lines < 3:
+                distribution['thick']['full'] -= 2 * no_anchor_frame_lines
+            # else: AF Lines > 2, no reduction (keeps original 4)
+        
+        elif thick_column == '2':  # 2 Bay Side
+            if no_anchor_frame_lines > 0:
+                distribution['thick']['full'] -= 2 * no_anchor_frame_lines
+        
+        elif thick_column == '4':  # All 4 Side
+            if no_anchor_frame_lines < 3:
+                distribution['thick']['half'] -= (no_of_spans - 1) * no_anchor_frame_lines
+                distribution['thick']['full'] -= no_anchor_frame_lines * 2
+            # else: AF Lines > 2, no reduction (keeps original values)
+        
+        elif thick_column == '3':  # 2 Span Side
+            if no_anchor_frame_lines > 2:
+                # No reduction for AF Lines > 2 (keeps original values)
+                pass
+            else:  # AF Lines < 3
+                distribution['thick']['half'] -= (no_of_spans - 1) * no_anchor_frame_lines
+                distribution['thick']['full'] -= 2 * no_anchor_frame_lines
     
     # Calculate total counts for each column type
     for col_type in distribution:
@@ -174,4 +250,3 @@ def calculate_v_support_column_distribution(record, v_support_count, v_support_f
         )
     
     return distribution
-
