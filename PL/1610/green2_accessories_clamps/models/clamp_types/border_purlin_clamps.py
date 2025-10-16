@@ -263,8 +263,8 @@ def _add_span_border_clamps_with_asc(record, accumulator, span_side_border_purli
         middle_size = helpers.get_middle_column_pipe_size(record)
         if middle_size:
             half_qty_middle = record.no_of_spans * span_side_border_purlin
-            helpers.add_to_clamp_accumulator(accumulator, 'Half Clamp', middle_size, half_qty_middle)
-            _logger.info(f"    Half Clamps (Middle): {half_qty_middle} × {middle_size}")
+            helpers.add_to_clamp_accumulator(accumulator, 'Half Clamp', asc_size, half_qty_middle)
+            _logger.info(f"    Half Clamps (Middle): {half_qty_middle} × {asc_size}")
         
         full_qty = 2 * span_side_border_purlin
         if full_qty > 0:
