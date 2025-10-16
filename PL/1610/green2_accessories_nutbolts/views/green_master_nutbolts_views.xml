@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add nut-bolts configuration -->
+    <record id="view_green_master_form_nutbolts_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.nutbolts.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add nut-bolt configuration section -->
+            <xpath expr="//page[last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Nut-Bolt Configuration -->
+                <separator string="Nut-Bolt Configuration"/>
+                <group string="Nut-Bolt Settings">
+                    <group>
+                        <field name="enable_nutbolts" widget="boolean_toggle"/>
+                        <field name="arch_pressed" invisible="not enable_nutbolts"/>
+                        <field name="bottom_pressed" invisible="not enable_nutbolts"/>
+                    </group>
+                    <group>
+                        <field name="ippf_width" invisible="not enable_nutbolts"/>
+                        <field name="last_span_gutter" invisible="not enable_nutbolts"/>
+                    </group>
+                </group>
+                
+                <separator string="Nut-Bolt Calculation Logic" invisible="not enable_nutbolts"/>
+                <div invisible="not enable_nutbolts" class="alert alert-warning">
+                    <h5>ℹ️ Nut-Bolt Calculation Information</h5>
+                    <ul>
+                        <li>
+                            <strong>Column Bolts:</strong><br/>
+                            • Size: 10×(Pipe Size + 15mm) rounded to available sizes<br/>
+                            • Quantity: 2 bolts per column (Middle, Main, Thick)
+                        </li>
+                        <li>
+                            <strong>Gutter Arch Brackets:</strong><br/>
+                            • Arch bolts: 4 per full bracket, 2 per half bracket<br/>
+                            • Bottom bolts: 2 per bracket<br/>
+                            • Column bolts: 2 per bracket<br/>
+                            • Size based on pressed/not pressed configuration
+                        </li>
+                        <li>
+                            <strong>Clamps:</strong><br/>
+                            • Full Clamp: 1 bolt (10×40)<br/>
+                            • Half Clamp: 2 bolts (10×40)
+                        </li>
+                        <li>
+                            <strong>IPPF:</strong><br/>
+                            • Width 400mm: 4× 10×40 + 2× 6×20 per unit<br/>
+                            • Width 500mm: 6× 10×40 + 2× 6×20 per unit
+                        </li>
+                        <li>
+                            <strong>Other Components:</strong><br/>
+                            • Bottom Chord Male: Based on pipe size + 10mm<br/>
+                            • Side Screen Guard: Based on ASC/Column + Spacer + 10mm<br/>
+                            • T-Joint: X-size + 10mm (1 bolt), Y-size + 10mm (2 bolts)<br/>
+                            • L-Joint: X-size + 10mm (1 bolt), Y-size + 10mm (1 bolt)<br/>
+                            • GI Patti: 1× 10×40 + 4× (Gable Purlin + 10mm)
+                        </li>
+                    </ul>
+                    <p class="mt-2">
+                        <strong>Available Bolt Sizes:</strong> 10×40, 10×50, 10×60, 10×80, 10×100, 10×120, 6×20
+                    </p>
+                </div>
+                
+            </xpath>
+            
+            <!-- Add Nut-Bolts Components Card -->
+            <!-- Insert before the Foundation Components card -->
+            <xpath expr="//div[@class='card mb-4'][div[@class='card-header bg-danger text-white']]" position="before">
+                <div class="card mb-4" invisible="not nutbolts_component_ids">
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="mb-0">🔩 Nut-Bolts &amp; Screws</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="nutbolts_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-dark">Nut-Bolts Total: <field name="total_nutbolts_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Tree view customization for nut-bolts visibility -->
+    <record id="view_green_master_tree_nutbolts_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.nutbolts.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            <field name="grand_total_cost" position="before">
+                <field name="total_nutbolts_cost" optional="hide" string="Nut-Bolts Cost"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

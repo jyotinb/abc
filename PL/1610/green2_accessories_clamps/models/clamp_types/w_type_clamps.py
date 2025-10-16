@@ -1,0 +1,57 @@
+# green2_accessories_clamps/models/clamp_types/w_type_clamps.py
+"""
+W Type Clamp Calculations
+"""
+
+import logging
+from .. import clamp_helpers as helpers
+
+_logger = logging.getLogger(__name__)
+
+
+def accumulate_w_type_clamps(record, accumulator):
+    """Accumulate W Type clamps"""
+    bottom_chord_data = helpers.get_bottom_chord_data(record)
+    v_support_count = helpers.get_v_support_count(record)
+    big_arch_data = helpers.get_big_arch_data(record)
+    small_arch_data = helpers.get_small_arch_data(record)
+    vent_big_support_count = helpers.get_vent_big_support_count(record)
+    arch_support_straight_middle_data = helpers.get_arch_support_straight_middle_data(record)
+    middle_column_data = helpers.get_middle_column_data(record)
+    
+    _logger.info("=== W TYPE CLAMPS ===")
+    
+    if bottom_chord_data['count'] > 0 and bottom_chord_data['size']:
+        qty = (bottom_chord_data['count'] * 3) + v_support_count
+        helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', bottom_chord_data['size'], qty)
+        _logger.info(f"  {qty} × Full Clamp - {bottom_chord_data['size']} (Bottom Chord)")
+    
+    if big_arch_data['count'] > 0 and big_arch_data['size']:
+        qty = (big_arch_data['count'] * 2) + vent_big_support_count
+        helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', big_arch_data['size'], qty)
+        _logger.info(f"  {qty} × Full Clamp - {big_arch_data['size']} (Big Arch)")
+    
+    if small_arch_data['count'] > 0 and small_arch_data['size']:
+        helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', small_arch_data['size'], 
+                                      small_arch_data['count'])
+        _logger.info(f"  {small_arch_data['count']} × Full Clamp - {small_arch_data['size']} (Small Arch)")
+    
+    if arch_support_straight_middle_data['count'] > 0 and arch_support_straight_middle_data['size']:
+        helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', 
+                                      arch_support_straight_middle_data['size'], 
+                                      arch_support_straight_middle_data['count'])
+        helpers.add_to_clamp_accumulator(accumulator, 'Half Clamp', 
+                                      arch_support_straight_middle_data['size'], 
+                                      arch_support_straight_middle_data['count'])
+        _logger.info(f"  {arch_support_straight_middle_data['count']} × Full Clamp - "
+                    f"{arch_support_straight_middle_data['size']} (Arch Support Straight Middle)")
+        _logger.info(f"  {arch_support_straight_middle_data['count']} × Half Clamp - "
+                    f"{arch_support_straight_middle_data['size']} (Arch Support Straight Middle)")
+    
+    if middle_column_data['count'] > 0 and middle_column_data['size']:
+        helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', middle_column_data['size'], 
+                                      middle_column_data['count'])
+        helpers.add_to_clamp_accumulator(accumulator, 'Half Clamp', middle_column_data['size'], 
+                                      middle_column_data['count'])
+        _logger.info(f"  {middle_column_data['count']} × Full Clamp - {middle_column_data['size']} (Middle Column)")
+        _logger.info(f"  {middle_column_data['count']} × Half Clamp - {middle_column_data['size']} (Middle Column)")
