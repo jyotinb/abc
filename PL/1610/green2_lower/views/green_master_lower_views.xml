@@ -1,0 +1,127 @@
+<odoo>
+    <!-- Inherit base form to add lower section configuration -->
+    <record id="view_green_master_form_lower" model="ir.ui.view">
+        <field name="name">green.master.form.lower</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_form_base"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Lower Section Configuration Page -->
+             <xpath expr="//page[position()=last()-1]" position="before">
+                <page string="Lower Section Configuration">
+					<group>
+						<group string="Cross Bracing Settings">
+							<field name="front_back_c_c_cross_bracing_x"/>
+							<field name="length_front_back_c_c_cross_bracing_x" invisible="not front_back_c_c_cross_bracing_x"/>
+							<field name="middle_c_c_cross_bracing_x"/>
+							<field name="length_middle_c_c_cross_bracing_x" invisible="middle_c_c_cross_bracing_x == 0"/>
+							<field name="cross_bracing_column_arch"/>
+							<field name="length_cross_bracing_column_arch" invisible="not cross_bracing_column_arch"/>
+							<field name="cross_bracing_column_bottom"/>
+							<field name="length_cross_bracing_column_bottom" invisible="not cross_bracing_column_bottom"/>
+						</group>
+						
+						<group string="Border Purlin Settings">
+							<field name="bay_side_border_purlin"/>
+							<field name="span_side_border_purlin"/>
+						</group>
+						
+						<group string="Border Purlin ASC Configuration" 
+							   invisible="bay_side_border_purlin == '0' and span_side_border_purlin == '0'">
+							
+							<!-- Info about auto-detection -->
+							<div class="alert alert-info" colspan="4">
+								<strong>ℹ Auto-Detection:</strong> ASC sides are automatically detected from ASC width settings:
+								<ul class="mb-0">
+									<li>Front Bay ASC: <code>width_front_bay_coridoor > 0</code></li>
+									<li>Back Bay ASC: <code>width_back_bay_coridoor > 0</code></li>
+									<li>Front Span ASC: <code>width_front_span_coridoor > 0</code></li>
+									<li>Back Span ASC: <code>width_back_span_coridoor > 0</code></li>
+								</ul>
+							</div>
+							
+							<separator string="Bay Side ASC (Auto-Detected)" colspan="2" 
+									   invisible="bay_side_border_purlin == '0'"/>
+							<field name="front_bay_asc" 
+								   widget="boolean_toggle"
+								   invisible="bay_side_border_purlin == '0'"/>
+							<field name="back_bay_asc" 
+								   widget="boolean_toggle"
+								   invisible="bay_side_border_purlin == '0'"/>
+							
+							<separator string="Span Side ASC (Auto-Detected)" colspan="2" 
+									   invisible="span_side_border_purlin == '0'"/>
+							<field name="front_span_asc" 
+								   widget="boolean_toggle"
+								   invisible="span_side_border_purlin == '0'"/>
+							<field name="back_span_asc" 
+								   widget="boolean_toggle"
+								   invisible="span_side_border_purlin == '0'"/>
+						</group>
+						
+						<group string="Thick Column Configuration">
+							<field name="thick_column_position"/>
+						</group>
+						
+						<group string="Anchor Frame Configuration">
+							<field name="no_anchor_frame_lines"/>
+						</group>
+						
+						<group string="Arch Middle Purlin Settings">
+							<field name="arch_middle_purlin_big_arch"/>
+							<field name="arch_middle_purlin_big_arch_pcs" invisible="arch_middle_purlin_big_arch == '0'"/>
+							<field name="arch_middle_purlin_small_arch"/>
+							<field name="arch_middle_purlin_small_arch_pcs" invisible="arch_middle_purlin_small_arch == '0'"/>
+						</group>
+						
+						<group string="Gutter Settings">
+							<field name="gutter_type" widget="radio"/>
+							
+							<!-- IPPF Gutter Fields -->
+							<field name="gutter_ippf_full" invisible="gutter_type != 'ippf'"/>
+							<field name="gutter_ippf_drainage_extension" invisible="gutter_type != 'ippf'"/>
+							<field name="gutter_funnel_ippf" invisible="gutter_type != 'ippf'"/>
+							<field name="gutter_end_cap" invisible="gutter_type != 'ippf'"/>
+							
+							<!-- Continuous Gutter Fields -->
+							<field name="gutter_extension" invisible="gutter_type != 'continuous'"/>
+						</group>
+					</group>
+					
+					<separator string="Lower Section Components"/>
+					<field name="lower_component_ids" context="{'default_section': 'lower'}"/>
+					
+					<group>
+						<field name="total_lower_cost" readonly="1" widget="monetary"/>
+					</group>
+				</page>
+            </xpath>
+            
+            <!-- Add Lower Components to Component Management -->
+            <!-- <xpath expr="//group[@name='component_sections']" position="inside"> -->
+			<xpath expr="//div[@class='card border-danger mb-4'][div[@class='card-header bg-danger text-white text-center']/h3[contains(text(), '💰 PROJECT TOTAL:')]]" position="before">
+  
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-white">
+                        <h4 class="mb-0">🔧 Lower Section Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="lower_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-warning">Lower Total: <field name="total_lower_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to Cost Summary -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="before">
+                <tr class="table-warning">
+                    <td><strong>🔧 Lower Section</strong></td>
+                    <td class="text-right"><field name="total_lower_cost" readonly="1" widget="monetary"/></td>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>
