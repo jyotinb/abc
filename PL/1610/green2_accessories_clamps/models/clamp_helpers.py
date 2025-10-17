@@ -27,15 +27,31 @@ def add_to_clamp_accumulator_separate(accumulator, component_name, size, quantit
 # =============================================
 
 def get_bottom_chord_data(record):
-    """Get bottom chord data from truss components"""
+    """Get bottom chord data from truss components (EXCLUDING Anchor)"""
     bottom_chord = record.truss_component_ids.filtered(
         lambda c: 'Bottom Chord' in c.name and 'Female' not in c.name and 
-        'V Support' not in c.name
+        'V Support' not in c.name and 'Anchor' not in c.name
     )
     data = {'count': 0, 'size': None}
     if bottom_chord:
         data['count'] = sum(bottom_chord.mapped('nos'))
         for component in bottom_chord:
+            if component.pipe_id and component.pipe_id.pipe_size:
+                data['size'] = f"{component.pipe_id.pipe_size.size_in_mm:.0f}mm"
+                break
+    return data
+
+def get_bottom_chord_anchor_data(record):
+    """Get bottom chord ANCHOR data from truss components"""
+    bottom_chord_anchor = record.truss_component_ids.filtered(
+        lambda c: 'Bottom Chord' in c.name and 'Anchor' in c.name and 
+        'Female' not in c.name and 'V Support' not in c.name
+    )
+    data = {'count': 0, 'size': None}
+    if bottom_chord_anchor:
+        total_nos = sum(bottom_chord_anchor.mapped('nos'))
+        data['count'] = total_nos // 2  # Divide by 2
+        for component in bottom_chord_anchor:
             if component.pipe_id and component.pipe_id.pipe_size:
                 data['size'] = f"{component.pipe_id.pipe_size.size_in_mm:.0f}mm"
                 break

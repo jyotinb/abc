@@ -12,7 +12,9 @@ _logger = logging.getLogger(__name__)
 def accumulate_w_type_clamps(record, accumulator):
     """Accumulate W Type clamps"""
     bottom_chord_data = helpers.get_bottom_chord_data(record)
+    bottom_chord_anchor_data = helpers.get_bottom_chord_anchor_data(record)
     v_support_count = helpers.get_v_support_count(record)
+    v_support_for_af = getattr(record, 'v_support_for_af', True)
     big_arch_data = helpers.get_big_arch_data(record)
     small_arch_data = helpers.get_small_arch_data(record)
     vent_big_support_count = helpers.get_vent_big_support_count(record)
@@ -21,11 +23,28 @@ def accumulate_w_type_clamps(record, accumulator):
     
     _logger.info("=== W TYPE CLAMPS ===")
     
+    # Bottom Chord (Non-Anchor)
     if bottom_chord_data['count'] > 0 and bottom_chord_data['size']:
-        qty = (bottom_chord_data['count'] * 3) + v_support_count
+        # Calculate v_support adjustment
+        if v_support_for_af:
+            v_support_adjustment = v_support_count - (2 * bottom_chord_anchor_data['count'])
+            v_support_adjustment = max(0, v_support_adjustment)  # Don't go negative
+        else:
+            v_support_adjustment = v_support_count
+        
+        qty = (bottom_chord_data['count'] * 3) + v_support_adjustment
         helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', bottom_chord_data['size'], qty)
         _logger.info(f"  {qty} × Full Clamp - {bottom_chord_data['size']} (Bottom Chord)")
     
+    # Bottom Chord Anchor
+    if bottom_chord_anchor_data['count'] > 0 and bottom_chord_anchor_data['size']:
+        multiplier = 4 if v_support_for_af else 2
+        qty = bottom_chord_anchor_data['count'] * multiplier
+        helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', 
+                                        bottom_chord_anchor_data['size'], qty)
+        _logger.info(f"  {qty} × Full Clamp - {bottom_chord_anchor_data['size']} (Bottom Chord Anchor)")
+    
+        
     if big_arch_data['count'] > 0 and big_arch_data['size']:
         qty = (big_arch_data['count'] * 2) + vent_big_support_count
         helpers.add_to_clamp_accumulator(accumulator, 'Full Clamp', big_arch_data['size'], qty)
