@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <header>
+                <button name="action_create_packages_wizard" type="object" string="Create Packages" class="oe_highlight" invisible="state != 'assigned'"/>
+            </header>
+        </field>
+    </record>
+	
+
+<!--     <record id="view_quant_package_tree_inherit" model="ir.ui.view">
+        <field name="name">stock.quant.package.tree.inherit</field>
+        <field name="model">stock.quant.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_tree"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable">bottom</attribute>
+            </xpath>
+            
+            
+            <xpath expr="//field" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            
+            
+            <xpath expr="//tree" position="inside">
+                <field name="actual_gross_weight" readonly="0"/>
+            </xpath>
+			  <xpath expr="//field[@name='package_type_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
+
+</odoo>

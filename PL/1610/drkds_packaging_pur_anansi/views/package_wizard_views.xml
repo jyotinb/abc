@@ -1,0 +1,63 @@
+<odoo>
+    
+<!--    <record id="view_package_creation_wizard_form" model="ir.ui.view">
+        <field name="name">package.creation.wizard.form</field>
+        <field name="model">package.creation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Packages">
+                <group>
+                    <field name="picking_id"  invisible="1"/>
+                    <field name="product_id" domain="[('id', 'in', product_ids)]"/>
+                    <field name="packaging_id" domain="[('product_id', '=', product_id)]"/>
+                    <field name="package_qty"/>
+					  <field name="quantity_available" readonly="1"/> 
+                    <field name="product_ids" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Create" type="object" name="create_packages" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+	</record> -->
+	<record id="view_package_creation_wizard_form" model="ir.ui.view">
+    <field name="name">package.creation.wizard.form</field>
+    <field name="model">package.creation.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Create Packages">
+            <group>
+                <field name="picking_id" invisible="1"/>
+                <field name="product_id" domain="[('id', 'in', product_ids)]"/>
+                <field name="packaging_with_qty_id" domain="[('id', 'in', packaging_ids)]" options="{'no_create': True}"/>
+                <field name="packaging_description" readonly="1"/>
+                <field name="package_qty"/>
+                <field name="product_ids" invisible="1"/>
+                <field name="packaging_ids" invisible="1"/>
+                <field name="packaging_id" invisible="1"/>
+            </group>
+            <footer>
+                <button string="Create" type="object" name="create_packages" class="btn-primary"/>
+                <button string="Cancel" special="cancel" class="btn-secondary"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+    <record id="action_package_creation_wizard" model="ir.actions.act_window">
+        <field name="name">Create Packages</field>
+        <field name="res_model">package.creation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="access_package_creation_wizard_user" model="ir.model.access">
+        <field name="name">package.creation.wizard user access</field>
+        <field name="model_id" ref="model_package_creation_wizard"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>
