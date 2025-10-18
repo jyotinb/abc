@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_covering_width,covering.width,model_covering_width,base.group_user,1,1,1,1
+access_apron_width,apron.width,model_apron_width,base.group_user,1,1,1,1
+access_insect_net_width,insect.net.width,model_insect_net_width,base.group_user,1,1,1,1
