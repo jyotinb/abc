@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit Green Master form to add miscellaneous configuration -->
+    <record id="view_green_master_form_misc_inherit" model="ir.ui.view">
+        <field name="name">green.master.form.misc.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_accessories_base.view_green_master_form_accessories_base_inherit"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add miscellaneous configuration to Accessories Management page -->
+            <xpath expr="//page[last()]/div[@class='alert alert-info']" position="after">
+                
+                <!-- Miscellaneous Components Configuration Section -->
+                <group string="🔧 Miscellaneous Components Configuration">
+                    <group string="Enable Components">
+                        <field name="calculate_misc_components" widget="boolean_toggle"/>
+                    </group>
+                    
+                    <group invisible="not calculate_misc_components">
+                        <!-- <button name="action_calculate_misc"  -->
+                                <!-- string="🔧 Calculate Miscellaneous Only"  -->
+                                <!-- type="object"  -->
+                                <!-- class="btn-info" -->
+                                <!-- help="Calculate only miscellaneous components"/> -->
+                    </group>
+                </group>
+                
+                <!-- Individual Component Settings -->
+                <group string="Component Settings" invisible="not calculate_misc_components">
+                    
+                    <!-- Silicon Settings -->
+                    <group string="Silicon Configuration">
+                        <field name="calculate_silicon" widget="boolean_toggle"/>
+                        <field name="silicon_unit_price" 
+                               invisible="not calculate_silicon"
+                               widget="monetary"/>
+                        <field name="gutter_type" invisible="1"/>
+                        <field name="last_span_gutter" invisible="1"/>
+                        <div invisible="not calculate_silicon" class="text-muted">
+                            <small>
+                                Only for IPPF Gutter<br/>
+                                Nos = Spans + 1 (if Last Span Gutter)<br/>
+                                Nos = Spans - 1 (if No Last Span Gutter)
+                            </small>
+                        </div>
+                    </group>
+                    
+                    <!-- Drainage Pipe Settings -->
+                    <group string="Drainage Pipe Configuration">
+                        <field name="calculate_drainage_pipe" widget="boolean_toggle"/>
+                        <field name="funnel_pipe_size" 
+                               invisible="not calculate_drainage_pipe"/>
+                        <field name="drainage_pipe_option_id" 
+                               invisible="not calculate_drainage_pipe"
+                               options="{'no_create_edit': True}"/>
+                        <div invisible="not calculate_drainage_pipe" class="text-muted">
+                            <small>
+                                Length from selected option<br/>
+                                Nos = No of Gutter Funnel
+                            </small>
+                        </div>
+                    </group>
+                    
+                    <!-- Hose Clamp Settings -->
+                    <group string="Hose Clamp Configuration">
+                        <field name="calculate_hose_clamp" widget="boolean_toggle"/>
+                        <field name="hose_clamp_unit_price" 
+                               invisible="not calculate_hose_clamp"
+                               widget="monetary"/>
+                        <div invisible="not calculate_hose_clamp" class="text-muted">
+                            <small>
+                                Size from Funnel Pipe Size<br/>
+                                Nos = No of Gutter Funnel
+                            </small>
+                        </div>
+                    </group>
+                    
+                    <!-- Sliding Door Settings -->
+                    <group string="Sliding Door Configuration">
+                        <field name="calculate_sliding_door" widget="boolean_toggle"/>
+                        <field name="door_model_id" 
+                               invisible="not calculate_sliding_door"
+                               options="{'no_create_edit': True}"/>
+                        <field name="no_of_sliding_doors" 
+                               invisible="not calculate_sliding_door"
+                               readonly="1"/>
+                        <div invisible="not calculate_sliding_door" class="text-muted">
+                            <small>
+                                Nos = (Standalone Doors × 1) + (Chambers × 2)
+                            </small>
+                        </div>
+                    </group>
+                    
+                </group>
+                
+            </xpath>
+            
+            <!-- Add miscellaneous components display in Accessories Management page -->
+            <xpath expr="//div[@class='card border-warning mb-4'][div[@class='card-header bg-warning text-white text-center']]" position="before">
+                <div class="card mb-4" invisible="not calculate_misc_components or not misc_component_ids">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">🔧 Miscellaneous Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="misc_component_ids" readonly="0">
+                            <tree editable="bottom" decoration-info="is_calculated==True">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="nos" sum="Total Units"/>
+                                <field name="size_specification"/>
+                                <field name="accessories_master_id" options="{'no_create_edit': True}" 
+                                       placeholder="Select from Master (optional)"/>
+                                <field name="unit_price" widget="monetary"/>
+                                <field name="total_cost" readonly="1" sum="Total" widget="monetary"/>
+                                <field name="notes" placeholder="Add notes"/>
+                                <field name="section" column_invisible="1"/>
+                                <field name="is_calculated" column_invisible="1"/>
+                            </tree>
+                        </field>
+                        <div class="text-right mt-2">
+                            <h5 class="text-info">Miscellaneous Total: 
+                                <field name="total_misc_cost" readonly="1" widget="monetary"/>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to cost summary table -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="after">
+                <tr class="table-info" invisible="not calculate_misc_components or total_misc_cost == 0">
+                    <td><strong>🔧 MISCELLANEOUS</strong></td>
+                    <td class="text-right">
+                        <field name="total_misc_cost" readonly="1" widget="monetary"/>
+                    </td>
+                </tr>
+            </xpath>
+            
+            <!-- Update accessories total to include miscellaneous -->
+            <xpath expr="//div[@class='card border-warning mb-4']/div[@class='card-header bg-warning text-white text-center']/h3" position="replace">
+                <h3 class="mb-0">
+                    🔧 ACCESSORIES TOTAL (
+                    <span invisible="not calculate_misc_components">incl. Misc</span>
+                    <span invisible="calculate_misc_components">excl. Misc</span>
+                    ): <field name="total_accessories_cost" readonly="1" widget="monetary"/>
+                </h3>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <!-- Tree view customization -->
+    <record id="view_green_master_tree_misc_inherit" model="ir.ui.view">
+        <field name="name">green.master.tree.misc.inherit</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_tree"/>
+        <field name="arch" type="xml">
+            <field name="grand_total_cost" position="before">
+                <field name="total_misc_cost" optional="hide" string="Misc Cost"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

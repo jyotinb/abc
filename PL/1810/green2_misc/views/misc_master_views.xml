@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Drainage Pipe Option Views -->
+    <record id="view_drainage_pipe_option_tree" model="ir.ui.view">
+        <field name="name">drainage.pipe.option.tree</field>
+        <field name="model">drainage.pipe.option</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="not active">
+                <field name="length_value"/>
+                <field name="unit_price" widget="monetary"/>
+                <field name="notes"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_drainage_pipe_option_form" model="ir.ui.view">
+        <field name="name">drainage.pipe.option.form</field>
+        <field name="model">drainage.pipe.option</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="length_value" string="Drainage Pipe Length"/>
+                        <h1>
+                            <field name="length_value" class="oe_inline"/> m
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="unit_price" widget="monetary"/>
+                        <field name="notes" placeholder="Add any notes about this option"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Door Model Views -->
+    <record id="view_door_model_tree" model="ir.ui.view">
+        <field name="name">door.model.tree</field>
+        <field name="model">door.model</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="door_width"/>
+                <field name="door_height"/>
+                <field name="material"/>
+                <field name="unit_price" widget="monetary"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_door_model_form" model="ir.ui.view">
+        <field name="name">door.model.form</field>
+        <field name="model">door.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Door Model"/>
+                        <h1>
+                            <field name="name" class="oe_inline" placeholder="e.g., Standard Sliding Door"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Basic Information">
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="unit_price" widget="monetary"/>
+                        </group>
+                        <group string="Specifications">
+                            <field name="door_width"/>
+                            <field name="door_height"/>
+                            <field name="material"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" placeholder="Detailed description of the door model"/>
+                    </group>
+                    <group string="Additional Notes">
+                        <field name="notes" placeholder="Any additional notes or specifications"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Actions -->
+    <record id="action_drainage_pipe_option" model="ir.actions.act_window">
+        <field name="name">Drainage Pipe Options</field>
+        <field name="res_model">drainage.pipe.option</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+    
+    <record id="action_door_model" model="ir.actions.act_window">
+        <field name="name">Door Models</field>
+        <field name="res_model">door.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+    
+    <!-- Menu Items -->
+    <menuitem id="menu_drainage_pipe_options" 
+              name="Drainage Pipe Options" 
+              parent="green2_accessories_base.menu_accessories_master_main" 
+              action="action_drainage_pipe_option" 
+              sequence="60"/>
+              
+    <menuitem id="menu_door_models" 
+              name="Door Models" 
+              parent="green2_accessories_base.menu_accessories_master_main" 
+              action="action_door_model" 
+              sequence="61"/>
+    
+</odoo>
