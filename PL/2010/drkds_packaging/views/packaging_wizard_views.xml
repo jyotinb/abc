@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="view_packaging_wizard_form" model="ir.ui.view">
+            <field name="name">packaging.wizard.form</field>
+            <field name="model">packaging.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Packaging Wizard">
+                    <group>
+                        <field name="product_id"/>
+                        <field name="package_type_id"/>
+                        <field name="package_qty"/>
+                    </group>
+                    <footer>
+                        <button string="Apply" type="object" name="apply_packaging" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

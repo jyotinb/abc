@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_package_selection_wizard_form" model="ir.ui.view">
+        <field name="name">package.selection.wizard.form</field>
+        <field name="model">package.selection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Packages">
+                <field name="picking_id" invisible="1"/>
+                <field name="total_selected_qty"/>
+                <group>
+                    <field name="available_package_ids" widget="many2many_tags" invisible="1"/>
+                    <field name="selected_package_ids" options="{'no_create': True}">
+                        <tree>
+                            <field name="name"/>
+                            <field name="product_names" string="Product"/>
+                            <field name="total_qty"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    
+    <!-- Add button to stock.picking form view -->
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.package.selection</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_package_selection" 
+                        string="Select Packages" 
+                        type="object" 
+                        invisible="picking_type_code != 'outgoing' or state not in ['assigned', 'partially_available']"/>
+            </xpath>
+        </field>
+    </record>
+	
+	
+	<!-- <record id="view_quant_package_tree_inherit" model="ir.ui.view">
+        <field name="name">stock.quant.package.tree.inherit</field>
+        <field name="model">stock.quant.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="product_names" string="Product"/>
+            </xpath>
+        </field>
+    </record> -->
+
+	</odoo>

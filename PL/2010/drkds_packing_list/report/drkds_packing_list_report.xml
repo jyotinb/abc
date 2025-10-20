@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_drkds_packing_list">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: smaller;">
+                        <!-- Header -->
+                        <h2 class="text-center">Packing List</h2>
+                        
+                        <!-- Information Section -->
+                        <div class="row mt-2 mb-2">
+                            <div class="col-4">
+                                <strong>Invoice No:</strong> _______________ 
+                                
+                                <strong>SO No:</strong>
+                                <span t-esc="o._get_sale_order_number() or ''" />
+                           
+                                <strong>DO No:</strong>
+                                <span t-field="o.name" />
+                             </div>
+                            <div class="col-3">
+                                <strong>Dispatch Date:</strong>
+                                <span t-field="o.date_done" t-options="{'widget': 'date'}" />
+                           
+                                <strong>Total Gross Weight:</strong>
+                                <span t-esc="o._get_total_gross_weight()" t-options="{'widget': 'float', 'precision': 2}" /> kg
+                           
+                                <!-- Modified Total Packages section -->
+                                <t t-set="package_count" t-value="o._get_package_count()"/>
+                                <t t-set="unpacked_qty" t-value="int(sum([sum(line.quantity for line in move.move_line_ids.filtered(lambda l: not l.result_package_id)) for move in o.move_ids]))"/>
+                                <t t-set="total_count" t-value="int(package_count + unpacked_qty)"/>
+                                
+                                <strong>Total Packages:</strong>
+                                <span t-esc="package_count"/> + UnPacked: <span t-esc="unpacked_qty"/> = <span t-esc="total_count"/>
+                               
+                            </div>
+                        </div>
+                        
+                        <!-- Product Table with horizontal hairlines -->
+                        <table class="table table-sm o_main_table" style="border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
+                                    <th name="th_sn" style="width: 5%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">SN</th>
+                                    <th name="th_product" style="width: 45%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Product</th>
+                                    <th name="th_quantity" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Delivered Qty</th>
+                                    <th name="th_uom" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">UOM</th>
+                                    <th name="th_packages" style="width: 30%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Packages</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.move_ids" t-as="move">
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="move_index + 1"/>
+                                        </td>
+                                        <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <!-- <span t-field="move.product_id.code"/><br/> -->
+                                            <span t-field="move.product_id.name"/>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="sum(line.quantity for line in move.move_line_ids) or move.product_uom_qty"/>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-field="move.product_uom.name"/>
+                                        </td>
+                                        <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="o._get_product_packages(move.product_id.id)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Package List Table -->
+                        <h4 class="mt-4">Package List</h4>
+                        <table class="table table-sm" style="border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
+                                    <th name="th_package_sn" style="text-align: left; width: 4%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">SN</th>
+                                    <th name="th_package_name" style="text-align: left; width: 17%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Package Name</th>
+                                    <th name="th_package_product" style="width: 49%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Product</th>
+                                    <th name="th_package_qty" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Quantity</th>
+                                    <th name="th_package_nw" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">NW (kg)</th>
+                                    <th name="th_package_gw" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">GW (kg)</th>
+                                    <!-- <th name="th_package_count" style="width: 6%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Count</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Initialize variables to track package/product combinations -->
+                                <t t-set="current_package_name" t-value="False"/>
+                                <t t-set="current_product_name" t-value="False"/>
+                                <t t-set="sequence_no" t-value="0"/>
+                                <t t-set="combo_count" t-value="0"/>
+                                <t t-set="package_details" t-value="o._get_packages_details()"/>
+                                
+                                <t t-foreach="package_details" t-as="package">
+                                    <!-- Check if package name or product name changes -->
+                                    <t t-if="current_package_name != package['name'] or current_product_name != package['product_name']">
+                                        <!-- Increment the sequence number only when package name changes -->
+                                        <t t-if="current_package_name != package['name']">
+                                            <t t-set="sequence_no" t-value="sequence_no + 1"/>
+                                        </t>
+                                        
+                                        <!-- Reset combination counter when either package or product changes -->
+                                    </t>
+                                    <t t-if="combo_count > 0 and current_package_name != package['name'] and current_product_name != package['product_name']">
+                                        <tr><td colspan="3" style="text-align: left; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span>Packages:</span><span t-esc="combo_count"/>
+                                        </td>
+                                        
+                                        </tr>
+                                        <t t-set="combo_count" t-value="0"/>
+                                    </t>
+                                    <t t-if=" current_package_name != package['name']">
+                                        <t t-set="combo_count" t-value="combo_count + 1"/>
+                                    </t>
+                                    <!-- Update tracking variables -->
+                                    <t t-set="current_package_name" t-value="package['name']"/>
+                                    <t t-set="current_product_name" t-value="package['product_name']"/>
+                                        
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="sequence_no"/>
+                                        </td>
+                                        <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="package['name']"/>
+                                        </td>
+                                        <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="package['product_name']"/>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="package['quantity']"/>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="package['net_weight']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                            <span t-esc="package['gross_weight']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        
+                                    </tr>
+                                    
+                                </t>
+                                <t t-if="combo_count > 0 ">
+                                    <tr><td colspan="3" style="text-align: left; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                        <span>Packages:</span><span t-esc="combo_count"/>
+                                    </td>
+                                    
+                                    </tr>
+                                    <t t-set="combo_count" t-value="0"/>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Unpacked Items Section -->
+                        <t t-set="has_unpacked_items" t-value="False"/>
+                        <t t-foreach="o.move_ids" t-as="move">
+                            <t t-if="any(not line.result_package_id for line in move.move_line_ids)">
+                                <t t-set="has_unpacked_items" t-value="True"/>
+                            </t>
+                        </t>
+
+                        <t t-if="has_unpacked_items">
+                            <h4 class="mt-4">Unpacked Items</h4>
+                            <table class="table table-sm" style="border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
+                                        <th name="th_unpacked_product" style="width: 45%; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Product</th>
+                                        <th name="th_unpacked_qty" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Quantity</th>
+                                        <th name="th_unpacked_uom" style="width: 10%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">UOM</th>
+                                        <th name="th_unpacked_nw" style="width: 15%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Net Weight (kg)</th>
+                                        <th name="th_unpacked_gw" style="width: 15%; text-align: right; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">Gross Weight (kg)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.move_ids" t-as="move">
+                                        <t t-set="unpackaged_lines" t-value="move.move_line_ids.filtered(lambda l: not l.result_package_id)"/>
+                                        <t t-if="unpackaged_lines">
+                                            <tr style="border-bottom: 1px solid #dee2e6;">
+                                                <td style="vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                                    <span t-field="move.product_id.name"/>
+                                                </td>
+                                                <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                                    <span t-esc="sum(line.quantity for line in unpackaged_lines)"/>
+                                                </td>
+                                                <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                                    <span t-field="move.product_uom.name"/>
+                                                </td>
+                                                <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                                    <!-- Use loose_item_weight if available -->
+                                                    <t t-set="net_weight" t-value="0.0"/>
+                                                    <t t-foreach="unpackaged_lines" t-as="line">
+                                                        <!-- Try to safely check if loose_item_weight exists and is greater than 0 -->
+                                                        <t t-if="line._fields.get('loose_item_weight') and line.loose_item_weight and line.loose_item_weight > 0">
+                                                            <t t-set="net_weight" t-value="net_weight + line.loose_item_weight"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-set="net_weight" t-value="net_weight + (line.product_id.weight * line.quantity)"/>
+                                                        </t>
+                                                    </t>
+                                                    <span t-esc="net_weight" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                </td>
+                                                <td style="text-align: right; vertical-align: top; border-bottom: 1px solid #dee2e6;">
+                                                    <!-- For unpacked items, gross weight equals net weight -->
+                                                    <span t-esc="net_weight" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Page numbers at bottom of content -->
+                        <div style="text-align: center; font-size: smaller; margin-top: 10px; position: absolute; bottom: 5mm; width: 100%;">
+                            Page <span class="page"/> of <span class="topage"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Paper format configuration with no top/bottom space -->
+    <record id="paperformat_drkds_packing_list" model="report.paperformat">
+        <field name="name">DRKDS Packing List Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_drkds_packing_list" model="ir.actions.report">
+        <field name="name">DRKDS Packing List</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">drkds_packing_list.report_drkds_packing_list</field>
+        <field name="report_file">drkds_packing_list.report_drkds_packing_list</field>
+        <field name="print_report_name">'Packing List - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="drkds_packing_list.paperformat_drkds_packing_list"/>
+    </record>
+</odoo>

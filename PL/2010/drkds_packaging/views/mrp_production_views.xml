@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+        <record id="view_mrp_production_form" model="ir.ui.view">
+            <field name="name">mrp.production.form.inherit.packaging</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_open_packaging_wizard" string="Create Packages" type="object" class="btn-primary"/>
+                    <button name="action_view_packages" string="Packages" type="object" class="btn-primary"/>
+                </xpath>
+            </field>
+        </record>
+		
+		
+  
+       
+       
+    
+   
+
+   
+    
+	
+    <record id="view_package_tree_custom" model="ir.ui.view">
+        <field name="name">stock.quant.package.tree.custom</field>
+        <field name="model">stock.quant.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <!-- <field name="content_details" string="Package Contents"/> -->
+				<field name="weight"/>
+            </xpath>
+        </field>
+    </record>
+
+	</data>
+</odoo>

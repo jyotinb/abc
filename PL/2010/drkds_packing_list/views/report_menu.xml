@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- This file adds the DRKDS Packing List report to menus if needed -->
+    <!-- Currently empty as the report is added via the binding_model_id in the report definition -->
+</odoo>

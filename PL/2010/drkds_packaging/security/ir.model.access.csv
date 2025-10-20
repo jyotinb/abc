@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_production_user,access_mrp_production_user,model_mrp_production,,1,1,1,1
+access_stock_quant_package_user,access_stock_quant_package_user,model_stock_quant_package,,1,1,1,1
+access_packaging_wizard_user,access_packaging_wizard_user,model_packaging_wizard,,1,1,1,1
