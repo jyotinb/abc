@@ -1,0 +1,74 @@
+<!-- Complete green2_side_screen/views/green_master_side_screen_views.xml -->
+<odoo>
+    <!-- Inherit base form to add side screen configuration -->
+    <record id="view_green_master_form_side_screen" model="ir.ui.view">
+        <field name="name">green.master.form.side_screen</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_form_base"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Side Screen Settings Page -->
+             <xpath expr="//page[position()=last()-1]" position="before">
+                <page string="Side Screen Settings">
+                    <group>
+                        <group string="Screen Configuration">
+                            <field name="no_of_curtains" string="No of Curtains"/>
+                            <field name="length_side_screen_rollup_handles" 
+                                   string="Length for Side Screen Rollup Handles"
+                                   invisible="no_of_curtains == 0"/>
+                        </group>
+                        
+                        <group string="Screen Roll Up Settings" invisible="no_of_curtains == 0">
+                            <field name="length_side_screen_roll_up_pipe_joiner"/>
+                        </group>
+                    </group>
+                    
+                    <group invisible="no_of_curtains == 0">
+                        <group string="Screen Guard Settings">
+                            <field name="side_screen_guard"/>
+                            <field name="length_side_screen_guard" invisible="not side_screen_guard"/>
+                            <field name="length_side_screen_guard_spacer"/>
+                            <field name="side_screen_guard_box"/>
+                            <field name="no_side_screen_guard_box" invisible="not side_screen_guard_box"/>
+                            <field name="length_side_screen_guard_box_h_pipe" invisible="not side_screen_guard_box"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Side Screen Components" invisible="no_of_curtains == 0"/>
+                    <field name="side_screen_component_ids" 
+                           context="{'default_section': 'side_screen'}"
+                           invisible="no_of_curtains == 0"/>
+                    
+                    <group invisible="no_of_curtains == 0">
+                        <field name="total_side_screen_cost" readonly="1" widget="monetary"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add Side Screen Components to Component Management -->
+            <!-- <xpath expr="//group[@name='component_sections']" position="inside"> -->
+						<xpath expr="//div[@class='card border-danger mb-4'][div[@class='card-header bg-danger text-white text-center']/h3[contains(text(), '💰 PROJECT TOTAL:')]]" position="before">
+                <div class="card mb-4" invisible="not side_screen_component_ids">
+                    <div class="card-header bg-secondary text-white">
+                        <h4 class="mb-0">🛡️ Side Screen Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="side_screen_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-secondary">Side Screen Total: <field name="total_side_screen_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to Cost Summary -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="before">
+                <tr invisible="total_side_screen_cost == 0" class="table-secondary">
+                    <td><strong>🛡️ Side Screen Components</strong></td>
+                    <td class="text-right"><field name="total_side_screen_cost" readonly="1" widget="monetary"/></td>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,55 @@
+<odoo>
+    <!-- Inherit base form to add frame configuration -->
+    <record id="view_green_master_form_frame" model="ir.ui.view">
+        <field name="name">green.master.form.frame</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_form_base"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add Frame Configuration Page after Structure Configuration -->
+             <xpath expr="//page[position()=last()-1]" position="before">
+                <page string="Frame Configuration">
+                    <group>
+                        <group string="Frame Settings">
+                            <field name="no_column_big_frame"/>
+                            <field name="no_anchor_frame_lines" invisible="no_column_big_frame == '0'"/>
+                            <field name="thick_column"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Frame Components"/>
+                    <field name="frame_component_ids" context="{'default_section': 'frame'}"/>
+                    
+                    <group>
+                        <field name="total_frame_cost" readonly="1" widget="monetary"/>
+                    </group>
+                </page>
+            </xpath>
+            
+            <!-- Add Frame Components to Component Management -->
+            <!-- <xpath expr="//group[@name='component_sections']" position="after"> -->
+						<xpath expr="//div[@class='card border-danger mb-4'][div[@class='card-header bg-danger text-white text-center']/h3[contains(text(), '💰 PROJECT TOTAL:')]]" position="before">
+                <div class="card mb-8">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">🏛️ Frame Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="frame_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-success">Frame Total: <field name="total_frame_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to Cost Summary -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="before">
+                <tr class="table-success">
+                    <td><strong>🏛️ Frame Components</strong></td>
+                    <td class="text-right"><field name="total_frame_cost" readonly="1" widget="monetary"/></td>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,64 @@
+<odoo>
+    <!-- Inherit base form to add ASC configuration -->
+    <record id="view_green_master_form_asc" model="ir.ui.view">
+        <field name="name">green.master.form.asc</field>
+        <field name="model">green.master</field>
+        <field name="inherit_id" ref="green2_base.view_green_master_form_base"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add ASC settings to Structure Configuration page -->
+            <xpath expr="//page[position()=2]//separator[1]" position="before">
+                <separator string="ASC (Aerodynamic Side Corridors) Settings"/>
+                <group>
+                    <group string="ASC Enable/Configuration">
+                        <field name="is_side_coridoors"/>
+                        <field name="width_front_span_coridoor" invisible="not is_side_coridoors" string="Width Front Span ASC"/>
+                        <field name="width_back_span_coridoor" invisible="not is_side_coridoors" string="Width Back Span ASC"/>
+                        <field name="width_front_bay_coridoor" invisible="not is_side_coridoors" string="Width Left Bay ASC"/>
+                        <field name="width_back_bay_coridoor" invisible="not is_side_coridoors" string="Width Right Bay ASC"/>
+                    </group>
+                    <group string="Support Configuration" invisible="not is_side_coridoors">
+                        <field name="support_hockeys"/>
+                        <field name="length_support_hockeys"/>
+                    </group>
+                </group>
+            </xpath>
+            
+            <!-- Add ASC components after calculated values -->
+            <xpath expr="//page[position()=2]//separator[3]/following-sibling::group[1]" position="after">
+					
+			   <separator string="ASC Components" invisible="not is_side_coridoors"/>
+                <field name="asc_component_ids" invisible="not is_side_coridoors" context="{'default_section': 'asc'}"/>
+                
+                <group invisible="not is_side_coridoors">
+                    <field name="total_asc_cost" readonly="1" widget="monetary"/>
+                </group>
+            </xpath>
+            
+            <!-- Add ASC Components to Component Management -->
+            <!-- <xpath expr="//group[@name='component_sections']" position="inside"> -->
+			<xpath expr="//div[@class='card border-danger mb-4'][div[@class='card-header bg-danger text-white text-center']/h3[contains(text(), '💰 PROJECT TOTAL:')]]" position="before">
+                <div class="card mb-4" invisible="not is_side_coridoors">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">🏗️ ASC Components</h4>
+                    </div>
+                    <div class="card-body">
+                        <field name="asc_component_ids" readonly="0"/>
+                        <div class="text-right mt-2">
+                            <h5 class="text-primary">ASC Total: <field name="total_asc_cost" readonly="1" widget="monetary"/></h5>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+            <!-- Add to Cost Summary -->
+            <xpath expr="//tr[@name='cost_summary_rows']" position="before">
+                <tr invisible="total_asc_cost == 0" class="table-primary">
+                    <td><strong>🏗️ ASC Components</strong></td>
+                    <td class="text-right"><field name="total_asc_cost" readonly="1" widget="monetary"/></td>
+                </tr>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>
