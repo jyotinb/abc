@@ -1,0 +1,62 @@
+Code Files for Customization
+=============================
+
+BACKEND FILES (Python/FastAPI):
+├── main.py                  - Main application entry point
+├── database.py              - Database connection & session
+├── config.py                - Configuration settings
+├── deps.py                  - Dependencies (auth, etc)
+├── requirements.txt         - Python packages
+├── Dockerfile               - Docker build config
+├── env.txt                  - Environment variables
+├── models/                  - Database models (SQLAlchemy)
+│   ├── user.py
+│   ├── company.py
+│   ├── device.py
+│   ├── zone.py
+│   ├── zone_topic.py
+│   └── telemetry.py
+├── api/                     - API route handlers
+│   ├── auth.py
+│   ├── users.py
+│   ├── companies.py
+│   ├── devices.py
+│   ├── zones.py
+│   └── zone_topics.py
+└── schemas/                 - Pydantic schemas (validation)
+    ├── user.py
+    ├── company.py
+    ├── device.py
+    └── zone.py
+
+FRONTEND FILES (React):
+├── AdminDashboard.jsx       - Main dashboard component
+├── App.js                   - React app entry point
+├── App.css                  - Global styles
+├── index.js                 - React DOM render
+├── package.json             - npm dependencies
+├── env.txt                  - Environment variables
+└── components/              - Other React components
+    └── *.jsx
+
+DOCKER & CONFIG:
+├── docker-compose.yml       - Docker services config
+
+DATABASE:
+└── database_schema.sql      - PostgreSQL schema
+
+KEY FILES TO SHARE FOR CUSTOMIZATION:
+=====================================
+1. AdminDashboard.jsx        - For UI changes
+2. api/*.py                  - For API endpoint changes
+3. models/*.py               - For database model changes
+4. main.py                   - For app-level changes
+5. database_schema.sql       - For database structure
+
+MOST FREQUENTLY CUSTOMIZED:
+===========================
+- AdminDashboard.jsx         - UI/UX changes
+- api/devices.py             - Device management logic
+- api/zones.py               - Zone management logic
+- models/device.py           - Device data structure
+- models/zone.py             - Zone data structure

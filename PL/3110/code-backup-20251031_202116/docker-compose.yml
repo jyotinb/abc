@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: greenhouse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    container_name: greenhouse-api
+    network_mode: host
+    environment:
+      DATABASE_URL: postgresql://greenhouse:greenhouse123@localhost:5432/greenhouse_iot
+      REDIS_URL: redis://localhost:6379/0
+      MQTT_BROKER_HOST: localhost
+      MQTT_BROKER_PORT: 1883
+      SECRET_KEY: your-secret-key-change-this
+      BACKEND_CORS_ORIGINS: '["http://167.86.89.98:3000","http://localhost:3000"]'
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
