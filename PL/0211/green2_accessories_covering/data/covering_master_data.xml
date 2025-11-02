@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ============== PLASTIC COVERING WIDTHS ============== -->
+        
+        <record id="covering_width_4" model="covering.width">
+            <field name="width_value">4.0</field>
+            <field name="notes">Standard 4m width covering</field>
+        </record>
+        
+        <record id="covering_width_5" model="covering.width">
+            <field name="width_value">5.0</field>
+            <field name="notes">Standard 5m width covering</field>
+        </record>
+        
+        <record id="covering_width_6" model="covering.width">
+            <field name="width_value">6.0</field>
+            <field name="notes">Standard 6m width covering</field>
+        </record>
+        
+        <record id="covering_width_7" model="covering.width">
+            <field name="width_value">7.0</field>
+            <field name="notes">Standard 7m width covering</field>
+        </record>
+        
+        <record id="covering_width_8" model="covering.width">
+            <field name="width_value">8.0</field>
+            <field name="notes">Standard 8m width covering</field>
+        </record>
+        
+        <record id="covering_width_9" model="covering.width">
+            <field name="width_value">9.0</field>
+            <field name="notes">Standard 9m width covering</field>
+        </record>
+        
+        <record id="covering_width_10" model="covering.width">
+            <field name="width_value">10.0</field>
+            <field name="notes">Standard 10m width covering</field>
+        </record>
+        
+        <record id="covering_width_12" model="covering.width">
+            <field name="width_value">12.0</field>
+            <field name="notes">Standard 12m width covering</field>
+        </record>
+        
+        <record id="covering_width_14" model="covering.width">
+            <field name="width_value">14.0</field>
+            <field name="notes">Standard 14m width covering</field>
+        </record>
+        
+        <record id="covering_width_16" model="covering.width">
+            <field name="width_value">16.0</field>
+            <field name="notes">Standard 16m width covering</field>
+        </record>
+        
+        <!-- ============== APRON WIDTHS WITH PRICING ============== -->
+        
+        <record id="apron_width_1_5" model="apron.width">
+            <field name="width_value">1.5</field>
+            <field name="unit_price">50.0</field>
+            <field name="notes">Standard 1.5m apron width</field>
+        </record>
+        
+        <record id="apron_width_2_0" model="apron.width">
+            <field name="width_value">2.0</field>
+            <field name="unit_price">55.0</field>
+            <field name="notes">Standard 2.0m apron width</field>
+        </record>
+        
+        <!-- ============== INSECT NET WIDTHS WITH PRICING ============== -->
+        
+        <record id="insect_net_width_2_5" model="insect.net.width">
+            <field name="width_value">2.5</field>
+            <field name="unit_price">60.0</field>
+            <field name="notes">Standard 2.5m insect net</field>
+        </record>
+        
+        <record id="insect_net_width_3_2" model="insect.net.width">
+            <field name="width_value">3.2</field>
+            <field name="unit_price">65.0</field>
+            <field name="notes">Standard 3.2m insect net</field>
+        </record>
+        
+        <record id="insect_net_width_3_6" model="insect.net.width">
+            <field name="width_value">3.6</field>
+            <field name="unit_price">70.0</field>
+            <field name="notes">Standard 3.6m insect net</field>
+        </record>
+        
+        <record id="insect_net_width_4_2" model="insect.net.width">
+            <field name="width_value">4.2</field>
+            <field name="unit_price">75.0</field>
+            <field name="notes">Standard 4.2m insect net</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 10mm Diameter Bolts -->
+        <record id="nutbolt_10x40" model="accessories.master">
+            <field name="name">Nut Bolt 10x40</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">10</field>
+            <field name="size_specification">10x40</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="nutbolt_10x50" model="accessories.master">
+            <field name="name">Nut Bolt 10x50</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">11</field>
+            <field name="size_specification">10x50</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="nutbolt_10x60" model="accessories.master">
+            <field name="name">Nut Bolt 10x60</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">12</field>
+            <field name="size_specification">10x60</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="nutbolt_10x80" model="accessories.master">
+            <field name="name">Nut Bolt 10x80</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">13</field>
+            <field name="size_specification">10x80</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="nutbolt_10x100" model="accessories.master">
+            <field name="name">Nut Bolt 10x100</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">14</field>
+            <field name="size_specification">10x100</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="nutbolt_10x120" model="accessories.master">
+            <field name="name">Nut Bolt 10x120</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">15</field>
+            <field name="size_specification">10x120</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- 6mm Diameter Bolts -->
+        <record id="nutbolt_6x20" model="accessories.master">
+            <field name="name">Nut Bolt 6x20</field>
+            <field name="category">nutbolts</field>
+            <field name="sequence">20</field>
+            <field name="size_specification">6x20</field>
+            <field name="unit_price">0.0</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>
