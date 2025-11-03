@@ -1,0 +1,1 @@
+# Asset Category in asset.py

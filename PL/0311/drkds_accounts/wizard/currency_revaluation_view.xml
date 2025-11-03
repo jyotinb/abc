@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_currency_revaluation_wizard_form" model="ir.ui.view">
+        <field name="name">drkds.currency.revaluation.wizard.form</field>
+        <field name="model">drkds.currency.revaluation.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <group>
+                        <field name="unrealized_gain_account_id"/>
+                        <field name="unrealized_loss_account_id"/>
+                        <field name="preview_mode"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="account_ids" widget="many2many_tags"/>
+                    <field name="currency_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="action_revaluate" string="Revaluate" type="object" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_currency_revaluation_wizard" model="ir.actions.act_window">
+        <field name="name">Currency Revaluation</field>
+        <field name="res_model">drkds.currency.revaluation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

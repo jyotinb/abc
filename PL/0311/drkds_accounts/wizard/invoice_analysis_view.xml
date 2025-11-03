@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_invoice_analysis_wizard_form" model="ir.ui.view">
+        <field name="name">drkds.invoice.analysis.wizard.form</field>
+        <field name="model">drkds.invoice.analysis.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="report_type"/>
+                    </group>
+                    <group>
+                        <field name="invoice_type"/>
+                        <field name="group_by"/>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                        <field name="include_draft"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print Report" type="object" class="oe_highlight"/>
+                    <button name="export_excel" string="Export to Excel" type="object"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_invoice_analysis_wizard" model="ir.actions.act_window">
+        <field name="name">Invoice Analysis</field>
+        <field name="res_model">drkds.invoice.analysis.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

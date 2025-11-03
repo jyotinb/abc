@@ -1,0 +1,1 @@
+# Asset Depreciation in asset.py

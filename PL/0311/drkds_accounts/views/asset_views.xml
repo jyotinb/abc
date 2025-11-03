@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_drkds_asset_tree" model="ir.ui.view">
+        <field name="name">drkds.asset.tree</field>
+        <field name="model">drkds.asset</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_drkds_asset_form" model="ir.ui.view">
+        <field name="name">drkds.asset.form</field>
+        <field name="model">drkds.asset</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_validate" string="Compute Depreciation" type="object" 
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_close" string="Close Asset" type="object" 
+                            invisible="state != 'open'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="purchase_date"/>
+                            <field name="purchase_value"/>
+                            <field name="salvage_value"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Depreciation">
+                            <field name="method"/>
+                            <field name="method_number"/>
+                            <field name="method_period"/>
+                        </group>
+                        <group string="Accounting">
+                            <field name="account_asset_id"/>
+                            <field name="account_depreciation_id"/>
+                            <field name="account_depreciation_expense_id"/>
+                            <field name="journal_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="value_residual"/>
+                            <field name="value_depreciated"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Depreciation Board">
+                            <field name="depreciation_line_ids">
+                                <tree>
+                                    <field name="sequence"/>
+                                    <field name="depreciation_date"/>
+                                    <field name="amount"/>
+                                    <field name="remaining_value"/>
+                                    <field name="move_id"/>
+                                    <field name="move_posted_check"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_drkds_asset_category_tree" model="ir.ui.view">
+        <field name="name">drkds.asset.category.tree</field>
+        <field name="model">drkds.asset.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="method_number"/>
+                <field name="method_period"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_drkds_asset_category_form" model="ir.ui.view">
+        <field name="name">drkds.asset.category.form</field>
+        <field name="model">drkds.asset.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="method_number"/>
+                            <field name="method_period"/>
+                        </group>
+                        <group>
+                            <field name="account_asset_id"/>
+                            <field name="account_depreciation_id"/>
+                            <field name="account_depreciation_expense_id"/>
+                            <field name="journal_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_drkds_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">drkds.asset</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <record id="action_drkds_asset_category" model="ir.actions.act_window">
+        <field name="name">Asset Categories</field>
+        <field name="res_model">drkds.asset.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

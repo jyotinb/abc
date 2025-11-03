@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="menu_drkds_accounting_root" name="DRKDS Accounting" sequence="5"/>
+    
+    <!-- Reports Menu -->
+    <menuitem id="menu_drkds_reports" name="Reports" parent="menu_drkds_accounting_root" sequence="1"/>
+    <menuitem id="menu_general_ledger" name="General Ledger" parent="menu_drkds_reports" 
+              action="action_general_ledger_wizard" sequence="1"/>
+    <menuitem id="menu_trial_balance" name="Trial Balance" parent="menu_drkds_reports" 
+              action="action_trial_balance_wizard" sequence="2"/>
+    
+    <!-- Budget Menu -->
+    <menuitem id="menu_drkds_budget" name="Budget" parent="menu_drkds_accounting_root" sequence="2"/>
+    <menuitem id="menu_budget_list" name="Budgets" parent="menu_drkds_budget" 
+              action="action_drkds_budget" sequence="1"/>
+    
+    <!-- Assets Menu -->
+    <menuitem id="menu_drkds_assets" name="Assets" parent="menu_drkds_accounting_root" sequence="3"/>
+    <menuitem id="menu_asset_list" name="Assets" parent="menu_drkds_assets" 
+              action="action_drkds_asset" sequence="1"/>
+    <menuitem id="menu_asset_category" name="Categories" parent="menu_drkds_assets" 
+              action="action_drkds_asset_category" sequence="2"/>
+</odoo>

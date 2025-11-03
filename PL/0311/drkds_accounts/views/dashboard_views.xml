@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_drkds_dashboard_form" model="ir.ui.view">
+        <field name="name">drkds.dashboard.form</field>
+        <field name="model">drkds.dashboard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Financial KPIs">
+                            <field name="total_receivable"/>
+                            <field name="total_payable"/>
+                            <field name="bank_balance"/>
+                            <field name="cash_balance"/>
+                        </group>
+                        <group string="Document Counts">
+                            <field name="invoice_count"/>
+                            <field name="bill_count"/>
+                            <field name="payment_count"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_drkds_dashboard" model="ir.actions.act_window">
+        <field name="name">Accounting Dashboard</field>
+        <field name="res_model">drkds.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+</odoo>

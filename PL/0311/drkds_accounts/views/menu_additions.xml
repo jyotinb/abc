@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Add missing menu items to existing menu structure -->
+    
+    <!-- Advanced Reports Menu -->
+    <menuitem id="menu_drkds_advanced_reports" name="Advanced Reports" 
+              parent="menu_drkds_reports" sequence="10"/>
+    
+    <menuitem id="menu_analytic_report" name="Analytic Report" 
+              parent="menu_drkds_advanced_reports" 
+              action="action_analytic_report_wizard" sequence="1"/>
+    
+    <menuitem id="menu_invoice_analysis" name="Invoice Analysis" 
+              parent="menu_drkds_advanced_reports" 
+              action="action_invoice_analysis_wizard" sequence="2"/>
+    
+    <!-- Operations Menu -->
+    <menuitem id="menu_drkds_operations" name="Operations" 
+              parent="menu_drkds_accounting_root" sequence="7"/>
+    
+    <menuitem id="menu_currency_revaluation" name="Currency Revaluation" 
+              parent="menu_drkds_operations" 
+              action="action_currency_revaluation_wizard" sequence="1"/>
+    
+    <menuitem id="menu_fiscal_year_close" name="Close Fiscal Year" 
+              parent="menu_drkds_operations" 
+              action="action_fiscal_year_close_wizard" sequence="2"/>
+    
+    <menuitem id="menu_mass_reconciliation" name="Mass Reconciliation" 
+              parent="menu_drkds_operations" 
+              action="action_mass_reconciliation_wizard" sequence="3"/>
+    
+    <menuitem id="menu_payment_batch" name="Create Payment Batch" 
+              parent="menu_drkds_operations" 
+              action="action_payment_batch_wizard" sequence="4"/>
+    
+    <!-- Analytics Menu -->
+    <menuitem id="menu_drkds_analytics" name="Analytics" 
+              parent="menu_drkds_config" sequence="3"/>
+    
+    <menuitem id="menu_analytic_distribution" name="Analytic Distributions" 
+              parent="menu_drkds_analytics" 
+              action="action_drkds_analytic_distribution" sequence="1"/>
+    
+    <!-- Bank Menu -->
+    <menuitem id="menu_drkds_bank" name="Bank" 
+              parent="menu_drkds_accounting_root" sequence="8"/>
+    
+    <menuitem id="menu_bank_reconciliation" name="Bank Reconciliation" 
+              parent="menu_drkds_bank" 
+              action="action_drkds_bank_reconciliation" sequence="1"/>
+    
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_dashboard" name="Dashboard" 
+              parent="menu_drkds_accounting_root" 
+              action="action_drkds_dashboard" sequence="0"/>
+</odoo>

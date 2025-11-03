@@ -1,0 +1,5 @@
+
+# ADD THESE LINES TO YOUR __manifest__.py 'data' LIST:
+
+        # Menu additions
+        'views/menu_additions.xml',
