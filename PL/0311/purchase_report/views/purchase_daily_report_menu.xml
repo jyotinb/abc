@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main Daily Report Menu -->
+    <menuitem id="menu_purchase_daily_report_root"
+              name="Daily Report"
+              parent="purchase.menu_purchase_root"
+              sequence="105"/>
+
+    <!-- Submenu: Open Wizard -->
+    <menuitem id="menu_purchase_daily_report_wizard"
+              name="Generate Report"
+              parent="menu_purchase_daily_report_root"
+              groups="sales_team.group_sale_salesman"
+              action="purchase_report.action_purchase_date_wizard"
+              sequence="1"/>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_purchase_date_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.date.wizard.form</field>
+        <field name="model">purchase.date.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Date for Daily Report">
+                <group>
+                    <field name="selected_date"/>
+                </group>
+                <footer>
+                    <button name="action_show_filtered_orders"
+                            string="Show Report"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_date_wizard" model="ir.actions.act_window">
+        <field name="name">Select Date</field>
+        <field name="res_model">purchase.date.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+
+
